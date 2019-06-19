@@ -219,7 +219,7 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
         ShowMessage(
         severity_levels::normal,
         "...DeployStrategy, ptree, in: %s",
-        in_print_str.str());
+        in_print_str.str().c_str());
 
 
     auto MiocpdNode= in.find("maxincreaseordercountperday");
