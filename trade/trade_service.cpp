@@ -213,6 +213,13 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
     unordered_map<string, string> _paramMap;
     unsigned int _maxIncreaseOrderCountPerDay = 10;
 
+    boost::property_tree::write_json(in_print_str,in);
+
+        ShowMessage(
+        severity_levels::normal,
+        "...DeployStrategy, ptree, in: %s",
+        in_print_str.str();
+
 
     auto MiocpdNode= in.find("maxincreaseordercountperday");
     if (MiocpdNode != in.not_found())
@@ -243,11 +250,6 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
     auto DataIDNode = in.find("dataid");
     if (DataIDNode == in.not_found())
         throw std::runtime_error("Can not find <dataid>.");
-
-    ShowMessage(
-        severity_levels::normal,
-        "...DataIDNode: %s",
-        DataIDNode.c_str();
 
     boost::shared_lock<boost::shared_mutex> rlock_MD(m_vecAllMarketDataSource.second, boost::defer_lock);
     boost::shared_lock<boost::shared_mutex> rlock_TD(m_vecAllTradeSource.second, boost::defer_lock);
