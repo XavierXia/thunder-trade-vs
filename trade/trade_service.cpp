@@ -244,6 +244,11 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
     if (DataIDNode == in.not_found())
         throw std::runtime_error("Can not find <dataid>.");
 
+    ShowMessage(
+        severity_levels::normal,
+        "...DataIDNode: %s",
+        DataIDNode.c_str();
+
     boost::shared_lock<boost::shared_mutex> rlock_MD(m_vecAllMarketDataSource.second, boost::defer_lock);
     boost::shared_lock<boost::shared_mutex> rlock_TD(m_vecAllTradeSource.second, boost::defer_lock);
     boost::unique_lock<boost::shared_mutex> wlock_ST(m_mtxAllStrategys, boost::defer_lock);
