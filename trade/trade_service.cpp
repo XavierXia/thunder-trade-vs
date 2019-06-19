@@ -213,6 +213,7 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
     unordered_map<string, string> _paramMap;
     unsigned int _maxIncreaseOrderCountPerDay = 10;
 
+    std::stringstream in_print_str;
     boost::property_tree::write_json(in_print_str,in);
 
         ShowMessage(
