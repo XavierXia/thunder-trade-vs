@@ -198,6 +198,44 @@ size_t CTradeService::GetNetHandlerThreadCount()
 
 }
 
+/*
+部署新策略
+./thunder-trader|0: ...DeployStrategy, ptree, in: {
+    "type": "reqdeploynewstrategy",
+    "bin": "strategy_simple_strategy",
+    "archive": "",
+    "maxincreaseordercountperday": "100",
+    "param": {
+        "a": "5",
+        "b": "0.200000",
+        "c": "2",
+        "aa": "5",
+        "bb": "0.200000",
+        "cc": "2"
+    },
+    "dataid": {
+        "0": {
+            "symboldefine": {
+                "type": "future",
+                "instrumentid": "IF1907",
+                "exchangeid": "CFFEX"
+            },
+            "marketdatasource": "ctp_md&120842&9999",
+            "tradesource": "ctp_td&120842&9999"
+        },
+        "1": {
+            "symboldefine": {
+                "type": "future",
+                "instrumentid": "rb1910",
+                "exchangeid": "SHFE"
+            },
+            "marketdatasource": "ctp_md&120842&9999",
+            "tradesource": "ctp_td&120842&9999"
+        }
+    },
+    "comment": "fff"
+}
+*/
 
 void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
 {
@@ -213,6 +251,7 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
     unordered_map<string, string> _paramMap;
     unsigned int _maxIncreaseOrderCountPerDay = 10;
 
+    //添加打印信息
     std::stringstream in_print_str;
     boost::property_tree::write_json(in_print_str,in);
 
@@ -348,7 +387,7 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
             throw std::runtime_error("Too many strategys MaxStrategyID.");
 
     
-
+    //LoadLibrary可用于将库模块加载到进程的地址空间中，并返回可在GetProcAddress中使用的句柄 以获取DLL函数的地址。
     _pBinHandle = LoadStrategyBin(Bin.c_str());
     if (nullptr == _pBinHandle)
         throw std::runtime_error("loadstrategybin failed.");
@@ -387,6 +426,18 @@ void CTradeService::DeployStrategy(const ptree & in,unsigned int & strategyid)
             error = string("Strategy load archive exception.") + err.what();
         }
     }
+
+    /*
+    struct CParNode{
+        char m_arrayParname[MAXPARNAMELENGTH];
+        int32_t m_intOption;
+        int * m_pIntAddress;
+        double * m_pDoubleAddress;
+        time_duration * m_pTimeDuraAddress;
+        char * m_pStringAddress;
+        
+    };
+    */
     if (error.empty())
     {
         CParNode * ppar = m_arrayAllStrategys[StrategyID].m_pStrategy->GetParamStruct();

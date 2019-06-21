@@ -256,7 +256,7 @@ void CCTP_FUTURE_MDPlugin::Stop()
 	CAutoPend pend(m_abIsPending);
 	if (true==m_boolIsOnline)
 	{
-		boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//д��
+		boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
 		unsigned int InstrumentCount = m_mapInsid2Strategys.size();
 		typedef char * NAME;
 		char * * ppInstrumentID = new NAME[InstrumentCount];
@@ -322,7 +322,7 @@ void CCTP_FUTURE_MDPlugin::MDAttachStrategy(
 	boost::shared_mutex & mtx,
 	atomic_uint_least64_t * updatetime)
 {
-	boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//д��
+	boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
 
 	auto InstrumentID = insConfig.find("instrumentid")->second;
 	auto findres = m_mapInsid2Strategys.find(InstrumentID);
@@ -338,6 +338,7 @@ void CCTP_FUTURE_MDPlugin::MDAttachStrategy(
 		tick.m_datetimeUTCDateTime = not_a_date_time;
 		tick.m_dbLastPrice=0;
 		tick.m_intVolume = 0;
+		//bid是买价,ask是卖价
 		for (unsigned int i = 0;i < MAX_QUOTATIONS_DEPTH;i++)
 		{
 			tick.m_dbBidPrice[i] = 0.0;
@@ -385,7 +386,7 @@ void CCTP_FUTURE_MDPlugin::MDAttachStrategy(
 
 void CCTP_FUTURE_MDPlugin::MDDetachStrategy(MStrategy * strategy)
 {
-	boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//д��
+	boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
 
 	for (auto & ins : m_mapStrategy2Insids[strategy])
 	{
@@ -484,7 +485,7 @@ void CCTP_FUTURE_MDPlugin::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserL
 			"AccountInfo: %s login succeed!",
 			GetCurrentKeyword().c_str());
 
-		boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//д��
+		boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
 		unsigned int InstrumentCount = m_mapInsid2Strategys.size();
 		if (0 != InstrumentCount)
 		{
@@ -576,7 +577,7 @@ void CCTP_FUTURE_MDPlugin::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *
 		return;
 	if (0 == pDepthMarketData->InstrumentID[0])
 		return;
-	boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//����
+	boost::shared_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//¶ÁËø
 	auto & InstrumentNode = m_mapInsid2Strategys[pDepthMarketData->InstrumentID];
 	auto & tick = InstrumentNode.first;
 	try {
@@ -599,6 +600,13 @@ void CCTP_FUTURE_MDPlugin::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *
 		tick.m_intAskVolume[0] = pDepthMarketData->AskVolume1;
 		tick.m_dbPreSettlementPrice = pDepthMarketData->PreSettlementPrice;
 		tick.m_dbPreClosePrice = pDepthMarketData->PreClosePrice;
+
+		ShowMessage(severity_levels::normal,
+				"GetCurrentKeyword:%s,InstrumentID:%s,m_dbBidPrice:%f,m_intBidVolume:%d,m_dbAskPrice:%f,m_intAskVolume:%d",
+				GetCurrentKeyword().c_str(),
+				pDepthMarketData->InstrumentID,
+				tick.m_dbBidPrice,tick.m_intBidVolume,tick.m_dbAskPrice,tick.m_intAskVolume
+				);
 	}
 	catch (std::exception & err)
 	{
