@@ -727,6 +727,15 @@ void CTradeService::ReqAddSource(PackageHandlerParamType param, const ptree & in
         tarContainer = &m_vecAllTradeSource;
     }
 
+    //添加打印信息
+    std::stringstream in_print_str;
+    boost::property_tree::write_json(in_print_str,in);
+    
+    ShowMessage(
+        severity_levels::normal,
+        "...ReqAddSource, ptree, in: %s",
+        in_print_str.str().c_str());
+
     if (in.find("sourcetype") != in.not_found())
     {
         auto SourceType = in.find("sourcetype")->second.data();
