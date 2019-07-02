@@ -23,7 +23,7 @@ date CCTP_FUTURE_TDPlugin::GetTradeday(ptime _Current)
 {
 	ShowMessage(
         severity_levels::normal,
-        "...TDInit, GetTradeday, _Current: %s",to_iso_string(_Current));
+        "...TDInit, GetTradeday, _Current: %s",to_iso_string(_Current).c_str());
 
 	if (_Current.time_of_day() < time_duration(12, 0, 0, 0))//这个地方不要卡的太死
 		return _Current.date();
