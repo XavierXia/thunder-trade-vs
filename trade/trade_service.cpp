@@ -709,6 +709,18 @@ void CTradeService::ReqGetAllSource(PackageHandlerParamType param, const ptree &
     }
 }
 
+
+/*
+./thunder-trader|0: ...ReqAddSource, ptree, in: {
+    "type": "reqaddtradesource",
+    "sourcetype": "ctp",
+    "brokerid": "9999",
+    "maxcancelperday": "",
+    "password": "808502",
+    "serveraddress": "tcp:\/\/192.168.0.2",
+    "username": "123456"
+}
+*/
 void CTradeService::ReqAddSource(PackageHandlerParamType param, const ptree & in, ptree &out)
 {
     //策略数组互斥:        不需要
@@ -730,7 +742,7 @@ void CTradeService::ReqAddSource(PackageHandlerParamType param, const ptree & in
     //添加打印信息
     std::stringstream in_print_str;
     boost::property_tree::write_json(in_print_str,in);
-    
+
     ShowMessage(
         severity_levels::normal,
         "...ReqAddSource, ptree, in: %s",

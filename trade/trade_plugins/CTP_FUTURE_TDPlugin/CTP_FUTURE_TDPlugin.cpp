@@ -21,6 +21,10 @@ const string CCTP_FUTURE_TDPlugin::s_strAccountKeyword = "serveraddress;brokerid
 
 date CCTP_FUTURE_TDPlugin::GetTradeday(ptime _Current)
 {
+	ShowMessage(
+        severity_levels::normal,
+        "...TDInit, GetTradeday, _Current: %s",to_iso_string(_Current));
+
 	if (_Current.time_of_day() < time_duration(12, 0, 0, 0))//这个地方不要卡的太死
 		return _Current.date();
 	else
