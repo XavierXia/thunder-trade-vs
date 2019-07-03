@@ -217,6 +217,7 @@ void CCTP_FUTURE_MDPlugin::TimerHandler(boost::asio::deadline_timer* timer, cons
 
 bool CCTP_FUTURE_MDPlugin::Start()
 {
+	ShowMessage(normal, "CCTP_FUTURE_MDPlugin::Start");
 	CAutoPend pend(m_abIsPending);
 	if (false == m_boolIsOnline)
 	{
@@ -507,6 +508,10 @@ void CCTP_FUTURE_MDPlugin::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserL
 			for (unsigned int i = 0;i < InstrumentCount;i++)
 				delete[] ppInstrumentID[i];
 			delete[] ppInstrumentID;
+		}
+		else
+		{
+			ShowMessage(severity_levels::normal,"subscribe InstrumentCount = %s",GetCurrentKeyword().c_str());
 		}
 	}
 	std::unique_lock<std::mutex> lk(m_mtxLoginSignal);

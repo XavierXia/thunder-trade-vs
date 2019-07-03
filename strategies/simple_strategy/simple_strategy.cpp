@@ -129,7 +129,6 @@ TLastErrorIdType MyStrategy::OnInit(ptime)
     return LB1_NO_ERROR;
 }
 
-//position 头寸
 void MyStrategy::OnTick(TMarketDataIdType dataid, const CTick *pDepthMarketData)
 {
     out_AskPrice1.store(pDepthMarketData->m_dbAskPrice[0]);
@@ -144,7 +143,7 @@ void MyStrategy::OnTick(TMarketDataIdType dataid, const CTick *pDepthMarketData)
             m_enumPosition = Increase_ing_Position;
         }
     };break;
-    case Increase_ing_Position: {                                     
+    case Increase_ing_Position: {
 
     };break;
     case HasPosition: {
