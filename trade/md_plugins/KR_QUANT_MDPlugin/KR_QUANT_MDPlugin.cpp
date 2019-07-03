@@ -5,7 +5,7 @@
 
 const string CKrQuantMDPluginImp::s_strAccountKeyword="serveraddress;username;";
 extern char ProcessName[256];
-const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-zpquant/third/Kr360Quant/conf/mds_client.conf";
+const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
 MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 
@@ -94,7 +94,7 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	//读取配置
     cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 
-    Start();
+    // Start();
 
 	m_StartAndStopCtrlTimer.expires_from_now(time_duration(0,0,3,0));
 	m_StartAndStopCtrlTimer.async_wait(boost::bind(&CKrQuantMDPluginImp::TimerHandler,this));
@@ -121,26 +121,30 @@ void CKrQuantMDPluginImp::TimerHandler()
 	}
 	else if (tid >= time_duration(0, 59, 0, 0) && tid < time_duration(7, 14, 0, 0))
 	{
-		if (false == m_boolIsOnline)
-			Start();
+		// if (false == m_boolIsOnline)
+		// 	Start();
+		Start();
 		nextActiveTime = ptime(second_clock::universal_time().date(), time_duration(7, 16, 30, 0));
 	}
 	else if (tid >= time_duration(7, 14, 0, 0) && tid < time_duration(12, 59, 0, 0))
 	{
-		if (true == m_boolIsOnline)
-			Stop();
+		// if (true == m_boolIsOnline)
+		// 	Stop();
+		Start();
 		nextActiveTime = ptime(second_clock::universal_time().date(), time_duration(12, 59, 30, 0));
 	}
 	else if (tid >= time_duration(12, 59, 0, 0) && tid < time_duration(18, 29, 0, 0))
 	{
-		if (false == m_boolIsOnline)
-			Start();
+		// if (false == m_boolIsOnline)
+		// 	Start();
+		Start();
 		nextActiveTime = ptime(second_clock::universal_time().date(), time_duration(18, 31, 0, 0));
 	}
 	else if (tid >= time_duration(18, 29, 0, 0) && tid < time_duration(23, 59, 59, 0))
 	{
-		if (true == m_boolIsOnline)
-			Stop();
+		// if (true == m_boolIsOnline)
+		// 	Stop();
+		Start();
 		nextActiveTime = ptime(second_clock::universal_time().date()+days(1), time_duration(0, 0, 30, 0));
 	}
 	m_StartAndStopCtrlTimer.expires_at(nextActiveTime);
