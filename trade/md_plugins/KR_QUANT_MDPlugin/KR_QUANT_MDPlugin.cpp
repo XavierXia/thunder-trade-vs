@@ -113,6 +113,7 @@ void CKrQuantMDPluginImp::MDHotUpdate(const ptree & NewConfig)
 
 void CKrQuantMDPluginImp::TimerHandler()
 {
+	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::TimerHandler!\n");
 	time_duration tid = second_clock::universal_time().time_of_day();
 	ptime nextActiveTime=not_a_date_time;
 	if (tid >= time_duration(0, 0, 0, 0) && tid < time_duration(0, 59, 0, 0))
@@ -169,12 +170,12 @@ bool CKrQuantMDPluginImp::Start()
     //test
     OnWaitOnMsg();
 
-	// std::unique_lock<std::mutex> lk(m_mtxLoginSignal);
-	// m_cvLoginSignalCV.wait_for(lk,std::chrono::seconds(10));
-	// if (m_boolIsOnline)
-	// 	return true;
-	// else
-	// 	return false;
+	std::unique_lock<std::mutex> lk(m_mtxLoginSignal);
+	m_cvLoginSignalCV.wait_for(lk,std::chrono::seconds(10));
+	if (m_boolIsOnline)
+		return true;
+	else
+		return false;
 
 	return true;
 }
