@@ -115,7 +115,7 @@ void CKrQuantMDPluginImp::MDHotUpdate(const ptree & NewConfig)
 	MDInit(NewConfig);
 }
 
-void CKrQuantMDPluginImp::TimerHandler()
+void CKrQuantMDPluginImp::TimerHandler(boost::asio::deadline_timer* timer, const boost::system::error_code& err)
 {
 	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::TimerHandler!\n");
 	time_duration tid = second_clock::universal_time().time_of_day();
@@ -153,7 +153,11 @@ void CKrQuantMDPluginImp::TimerHandler()
 		nextActiveTime = ptime(second_clock::universal_time().date()+days(1), time_duration(0, 0, 30, 0));
 	}
 	m_StartAndStopCtrlTimer.expires_at(nextActiveTime);
-	m_StartAndStopCtrlTimer.async_wait(boost::bind(&CKrQuantMDPluginImp::TimerHandler, this));
+	m_StartAndStopCtrlTimer.async_wait(boost::bind(
+	&CKrQuantMDPluginImp::TimerHandler,
+	this,
+	&m_StartAndStopCtrlTimer,
+	boost::asio::placeholders::error));
 	ShowMessage(normal, "%s: Next:%s", GetCurrentKeyword().c_str(), to_simple_string(nextActiveTime).c_str());
 }
 

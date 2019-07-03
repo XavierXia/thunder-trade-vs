@@ -1,5 +1,5 @@
-#ifndef QFCOMPRETRADESYSTEM_ATMMARKETDATAPLUGINS_KR_QUANT_MDPLUGIN_H
-#define QFCOMPRETRADESYSTEM_ATMMARKETDATAPLUGINS_KR_QUANT_MDPLUGIN_H
+#ifndef _QFCOMPRETRADESYSTEM_ATMMARKETDATAPLUGINS_KR_QUANT_MDPLUGIN_H_
+#define _QFCOMPRETRADESYSTEM_ATMMARKETDATAPLUGINS_KR_QUANT_MDPLUGIN_H_
 #include <string>
 #include <boost/thread.hpp>
 #include <thread>                // std::thread
@@ -101,7 +101,7 @@ public:
 private:
 	bool Start();
 	void Stop();
-	void TimerHandler();
+	void TimerHandler(boost::asio::deadline_timer* timer, const boost::system::error_code& err);
 	void OnError();
 };
 #endif
