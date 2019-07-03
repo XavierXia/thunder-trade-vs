@@ -97,8 +97,10 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
     // Start();
 
 	m_StartAndStopCtrlTimer.expires_from_now(time_duration(0,0,3,0));
-	m_StartAndStopCtrlTimer.async_wait(boost::bind(&CKrQuantMDPluginImp::TimerHandler,this));
-	m_futTimerThreadFuture=std::async([this] {
+	m_StartAndStopCtrlTimer.async_wait(boost::bind(&CKrQuantMDPluginImp::TimerHandler,this,
+		&m_StartAndStopCtrlTimer,
+		boost::asio::placeholders::error));
+	m_futTimerThreadFuture=std::async(std::launch::async,[this] {
 		this->m_IOservice.run();
 		return true;
 	});
