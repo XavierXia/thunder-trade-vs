@@ -1675,6 +1675,9 @@ TOrderRefIdType CTradeService::MakeOrder(
         _OrderOffset2OrderRefPart(offset) +
         _SystemNumberPart2OrderRefPart(m_uSystemNumber);
     auto OrderRef= API.first->TDBasicMakeOrder(type,API.second, dir, offset, volume, price, orderRefBase);
+    /*
+        ./thunder-trader|0: LimitOrder Volume:1 Price:3902 Ref:65034240 Custom:0 SystemN:1 AccountN:0 OrderInc:31 RemainTickets:85 [20190702T065607.869348]
+    */
     BOOST_LOG_SEV(m_Logger, severity_levels::normal) 
         << ProcessName << "|" << stid << ": "
         << "LimitOrder Volume:"<< volume
@@ -1821,6 +1824,9 @@ void CTradeService::OnTrade(
         static_cast<StrategyData::TOrderDirectionType>(DirectionPart),
         static_cast<StrategyData::TOrderOffsetType>(OffsetPart)
         );
+    /*
+        ./thunder-trader|0: Strategy0: OnTrade Ref:73422848 Price:3912.4 Volume:1 Custom:0 SystemN:1 AccountN:0 OrderInc:35 [20190702T065954.952932]
+    */
     BOOST_LOG_SEV(m_Logger, severity_levels::normal)
         << ProcessName << "|" << StrategyIDPart << ": "
         << "Strategy" << StrategyIDPart
@@ -1876,6 +1882,9 @@ void CTradeService::OnOrder(
         case LB1_StatusCanceled:_strStatus = "Canceled";break;
         case LB1_StatusUnknown:_strStatus = "Unknown";break;
     }
+    /*
+        ./thunder-trader|0: Strategy0: OnOrder Ref:65034240 Sys:       94047 Dir:Sell Offset:Decrease Status:AllTraded Price:3902 TradedVolume:1 RemainVolume:0 Custom:0 SystemN:1 AccountN:0 OrderInc:31 [20190702T065607.934480]
+    */
     BOOST_LOG_SEV(m_Logger, severity_levels::normal) 
         << ProcessName << "|" << StrategyIDPart << ": "
         << "Strategy" << StrategyIDPart
