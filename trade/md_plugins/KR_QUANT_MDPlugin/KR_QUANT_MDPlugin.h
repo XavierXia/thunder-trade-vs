@@ -22,6 +22,7 @@ extern "C" {
 
 #include "SeverityLevel.h"
 #include "FutureTick.h"
+#include <vector>
 
 #include "AtmPluginInterface.h"
 #include "AtmMarketDataPluginInterface.h"
