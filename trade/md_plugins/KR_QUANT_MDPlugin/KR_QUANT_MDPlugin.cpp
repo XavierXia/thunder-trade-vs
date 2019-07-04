@@ -592,23 +592,25 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
     MdsApi_WaitOnMsg 返回超时是正常的，表示在指定的时间内没有收到任何网络消息 
 	当WaitOnMsg的返回值小于0时，只有 ETIMEDOUT 是正常的，其它小于0的返回值都可以认为是连接异常，需要重建连接
     */
+    while (1) {
+		int ret = MdsApi_WaitOnMsg(&cliEnv.tcpChannel, THE_TIMEOUT_MS,
+		        _MdsApi_OnRtnDepthMarketData, (void *)this);
 
-    int ret = MdsApi_WaitOnMsg(&cliEnv.tcpChannel, THE_TIMEOUT_MS,
-            _MdsApi_OnRtnDepthMarketData, (void *)this);
+		ShowMessage(severity_levels::normal,"... MdsApi_WaitOnMsg,[ret:%d]!\n",ret);
 
-    ShowMessage(severity_levels::normal,"... MdsApi_WaitOnMsg,[ret:%d]!\n",ret);
+		if (unlikely(ret < 0) && (ret != -110)) {
+		    if (likely(SPK_IS_NEG_ETIMEDOUT(ret))) {
+		        /* 执行超时检查 (检查会话是否已超时) */
+		        ;
+		    }
 
-    if (unlikely(ret < 0) && (ret != -110)) {
-        if (likely(SPK_IS_NEG_ETIMEDOUT(ret))) {
-            /* 执行超时检查 (检查会话是否已超时) */
-            ;
-        }
-
-        if (SPK_IS_NEG_EPIPE(ret)) {
-            /* 连接已断开 */
-        }
-        MDDestoryAll();
+		    if (SPK_IS_NEG_EPIPE(ret)) {
+		        /* 连接已断开 */
+		    }
+		    MDDestoryAll();
+		}
     }
+
 
     // while(1)
     // {
