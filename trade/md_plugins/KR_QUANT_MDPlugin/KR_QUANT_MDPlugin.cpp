@@ -637,7 +637,7 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
 		        if (likely(_MdsApiSample_OnTimeout(&cliEnv.tcpChannel) == 0)) {
                     continue;
                 }else{ //连接超时
-                	start();
+                	Start();
                 	return;
                 }
 		    }
