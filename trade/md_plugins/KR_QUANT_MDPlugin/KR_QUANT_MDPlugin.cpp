@@ -433,7 +433,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
 
     char encodeBuf[8192] = {0};
     char *pStrMsg = (char *) NULL;
-    char sendJsonDataStr[8192];
+    char sendJsonDataStr[4086];
 
     if (pSessionInfo->protocolType == SMSG_PROTO_BINARY) {
         /* 将行情消息转换为JSON格式的文本数据 */
@@ -578,6 +578,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     return 0;
 }
 
+
 /**
  * 超时检查处理
  *
@@ -625,7 +626,8 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
     MdsApi_WaitOnMsg 返回超时是正常的，表示在指定的时间内没有收到任何网络消息 
 	当WaitOnMsg的返回值小于0时，只有 ETIMEDOUT 是正常的，其它小于0的返回值都可以认为是连接异常，需要重建连接
     */
-    while (1) {
+
+    while (0) {
 		int ret = MdsApi_WaitOnMsg(&cliEnv.tcpChannel, THE_TIMEOUT_MS,
 		        _MdsApi_OnRtnDepthMarketData, (void *)this);
 
@@ -650,8 +652,10 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
 		}
     }
 
-	MDDestoryAll();
+	//MDDestoryAll();
+
 	return;
+
 }
 
 
