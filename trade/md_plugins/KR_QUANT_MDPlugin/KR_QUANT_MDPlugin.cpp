@@ -164,14 +164,16 @@ void CKrQuantMDPluginImp::TimerHandler(boost::asio::deadline_timer* timer, const
 bool CKrQuantMDPluginImp::Start()
 {
 	m_uRequestID = 0;
-	m_boolIsOnline = false;
 
     /* 初始化客户端环境 (配置文件参见: mds_client_sample.conf) */
     if (! MdsApi_InitAllByConvention(&cliEnv, THE_CONFIG_FILE_NAME)) 
     {
     	ShowMessage(severity_levels::error, "kr_mds:MdsApi_InitAllByConvention failed.");
+    	m_boolIsOnline = false;
         return false;
     }
+    //在线
+    m_boolIsOnline = true;
 
     ShowMessage(severity_levels::normal,"... MdsApi_InitAllByConvention,初始化客户端环境,成功!\n");
 
@@ -431,7 +433,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
 
     char encodeBuf[8192] = {0};
     char *pStrMsg = (char *) NULL;
-    char sendJsonDataStr[4096];
+    char sendJsonDataStr[8192];
 
     if (pSessionInfo->protocolType == SMSG_PROTO_BINARY) {
         /* 将行情消息转换为JSON格式的文本数据 */
@@ -576,6 +578,37 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     return 0;
 }
 
+/**
+ * 超时检查处理
+ *
+ * @param   pSessionInfo    会话信息
+ * @return  等于0，运行正常，未超时；大于0，已超时，需要重建连接；小于0，失败（错误号）
+ */
+static inline int32
+_MdsApiSample_OnTimeout(MdsApiSessionInfoT *pSessionInfo) {
+    
+    int64               recvInterval = 0;
+
+    SLOG_ASSERT(pSessionInfo);
+
+    recvInterval = STime_GetSysTime() - MdsApi_GetLastRecvTime(pSessionInfo);
+    if (unlikely(pSessionInfo->heartBtInt > 0
+            && recvInterval > pSessionInfo->heartBtInt * 2)) {
+        SLOG_ERROR("会话已超时, 将主动断开与服务器[%s:%d]的连接! " \
+                "lastRecvTime[%lld], lastSendTime[%lld], " \
+                "heartBtInt[%d], recvInterval[%lld]",
+                pSessionInfo->channel.remoteAddr,
+                pSessionInfo->channel.remotePort,
+                MdsApi_GetLastRecvTime(pSessionInfo),
+                MdsApi_GetLastSendTime(pSessionInfo),
+                pSessionInfo->heartBtInt, recvInterval);
+        return ETIMEDOUT;
+    }
+    
+    return 0;
+}
+
+
 void CKrQuantMDPluginImp::OnWaitOnMsg()
 {
 	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::OnWaitOnMsg!\n");
@@ -601,21 +634,24 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
 		if (unlikely(ret < 0) && (ret != -110)) {
 		    if (likely(SPK_IS_NEG_ETIMEDOUT(ret))) {
 		        /* 执行超时检查 (检查会话是否已超时) */
-		        ;
+		        if (likely(_MdsApiSample_OnTimeout(&cliEnv.tcpChannel) == 0)) {
+                    continue;
+                }else{ //连接超时
+                	start();
+                	return;
+                }
 		    }
 
 		    if (SPK_IS_NEG_EPIPE(ret)) {
 		        /* 连接已断开 */
 		    }
 		    MDDestoryAll();
+		    return;
 		}
     }
 
-
-    // while(1)
-    // {
-    // 	sleep(100);
-    // }
+	MDDestoryAll();
+	return;
 }
 
 
