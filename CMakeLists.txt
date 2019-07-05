@@ -1,4 +1,6 @@
+# 项目信息
 project(auto_trade_machine)
+
 set (Tutorial_VERSION_MAJOR 1)
 set (Tutorial_VERSION_MINOR 0)
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -6,6 +8,8 @@ message(${PROJECT_SOURCE_DIR})
 message(${PROJECT_BINARY_DIR})
 set (VERSION_MAJOR 1)
 set (VERSION_MINOR 0)
+
+# 加入一个配置头文件，用于处理 CMake 对源码的设置
 configure_file (
   "${PROJECT_SOURCE_DIR}/common/config.h.in"
   "${PROJECT_BINARY_DIR}/common/config.h"
@@ -15,6 +19,7 @@ configure_file (
 else()
     set(BOOST_THREAD "boost_thread")
 endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb -std=c++11 -fno-strict-aliasing")
@@ -28,15 +33,16 @@ include_directories("${PROJECT_SOURCE_DIR}/trade/trade_plugins")
 include_directories("${PROJECT_SOURCE_DIR}/common/tick")  
 
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-
 message(STATUS "${BOOST_THREAD}")
 add_definitions(-DBOOST_SPIRIT_THREADSAFE)
 #If you has a custom boost install path, you should set BOOST_ROOT like
 #SET(BOOST_ROOT /usr/local/install/boost_1_61_0)
+
 find_package(Boost REQUIRED COMPONENTS filesystem regex system thread serialization date_time log log_setup)
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+
 if(NOT Boost_FOUND)
     message("Can not find Boost")
 endif()
@@ -47,16 +53,16 @@ set(libs dl pthread boost_system boost_filesystem boost_thread boost_regex boost
 
 add_definitions(-DBOOST_SPIRIT_THREADSAFE)
 add_definitions(-DBOOST_ALL_DYN_LINK)
-
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+# 是否使用该库
 option (CTP_FUTURE_MDPlugin "Support CTP quotation" ON) 
 option (CTP_FUTURE_TDPlugin "Support CTP trade" ON) 
 
 option (KR_QUANT_MDPlugin "Support KR_QUANT quotation" ON) 
 option (KR_QUANT_MDPlugin "Support KR_QUANT trade" ON) 
-
+# 生成链接库
 add_library(autopend STATIC  common/AutoPend.cpp)
 
 
@@ -70,6 +76,7 @@ if (CTP_FUTURE_MDPlugin)
     include_directories("${ctp_md_plugpath}")
     add_library(ctp_future_mdplugin ${ctp_md_plugpath}/CTP_FUTURE_MDPlugin.cpp )
     target_link_libraries(ctp_future_mdplugin ${libs} thostmduserapi)
+    # 指定 库的安装路径
     install(FILES "${PROJECT_SOURCE_DIR}/third/CTPForLinux32/libthostmduserapi.so" DESTINATION lib)
 endif (CTP_FUTURE_MDPlugin)
     
@@ -79,11 +86,13 @@ if (CTP_FUTURE_TDPlugin)
     include_directories("${ctp_td_plugpath}")
     add_library(ctp_future_tdplugin ${ctp_td_plugpath}/CTP_FUTURE_TDPlugin.cpp)
     target_link_libraries(ctp_future_tdplugin ${libs} thosttraderapi)
+    # 指定 库的安装路径
     install(FILES "${PROJECT_SOURCE_DIR}/third/CTPForLinux32/libthosttraderapi.so" DESTINATION lib)
 endif (CTP_FUTURE_TDPlugin)
 
     ####################### KR_QUANT ##########################################
 include_directories("${PROJECT_SOURCE_DIR}/third/Kr360Quant/include/")
+include_directories("${PROJECT_SOURCE_DIR}/third/Kr360Quant/redox_header/")
 link_directories("${PROJECT_SOURCE_DIR}/third/Kr360Quant/linux64/")
     
 if (KR_QUANT_MDPlugin)
@@ -91,18 +100,20 @@ if (KR_QUANT_MDPlugin)
     set(kr_quant_mdplugpath "${PROJECT_SOURCE_DIR}/trade/md_plugins/KR_QUANT_MDPlugin")
     include_directories("${kr_quant_mdplugpath}")
     add_library(kr_quant_mdplugin STATIC ${kr_quant_mdplugpath}/KR_QUANT_MDPlugin.cpp)
+    # 添加链接库
     target_link_libraries(kr_quant_mdplugin ${libs} "${PROJECT_SOURCE_DIR}/third/Kr360Quant/linux64/liboes_api.so")
     install(FILES "${PROJECT_SOURCE_DIR}/third/Kr360Quant/linux64/liboes_api.so" DESTINATION lib)
 endif (KR_QUANT_MDPlugin)
 
 #################### trade_service 
 include_directories(${PROJECT_SOURCE_DIR}/trade)
+# 指定生成目标
 add_executable(thunder-trader trade/main.cpp trade/connection.cpp trade/io_service_pool.cpp trade/server.cpp trade/trade_service.cpp)
 target_link_libraries(thunder-trader ${libs} ctp_future_mdplugin ctp_future_tdplugin kr_quant_mdplugin autopend)
 
 install (TARGETS thunder-trader DESTINATION bin)
 install (FILES thunder-trader.conf.default DESTINATION bin RENAME thunder-trader.conf)
 
-
+# 添加子目录
 add_subdirectory("${PROJECT_SOURCE_DIR}/strategies/arbitrage_future")
 add_subdirectory("${PROJECT_SOURCE_DIR}/strategies/simple_strategy")

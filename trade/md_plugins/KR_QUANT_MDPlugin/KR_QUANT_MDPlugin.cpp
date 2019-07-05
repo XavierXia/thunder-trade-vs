@@ -8,9 +8,15 @@ extern char ProcessName[256];
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
 MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
+redox::Redox publisher; // Initialize Redox (default host/port)
+redox::Subscriber subscriber;
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
+	if(!publisher.connect())
+		throw std::runtime_error("Can not connect redis,publisher!!!");
+	if(!subscriber.connect())
+		throw std::runtime_error("Can not connect redis,subscriber!!!");
 }
 
 CKrQuantMDPluginImp::~CKrQuantMDPluginImp()
@@ -94,6 +100,17 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	//读取配置
     cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 
+    auto temp = in.find("username");
+	if (temp != in.not_found())
+	{
+		m_strUsername = temp->second.data();
+		if(m_strUsername.size()>(sizeof(CThostFtdcReqUserLoginField::UserID)-1))
+			throw std::runtime_error("ctp:username is too long");
+		else if(m_strUsername.empty())
+			throw std::runtime_error("ctp:username is empty");
+	}
+	else
+		throw std::runtime_error("ctp:Can not find <username>");
     // Start();
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
@@ -300,34 +317,80 @@ void CKrQuantMDPluginImp::MDAttachStrategy(MStrategy * strategy,TMarketDataIdTyp
 		findres->second.second.push_back(make_tuple(strategy, dataid, &mtx));
 	else
 	{
-		m_mapInsid2Strategys[InstrumentID].second.push_back(make_tuple(strategy, dataid, &mtx));
-		if (m_boolIsOnline&&(m_mapInsid2Strategys[InstrumentID].second.size()==1))
+		m_mapInsid2Strategys[InstrumentID].second.push_back(make_tuple(strategy, dataid, &mtx, updatetime));
+		auto & tick = m_mapInsid2Strategys[InstrumentID].first;
+		
+		memset(tick.m_strInstrumentID, 0, sizeof(TInstrumentIDType));
+		tick.m_datetimeUTCDateTime = not_a_date_time;
+		tick.m_dbLastPrice=0;
+		tick.m_intVolume = 0;
+		//bid是买价,ask是卖价
+		for (unsigned int i = 0;i < MAX_QUOTATIONS_DEPTH;i++)
+		{
+			tick.m_dbBidPrice[i] = 0.0;
+			tick.m_intBidVolume[i] = 0;
+			tick.m_dbAskPrice[i] = 0.0;
+			tick.m_intAskVolume[i] = 0;
+		}
+
+		tick.m_dbLowerLimitPrice = 0;
+		tick.m_dbUpperLimitPrice = 0;
+		tick.m_dbOpenPrice = 0;
+		tick.m_dbHighestPrice = 0;
+		tick.m_dbLowestPrice = 0;
+		tick.m_dbClosePrice = 0;
+		tick.m_dbPreClosePrice = 0;
+		
+		if (m_boolIsOnline)
 		{
 			typedef char * NAME;
 			char * * ppInstrumentID = new NAME[1];
 			ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
 			strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
-			// if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
-			// 	ShowMessage(
-			// 		severity_levels::error,
-			// 		"send subscribemarketdata(%s) failed.", 
-			// 		InstrumentID.c_str());
-
-			/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-        	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,InstrumentID.c_str())) 
-        	{
-        		ShowMessage(
+			if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
+				ShowMessage(
 					severity_levels::error,
-					"send MdsApiSample_ResubscribeByCodePrefix(%s) failed.", 
+					"send subscribemarketdata(%s) failed.", 
 					InstrumentID.c_str());
-            	MDDestoryAll();
-       		}
-
+			else
+				ShowMessage(
+					severity_levels::normal,
+					"trying to subscribe %s",
+					InstrumentID.c_str());
 			delete[] ppInstrumentID[0];
 			delete[] ppInstrumentID;
-
-			OnWaitOnMsg();
 		}
+
+
+		// if (m_boolIsOnline&&(m_mapInsid2Strategys[InstrumentID].second.size()==1))
+		// {
+		// 	typedef char * NAME;
+		// 	char * * ppInstrumentID = new NAME[1];
+		// 	ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
+		// 	strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
+		// 	// if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
+		// 	// 	ShowMessage(
+		// 	// 		severity_levels::error,
+		// 	// 		"send subscribemarketdata(%s) failed.", 
+		// 	// 		InstrumentID.c_str());
+
+		// 	/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
+  //       	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,InstrumentID.c_str())) 
+  //       	{
+  //       		ShowMessage(
+		// 			severity_levels::error,
+		// 			"send MdsApiSample_ResubscribeByCodePrefix(%s) failed.", 
+		// 			InstrumentID.c_str());
+  //           	MDDestoryAll();
+  //      		}
+
+		// 	delete[] ppInstrumentID[0];
+		// 	delete[] ppInstrumentID;
+
+		// 	OnWaitOnMsg();
+		// }
+
+
 	}
 }
 
@@ -346,16 +409,22 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
 		}
 		if (m_boolIsOnline && m_mapInsid2Strategys[ins].second.empty())
 		{
-			typedef char * NAME;
-			char * * ppInstrumentID = new NAME[1];
-			ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
-			strncpy(ppInstrumentID[0], ins.c_str(), 31);
+
 			// if (0 != m_pUserApi->UnSubscribeMarketData(ppInstrumentID, 1))
 			// 	ShowMessage(
 			// 		severity_levels::error, 
 			// 		"%s: send unsubscribemarketdata(%s) failed.", 
 			// 		GetCurrentKeyword().c_str(),
 			// 		ins.c_str());
+
+			//ins.c_str()
+			//发布者
+    		subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
+  				ShowMessage(
+					severity_levels::normal,
+					"...subscribe,topic:%s,msg:%s", 
+					topic.c_str(),msg.c_str());
+			});
 
 			/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
         	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,"")) 
@@ -367,8 +436,7 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
             	MDDestoryAll();
        		}
 
-			delete[] ppInstrumentID[0];
-			delete[] ppInstrumentID;
+
 			m_mapInsid2Strategys.erase(ins);
 		}
 	}
@@ -425,7 +493,7 @@ BOOL CKrQuantMDPluginImp::MDResubscribeByCodePrefix(MdsApiSessionInfoT *pTcpChan
 
 //可以在该函数上做同一行情的分发,让部署的不同策略从此处得到所需要的行情数据
 static __inline int32
-_MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
+_MdsApi_OnRtnDepthMarketData_print(MdsApiSessionInfoT *pSessionInfo,
         SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
     MdsMktRspMsgBodyT   *pRspMsg = (MdsMktRspMsgBodyT *) pMsgBody;
 
@@ -578,6 +646,68 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     return 0;
 }
 
+static __inline int32
+_MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
+        SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
+    MdsMktRspMsgBodyT   *pRspMsg = (MdsMktRspMsgBodyT *) pMsgBody;
+
+    ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... MdsApi_OnRtnDepthMarketData 接收到消息)\n");
+
+    char encodeBuf[8192] = {0};
+    char *pStrMsg = (char *) NULL;
+    char sendJsonDataStr[4086];
+
+    if (pSessionInfo->protocolType == SMSG_PROTO_BINARY) {
+        /* 将行情消息转换为JSON格式的文本数据 */
+        pStrMsg = (char *) MdsJsonParser_EncodeRsp(
+                pMsgHead, (MdsMktRspMsgBodyT *) pMsgBody,
+                encodeBuf, sizeof(encodeBuf),
+                pSessionInfo->channel.remoteAddr);
+    } else {
+        pStrMsg = (char *) pMsgBody;
+    }
+
+	const ptime now = microsec_clock::local_time();
+	const time_duration td = now.time_of_day();
+    
+    time_t sendDataCurrentTime = td.total_milliseconds();
+    time_t GetLastRecvTime = MdsApi_GetLastRecvTime(pSessionInfo);
+    ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... sendDataCurrentTime:%ld\n",sendDataCurrentTime);
+
+    if (pMsgHead->msgSize > 0) {
+        pStrMsg[pMsgHead->msgSize - 1] = '\0';
+        sprintf(sendJsonDataStr,
+                "{" \
+                "\"msgType\":%" __SPK_FMT_HH__ "u, " \
+                "\"sendDCT\":%ld, " \
+                "\"LastRecvT\":%ld, " \
+                "\"mktData\":%s" \
+                "}\n",
+                pMsgHead->msgId,
+                sendDataCurrentTime,
+                GetLastRecvTime,
+                pStrMsg);
+    }
+    else
+    {
+        sprintf(sendJsonDataStr,
+                "{" \
+                "\"msgType\":%" __SPK_FMT_HH__ "u, " \
+                "\"sendDCT\":%ld, " \
+                "\"LastRecvT\":%ld, " \
+                "\"mktData\":{}" \
+                "}",
+                pMsgHead->msgId,
+                sendDataCurrentTime,
+                GetLastRecvTime)
+                ;
+    } 
+
+    //发布者
+    publisher.publish("allHQData", sendJsonDataStr);
+
+    return 0;
+}
 
 /**
  * 超时检查处理
@@ -627,7 +757,7 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
 	当WaitOnMsg的返回值小于0时，只有 ETIMEDOUT 是正常的，其它小于0的返回值都可以认为是连接异常，需要重建连接
     */
 
-    while (0) {
+    while (1) {
 		int ret = MdsApi_WaitOnMsg(&cliEnv.tcpChannel, THE_TIMEOUT_MS,
 		        _MdsApi_OnRtnDepthMarketData, (void *)this);
 
@@ -652,7 +782,7 @@ void CKrQuantMDPluginImp::OnWaitOnMsg()
 		}
     }
 
-	//MDDestoryAll();
+	MDDestoryAll();
 
 	return;
 

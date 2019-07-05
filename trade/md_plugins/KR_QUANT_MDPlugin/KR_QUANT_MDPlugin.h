@@ -27,6 +27,8 @@ extern "C" {
 
 #include "AtmPluginInterface.h"
 #include "AtmMarketDataPluginInterface.h"
+#include "redox.hpp"
+
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 using namespace boost::asio;
@@ -58,7 +60,7 @@ class CKrQuantMDPluginImp:
 
 //观察者管理
 	boost::shared_mutex m_mapObserverStructProtector;
-	unordered_map<string, pair<CFutureTick,list< tuple < MStrategy*, TMarketDataIdType, boost::shared_mutex*> > > > m_mapInsid2Strategys;
+	unordered_map<string, pair<CStockTick,list< tuple < MStrategy*, TMarketDataIdType, boost::shared_mutex*> > > > m_mapInsid2Strategys;
 	unordered_map< MStrategy*, list<string> > m_mapStrategy2Insids;
 
 	//MdsApiClientEnvT    cliEnv;
