@@ -419,8 +419,8 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
 
 			//ins.c_str()
 			//发布者
-    		subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
-  				ShowMessage(
+    		subscriber.subscribe("allHQData", [this](const string& topic, const string& msg) {
+  				this->ShowMessage(
 					severity_levels::normal,
 					"...subscribe,topic:%s,msg:%s", 
 					topic,msg);
@@ -706,8 +706,8 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     //发布者
     publisher.publish("allHQData", sendJsonDataStr);
 
-    subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
-  		ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic,msg);
+    subscriber.subscribe("allHQData", [this](const string& topic, const string& msg) {
+  		this->ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic,msg);
 	});
 
     return 0;
