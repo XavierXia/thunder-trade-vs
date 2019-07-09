@@ -418,13 +418,6 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
 			// 		ins.c_str());
 
 			//ins.c_str()
-			//发布者
-    		subscriber.subscribe("allHQData", [this](const string& topic, const string& msg) {
-  				this->ShowMessage(
-					severity_levels::normal,
-					"...subscribe,topic:%s,msg:%s", 
-					topic,msg);
-			});
 
 			/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
         	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,"")) 
@@ -706,9 +699,15 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     //发布者
     publisher.publish("allHQData", sendJsonDataStr);
 
-    subscriber.subscribe("allHQData", [this](const string& topic, const string& msg) {
-  		this->ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic,msg);
+	string top("");
+	string ms("");
+
+	subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
+		top = topic;
+		ms = msg;
 	});
+
+	ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", top,ms);
 
     return 0;
 }
