@@ -308,58 +308,58 @@ void CKrQuantMDPluginImp::MDAttachStrategy(MStrategy * strategy,TMarketDataIdTyp
 {
 	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::MDAttachStrategy!\n");
 
-	boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
+	// boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
 
-	auto InstrumentID = insConfig.find("instrumentid")->second;
-	auto findres = m_mapInsid2Strategys.find(InstrumentID);
-	m_mapStrategy2Insids[strategy].push_back(InstrumentID);
-	if (findres != m_mapInsid2Strategys.end())
-		findres->second.second.push_back(make_tuple(strategy, dataid, &mtx));
-	else
-	{
-		m_mapInsid2Strategys[InstrumentID].second.push_back(make_tuple(strategy, dataid, &mtx, updatetime));
-		auto & tick = m_mapInsid2Strategys[InstrumentID].first;
+	// auto InstrumentID = insConfig.find("instrumentid")->second;
+	// auto findres = m_mapInsid2Strategys.find(InstrumentID);
+	// m_mapStrategy2Insids[strategy].push_back(InstrumentID);
+	// if (findres != m_mapInsid2Strategys.end())
+	// 	findres->second.second.push_back(make_tuple(strategy, dataid, &mtx));
+	// else
+	// {
+	// 	m_mapInsid2Strategys[InstrumentID].second.push_back(make_tuple(strategy, dataid, &mtx, updatetime));
+	// 	auto & tick = m_mapInsid2Strategys[InstrumentID].first;
 		
-		memset(tick.m_strInstrumentID, 0, sizeof(TInstrumentIDType));
-		tick.m_datetimeUTCDateTime = not_a_date_time;
-		tick.m_dbLastPrice=0;
-		tick.m_intVolume = 0;
-		//bid是买价,ask是卖价
-		for (unsigned int i = 0;i < MAX_QUOTATIONS_DEPTH;i++)
-		{
-			tick.m_dbBidPrice[i] = 0.0;
-			tick.m_intBidVolume[i] = 0;
-			tick.m_dbAskPrice[i] = 0.0;
-			tick.m_intAskVolume[i] = 0;
-		}
+	// 	memset(tick.m_strInstrumentID, 0, sizeof(TInstrumentIDType));
+	// 	tick.m_datetimeUTCDateTime = not_a_date_time;
+	// 	tick.m_dbLastPrice=0;
+	// 	tick.m_intVolume = 0;
+	// 	//bid是买价,ask是卖价
+	// 	for (unsigned int i = 0;i < MAX_QUOTATIONS_DEPTH;i++)
+	// 	{
+	// 		tick.m_dbBidPrice[i] = 0.0;
+	// 		tick.m_intBidVolume[i] = 0;
+	// 		tick.m_dbAskPrice[i] = 0.0;
+	// 		tick.m_intAskVolume[i] = 0;
+	// 	}
 
-		tick.m_dbLowerLimitPrice = 0;
-		tick.m_dbUpperLimitPrice = 0;
-		tick.m_dbOpenPrice = 0;
-		tick.m_dbHighestPrice = 0;
-		tick.m_dbLowestPrice = 0;
-		tick.m_dbClosePrice = 0;
-		tick.m_dbPreClosePrice = 0;
+	// 	tick.m_dbLowerLimitPrice = 0;
+	// 	tick.m_dbUpperLimitPrice = 0;
+	// 	tick.m_dbOpenPrice = 0;
+	// 	tick.m_dbHighestPrice = 0;
+	// 	tick.m_dbLowestPrice = 0;
+	// 	tick.m_dbClosePrice = 0;
+	// 	tick.m_dbPreClosePrice = 0;
 		
-		if (m_boolIsOnline)
-		{
-			typedef char * NAME;
-			char * * ppInstrumentID = new NAME[1];
-			ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
-			strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
-			if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
-				ShowMessage(
-					severity_levels::error,
-					"send subscribemarketdata(%s) failed.", 
-					InstrumentID.c_str());
-			else
-				ShowMessage(
-					severity_levels::normal,
-					"trying to subscribe %s",
-					InstrumentID.c_str());
-			delete[] ppInstrumentID[0];
-			delete[] ppInstrumentID;
-		}
+	// 	if (m_boolIsOnline)
+	// 	{
+	// 		typedef char * NAME;
+	// 		char * * ppInstrumentID = new NAME[1];
+	// 		ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
+	// 		strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
+	// 		if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
+	// 			ShowMessage(
+	// 				severity_levels::error,
+	// 				"send subscribemarketdata(%s) failed.", 
+	// 				InstrumentID.c_str());
+	// 		else
+	// 			ShowMessage(
+	// 				severity_levels::normal,
+	// 				"trying to subscribe %s",
+	// 				InstrumentID.c_str());
+	// 		delete[] ppInstrumentID[0];
+	// 		delete[] ppInstrumentID;
+	// 	}
 
 
 		// if (m_boolIsOnline&&(m_mapInsid2Strategys[InstrumentID].second.size()==1))
