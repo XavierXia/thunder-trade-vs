@@ -391,7 +391,7 @@ void CKrQuantMDPluginImp::MDAttachStrategy(MStrategy * strategy,TMarketDataIdTyp
 		// }
 
 
-	}
+	// }
 }
 
 void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
