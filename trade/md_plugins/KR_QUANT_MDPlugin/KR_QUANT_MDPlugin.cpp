@@ -699,15 +699,9 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     //发布者
     publisher.publish("allHQData", sendJsonDataStr);
 
-	string top("");
-	string ms("");
-
-	subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
-		top = topic;
-		ms = msg;
+	subscriber.subscribe("allHQData", [pCallbackParams](const string& topic, const string& msg) {
+		((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", topic,msg);
 	});
-
-	ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", top,ms);
 
     return 0;
 }
