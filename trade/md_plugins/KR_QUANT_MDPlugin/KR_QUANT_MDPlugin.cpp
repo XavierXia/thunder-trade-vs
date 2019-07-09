@@ -700,7 +700,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     publisher.publish("allHQData", sendJsonDataStr);
 
 	subscriber.subscribe("allHQData", [pCallbackParams](const string& topic, const string& msg) {
-		((CKrQuantMDPluginImp *) pCallbackParams)->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", topic,msg);
+		((CKrQuantMDPluginImp *) pCallbackParams)->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", topic.c_str(),msg.c_str());
 
 	});
 
