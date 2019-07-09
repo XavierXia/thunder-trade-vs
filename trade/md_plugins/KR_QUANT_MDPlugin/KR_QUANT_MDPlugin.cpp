@@ -706,6 +706,10 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     //发布者
     publisher.publish("allHQData", sendJsonDataStr);
 
+    subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
+  		ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic.c_str(),msg.c_str());
+	});
+
     return 0;
 }
 
