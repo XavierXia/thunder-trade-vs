@@ -49,7 +49,7 @@ endif()
 message(STATUS "Found Boost IncPath ${Boost_INCLUDE_DIRS}")
 message(STATUS "Found Boost LibPath ${Boost_LIBRARY_DIRS}")
 
-set(libs dl pthread boost_system boost_filesystem boost_thread boost_regex boost_date_time boost_serialization boost_log_setup boost_log)
+set(libs dl pthread redox ev hiredis boost_system boost_filesystem boost_thread boost_regex boost_date_time boost_serialization boost_log_setup boost_log)
 
 add_definitions(-DBOOST_SPIRIT_THREADSAFE)
 add_definitions(-DBOOST_ALL_DYN_LINK)
