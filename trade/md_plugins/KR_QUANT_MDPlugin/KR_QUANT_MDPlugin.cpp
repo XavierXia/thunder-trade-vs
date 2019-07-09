@@ -104,7 +104,7 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	if (temp != in.not_found())
 	{
 		m_strUsername = temp->second.data();
-		if(m_strUsername.size()>(sizeof(CThostFtdcReqUserLoginField::UserID)-1))
+		if(m_strUsername.size()>(150)
 			throw std::runtime_error("ctp:username is too long");
 		else if(m_strUsername.empty())
 			throw std::runtime_error("ctp:username is empty");
