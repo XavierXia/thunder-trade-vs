@@ -423,7 +423,7 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
   				ShowMessage(
 					severity_levels::normal,
 					"...subscribe,topic:%s,msg:%s", 
-					topic.c_str(),msg.c_str());
+					topic,msg);
 			});
 
 			/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
