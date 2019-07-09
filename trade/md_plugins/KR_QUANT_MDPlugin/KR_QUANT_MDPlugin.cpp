@@ -707,7 +707,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     publisher.publish("allHQData", sendJsonDataStr);
 
     subscriber.subscribe("allHQData", [](const string& topic, const string& msg) {
-  		ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic.c_str(),msg.c_str());
+  		ShowMessage(severity_levels::normal,"... allHQData,subscribe,[topic:%s,msg:%s]!\n",topic,msg);
 	});
 
     return 0;
