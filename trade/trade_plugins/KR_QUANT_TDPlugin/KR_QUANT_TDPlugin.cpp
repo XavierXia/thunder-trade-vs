@@ -161,7 +161,7 @@ bool CKR_QUANT_TDPlugin::Start()
     //             ret, strerror(ret));
     // }
 
-   	if(!subscriber.connect()) return;
+   	if(!subscriber.connect()) return false;
 	
 	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
       	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());
