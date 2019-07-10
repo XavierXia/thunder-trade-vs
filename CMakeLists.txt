@@ -109,7 +109,7 @@ if (KR_QUANT_TDPlugin)
     add_definitions(-DKR_QUANT_TDPlugin)
     set(kr_quant_tdplugpath "${PROJECT_SOURCE_DIR}/trade/trade_plugins/KR_QUANT_TDPlugin")
     include_directories("${kr_quant_tdplugpath}")
-    add_library(${kr_quant_tdplugpath}/KR_QUANT_TDPlugin.cpp ${kr_quant_tdplugpath}/oes_client_api.cpp ${kr_quant_tdplugpath}/oes_client_spi.cpp)
+    add_library(kr_quant_tdplugin ${kr_quant_tdplugpath}/KR_QUANT_TDPlugin.cpp ${kr_quant_tdplugpath}/oes_client_api.cpp ${kr_quant_tdplugpath}/oes_client_spi.cpp)
     target_link_libraries(kr_quant_tdplugin ${libs} "${PROJECT_SOURCE_DIR}/third/Kr360Quant/linux64/liboes_api.so")
     # 指定 库的安装路径
     install(FILES "${PROJECT_SOURCE_DIR}/third/Kr360Quant/linux64/liboes_api.so" DESTINATION lib)
