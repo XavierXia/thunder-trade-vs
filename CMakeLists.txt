@@ -61,7 +61,7 @@ option (CTP_FUTURE_MDPlugin "Support CTP quotation" ON)
 option (CTP_FUTURE_TDPlugin "Support CTP trade" ON) 
 
 option (KR_QUANT_MDPlugin "Support KR_QUANT quotation" ON) 
-option (KR_QUANT_MDPlugin "Support KR_QUANT trade" ON) 
+option (KR_QUANT_TDPlugin "Support KR_QUANT trade" ON) 
 # 生成链接库
 add_library(autopend STATIC  common/AutoPend.cpp)
 
