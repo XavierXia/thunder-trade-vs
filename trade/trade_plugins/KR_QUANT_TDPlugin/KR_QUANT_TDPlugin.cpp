@@ -223,7 +223,7 @@ void CKR_QUANT_TDPlugin::ShowMessage(severity_levels lv, const char * fmt, ...)
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_SendOrder(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId, const char *pInvAcctId,
         uint8 ordType, uint8 bsType, int32 ordQty, int32 ordPrice) {
@@ -260,7 +260,7 @@ CKR_QUANT_TDPlugin::OesClientMain_SendOrder(Quant360::OesClientApi *pOesApi,
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_CancelOrder(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId, const char *pInvAcctId,
         int32 origClSeqNo, int8 origClEnvId, int64 origClOrdId) {
@@ -293,7 +293,7 @@ CKR_QUANT_TDPlugin::OesClientMain_CancelOrder(Quant360::OesClientApi *pOesApi,
  * @param   pSessionInfo    会话信息
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_QueryClientOverview(Quant360::OesClientApi *pOesApi) {
     OesClientOverviewT  clientOverview = {NULLOBJ_OES_CLIENT_OVERVIEW};
     int32               ret = 0;
@@ -387,7 +387,7 @@ CKR_QUANT_TDPlugin::OesClientMain_QueryClientOverview(Quant360::OesClientApi *pO
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_QueryMarketStatus(Quant360::OesClientApi *pOesApi,
         uint8 exchId, uint8 platformId) {
     OesQryMarketStateFilterT    qryFilter = {NULLOBJ_OES_QRY_MARKET_STATE_FILTER};
@@ -408,7 +408,7 @@ CKR_QUANT_TDPlugin::OesClientMain_QueryMarketStatus(Quant360::OesClientApi *pOes
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_QueryCashAsset(Quant360::OesClientApi *pOesApi,
         const char *pCashAcctId) {
     OesQryCashAssetFilterT  qryFilter = {NULLOBJ_OES_QRY_CASH_ASSET_FILTER};
@@ -434,7 +434,7 @@ CKR_QUANT_TDPlugin::OesClientMain_QueryCashAsset(Quant360::OesClientApi *pOesApi
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_QueryStock(Quant360::OesClientApi *pOesApi,
         const char *pSecurityId, uint8 mktId, uint8 securityType,
         uint8 subSecurityType) {
@@ -462,7 +462,7 @@ CKR_QUANT_TDPlugin::OesClientMain_QueryStock(Quant360::OesClientApi *pOesApi,
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-static int32
+int32
 CKR_QUANT_TDPlugin::OesClientMain_QueryStkHolding(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId) {
     OesQryStkHoldingFilterT qryFilter = {NULLOBJ_OES_QRY_STK_HOLDING_FILTER};

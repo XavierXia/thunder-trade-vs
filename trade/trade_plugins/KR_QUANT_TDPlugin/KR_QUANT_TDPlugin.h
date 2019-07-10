@@ -82,21 +82,21 @@ public:
 	virtual int TDGetRemainAmountOfCancelChances(const char *);
 
 	//交易相关
-	static int32 OesClientMain_SendOrder(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_SendOrder(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId, const char *pInvAcctId,
         uint8 ordType, uint8 bsType, int32 ordQty, int32 ordPrice);
-	static int32 OesClientMain_CancelOrder(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_CancelOrder(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId, const char *pInvAcctId,
         int32 origClSeqNo, int8 origClEnvId, int64 origClOrdId);
-	static int32 OesClientMain_QueryClientOverview(Quant360::OesClientApi *pOesApi);
-	static int32 OesClientMain_QueryMarketStatus(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_QueryClientOverview(Quant360::OesClientApi *pOesApi);
+	int32 OesClientMain_QueryMarketStatus(Quant360::OesClientApi *pOesApi,
         uint8 exchId, uint8 platformId);
-	static int32 OesClientMain_QueryCashAsset(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_QueryCashAsset(Quant360::OesClientApi *pOesApi,
         const char *pCashAcctId);
-	static int32 OesClientMain_QueryStock(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_QueryStock(Quant360::OesClientApi *pOesApi,
         const char *pSecurityId, uint8 mktId, uint8 securityType,
         uint8 subSecurityType);
-	static int32 OesClientMain_QueryStkHolding(Quant360::OesClientApi *pOesApi,
+	int32 OesClientMain_QueryStkHolding(Quant360::OesClientApi *pOesApi,
         uint8 mktId, const char *pSecurityId);
 
 private:
