@@ -50,8 +50,8 @@ class CKR_QUANT_TDPlugin :
 	
 public:
 	static const string s_strAccountKeyword;
-	CTEMPLATE_ANY_TDPlugin();
-	~CTEMPLATE_ANY_TDPlugin();
+	CKR_QUANT_TDPlugin();
+	~CKR_QUANT_TDPlugin();
 	int m_intRefCount = 0;
 	atomic_bool m_abIsPending = false;
 	bool IsPedding();
