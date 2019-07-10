@@ -1,8 +1,8 @@
 #ifndef _OES_CLIENT_API_H
 #define _OES_CLIENT_API_H
 
-#include    <oes_api/oes_api.h>
-#include    <sutil/compiler.h>
+#include    "oes_api/oes_api.h"
+#include    "sutil/compiler.h"
 #if ! (defined (__WINDOWS__) || defined (__MINGW__))
 #include    <pthread.h>
 #endif
