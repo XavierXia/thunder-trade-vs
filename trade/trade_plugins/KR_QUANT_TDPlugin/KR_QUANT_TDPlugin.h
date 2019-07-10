@@ -53,7 +53,7 @@ public:
 	CKR_QUANT_TDPlugin();
 	~CKR_QUANT_TDPlugin();
 	int m_intRefCount = 0;
-	atomic_bool m_abIsPending = false;
+	atomic_bool m_abIsPending;
 	bool IsPedding();
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
