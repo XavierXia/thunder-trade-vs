@@ -127,15 +127,15 @@ void CKR_QUANT_TDPlugin::TimerHandler(boost::asio::deadline_timer* timer, const 
 	
 }
 
-void *CKR_QUANT_TDPlugin::subThreadMain(void *pParams) 
-{
-	// CKR_QUANT_TDPlugin  *tdPlugin = (CKR_QUANT_TDPlugin *) pParams;
-	// if(!tdPlugin->subscriber.connect()) return;
+// void *CKR_QUANT_TDPlugin::subThreadMain(void *pParams) 
+// {
+// 	CKR_QUANT_TDPlugin  *tdPlugin = (CKR_QUANT_TDPlugin *) pParams;
+// 	if(!tdPlugin->subscriber.connect()) return;
 	
-	// subscriber.subscribe("allHQData", [tdPlugin](const string& topic, const string& msg) {
- //      cout << "...subscribe,topic:" << topic << ",msg: " << msg << endl;
- //    });
-}
+// 	subscriber.subscribe("allHQData", [tdPlugin](const string& topic, const string& msg) {
+//       cout << "...subscribe,topic:" << topic << ",msg: " << msg << endl;
+//     });
+// }
 
 bool CKR_QUANT_TDPlugin::Start()
 {
