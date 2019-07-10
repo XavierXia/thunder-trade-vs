@@ -1,5 +1,5 @@
-#ifndef _QFCOMPRETRADESYSTEM_ATMTRADEPLUGINS_TWS_TDPLUGIN_H_
-#define _QFCOMPRETRADESYSTEM_ATMTRADEPLUGINS_TWS_TDPLUGIN_H_
+#ifndef QFCOMPRETRADESYSTEM_ATMTRADEPLUGINS_KR_QUANT_TDPLUGIN_TEMPLATE_ANY_TDPlugin_H_
+#define QFCOMPRETRADESYSTEM_ATMTRADEPLUGINS_KR_QUANT_TDPLUGIN_TEMPLATE_ANY_TDPlugin_H_
 #include <boost/thread.hpp>
 #include <thread>                // std::thread
 #include <mutex>                // std::mutex, std::unique_lock
@@ -15,12 +15,6 @@
 #include "AtmTradePluginInterface.h"
 #include "TradePluginContextInterface.h"
 
-
-#include "TwsApi/TwsApi.h"
-#include "TwsApi/TwsDataStructDef.h"
-#include "TwsApi/TwsDataTypeDef.h"
-#include "TwsApi/TwsSpi.h"
-
 #include "SeverityLevel.h"
 
 using namespace boost::posix_time;
@@ -28,44 +22,12 @@ using namespace boost::gregorian;
 using namespace boost::asio;
 using namespace std;
 
-class CTWS_TDPlugin :
-	public MAtmTradePluginInterface,
-	public CTwsSpi
+class CKR_QUANT_TDPlugin :
+	public MAtmTradePluginInterface
 {
 
 
 	boost::log::sources::severity_logger< severity_levels > m_Logger;
-
-
-
-	io_service  m_IOservice;
-	deadline_timer m_StartAndStopCtrlTimer;
-	std::future<bool> m_futTimerThreadFuture;
-
-
-
-	MTradePluginContextInterface * m_pTradePluginContext = nullptr;
-	MTwsApi * m_pUserApi = nullptr;//Init at Start()
-
-
-
-	string m_strServerAddress;//Init at Start()
-	unsigned int m_uPort;//Init at Start()
-	unsigned int m_uClientID;//Init at Start()
-	bool m_boolIsOnline = false;//Init at Start()
-	unsigned int m_uAccountNumber = 0;//Init at CTWS_TDPlugin()
-	unsigned int m_uRequestID = 0;//Init at Start()
-	unsigned int m_uIncreasePart = 0;//Init at OnRspUserLogin()
-	TTwsOrderIdType m_intNextValidId;//Init at OnRspUserLogin()
-	TTwsTimeType m_LongServerTime;//Init at OnRspUserLogin()
-	char m_strManagedAccounts[64];//Init at OnRspUserLogin()
-
-
-
-	std::mutex m_mtxLoginSignal;
-	condition_variable m_cvLoginSignalCV;
-	std::mutex m_mtxLogoutSignal;
-	condition_variable m_cvLogoutSignalCV;
 
 
 
@@ -78,10 +40,10 @@ class CTWS_TDPlugin :
 	
 public:
 	static const string s_strAccountKeyword;
-	CTWS_TDPlugin();
-	~CTWS_TDPlugin();
+	CTEMPLATE_ANY_TDPlugin();
+	~CTEMPLATE_ANY_TDPlugin();
 	int m_intRefCount = 0;
-	atomic_bool m_abIsPending;
+	atomic_bool m_abIsPending = false;
 	bool IsPedding();
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
@@ -95,7 +57,6 @@ public:
 	virtual void TDHotUpdate(const ptree &);
 	virtual void TDUnload();
 
-	void UpdateAccountInfo(const ptree & in);
 
 	virtual TOrderRefIdType TDBasicMakeOrder(
 		TOrderType ordertype,
@@ -115,12 +76,6 @@ private:
 	void ShowMessage(severity_levels, const char * fmt, ...);
 	void TimerHandler(boost::asio::deadline_timer* timer, const boost::system::error_code& err);
 
-
-	virtual void OnRspUserLogin(CTwsRspUserLoginField * loginField, bool IsSucceed);
-	virtual void OnRspError(int ErrID, int ErrCode, const char * ErrMsg);
-	virtual void OnDisconnected();
-	virtual void OnRtnOrder(CTwsOrderField *);
-	virtual void OnRtnTrade(CTwsTradeField *);
 
 };
 #endif
