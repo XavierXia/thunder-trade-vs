@@ -119,7 +119,7 @@ endif (KR_QUANT_TDPlugin)
 include_directories(${PROJECT_SOURCE_DIR}/trade)
 # 指定生成目标
 add_executable(thunder-trader trade/main.cpp trade/connection.cpp trade/io_service_pool.cpp trade/server.cpp trade/trade_service.cpp)
-target_link_libraries(thunder-trader ${libs} ctp_future_mdplugin ctp_future_tdplugin kr_quant_mdplugin autopend)
+target_link_libraries(thunder-trader ${libs} ctp_future_mdplugin ctp_future_tdplugin kr_quant_mdplugin kr_quant_tdplugin autopend)
 
 install (TARGETS thunder-trader DESTINATION bin)
 install (FILES thunder-trader.conf.default DESTINATION bin RENAME thunder-trader.conf)
