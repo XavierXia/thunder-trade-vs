@@ -3,6 +3,7 @@
 #include <thread>
 #include "OrderRefResolve.h"
 #include "AutoPend.h"
+#include <iostream>
 
 const string CKR_QUANT_TDPlugin::s_strAccountKeyword = "serveraddress;username;";
 extern char ProcessName[256];
