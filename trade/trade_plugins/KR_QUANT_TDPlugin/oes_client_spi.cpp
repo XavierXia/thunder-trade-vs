@@ -16,6 +16,8 @@ OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderRej
             pOrderReject->mktId, pOrderReject->ordType,
             pOrderReject->bsType, pOrderReject->ordQty,
             pOrderReject->ordPrice, pOrderReject->origClOrdId, errorCode);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -46,6 +48,8 @@ OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
             pOrderInsert->frzInterest, pOrderInsert->frzFee,
             pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
             pOrderInsert->exchErrCode);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -76,6 +80,8 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
             pOrderReport->frzInterest, pOrderReport->frzFee,
             pOrderReport->origClOrdId, pOrderReport->ordRejReason,
             pOrderReport->exchErrCode);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -100,6 +106,8 @@ OesClientMySpi::OnTradeReport(const OesTrdCnfmT *pTradeReport) {
             pTradeReport->trdAmt, pTradeReport->cumQty, pTradeReport->cumAmt,
             pTradeReport->cumInterest, pTradeReport->cumFee,
             pTradeReport->pbuId);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -141,6 +149,8 @@ OesClientMySpi::OnCashAssetVariation(const OesCashAssetItemT *pCashAssetItem) {
             pCashAssetItem->marginFrzAmt, pCashAssetItem->currentTotalBal,
             pCashAssetItem->currentAvailableBal,
             pCashAssetItem->currentDrawableBal);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -188,6 +198,8 @@ OesClientMySpi::OnStockHoldingVariation(const OesStkHoldingItemT *pStkHoldingIte
             pStkHoldingItem->sumHld, pStkHoldingItem->sellAvlHld,
             pStkHoldingItem->trsfOutAvlHld, pStkHoldingItem->lockAvlHld,
             pStkHoldingItem->coveredAvlHld);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -206,6 +218,8 @@ OesClientMySpi::OnFundTrsfReject(int32 errorCode,
             pFundTrsfReject->clEnvId, pFundTrsfReject->clSeqNo,
             pFundTrsfReject->cashAcctId, pFundTrsfReject->isAllotOnly,
             pFundTrsfReject->direct, pFundTrsfReject->occurAmt);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -230,6 +244,8 @@ OesClientMySpi::OnFundTrsfReport(int32 errorCode,
             pFundTrsfReport->trsfStatus, pFundTrsfReport->operDate,
             pFundTrsfReport->operTime, pFundTrsfReport->dclrTime,
             pFundTrsfReport->doneTime);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -241,6 +257,8 @@ OesClientMySpi::OnMarketState(const OesMarketStateItemT *pMarketStateItem) {
             "市场状态[%hhu]\n",
             pMarketStateItem->exchId, pMarketStateItem->platformId,
             pMarketStateItem->mktId, pMarketStateItem->mktState);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -270,6 +288,8 @@ OesClientMySpi::OnQueryOrder(const OesOrdItemT *pOrder,
             pOrder->cumFee, pOrder->frzAmt, pOrder->frzInterest,
             pOrder->frzFee, pOrder->origClOrdId, pOrder->ordRejReason,
             pOrder->exchErrCode);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -293,6 +313,8 @@ OesClientMySpi::OnQueryTrade(const OesTrdItemT *pTrade,
             pTrade->trdDate, pTrade->trdTime, pTrade->trdQty, pTrade->trdPrice,
             pTrade->trdAmt, pTrade->cumQty, pTrade->cumAmt, pTrade->cumInterest,
             pTrade->cumFee, pTrade->pbuId);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -322,6 +344,8 @@ OesClientMySpi::OnQueryCashAsset(const OesCashAssetItemT *pCashAsset,
             pCashAsset->feeFrzAmt, pCashAsset->marginAmt,
             pCashAsset->marginFrzAmt, pCashAsset->currentTotalBal,
             pCashAsset->currentAvailableBal, pCashAsset->currentDrawableBal);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -359,6 +383,8 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
             pStkHolding->coveredAvlHld, pStkHolding->sumHld,
             pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
             pStkHolding->lockAvlHld);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -378,6 +404,8 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
             pLotWinning->securityName, pLotWinning->mktId, pLotWinning->lotType,
             pLotWinning->rejReason, pLotWinning->lotDate, pLotWinning->assignNum,
             pLotWinning->lotQty, pLotWinning->lotPrice, pLotWinning->lotAmt);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -394,6 +422,8 @@ OesClientMySpi::OnQueryCustInfo(const OesCustItemT *pCust,
             pCust->riskLevel, pCust->institutionFlag,
             pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
                     '0' : pCust->investorClass + 'A' - 1);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -409,6 +439,8 @@ OesClientMySpi::OnQueryInvAcct(const OesInvAcctItemT *pInvAcct,
             pInvAcct->invAcctId, pInvAcct->mktId,
             pInvAcct->custId, pInvAcct->status,
             pInvAcct->subscriptionQuota);
+
+    fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -430,6 +462,8 @@ OesClientMySpi::OnQueryCommissionRate(
             pCommissionRate->currType, pCommissionRate->feeType,
             pCommissionRate->calcFeeMode, pCommissionRate->feeRate,
             pCommissionRate->minFee, pCommissionRate->maxFee);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -453,6 +487,8 @@ OesClientMySpi::OnQueryFundTransferSerial(
             pFundTrsf->counterEntrustNo, pFundTrsf->operDate,
             pFundTrsf->operTime, pFundTrsf->dclrTime,
             pFundTrsf->doneTime);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -479,6 +515,8 @@ OesClientMySpi::OnQueryIssue(const OesIssueItemT *pIssue,
             pIssue->issueQty, pIssue->qtyUnit, pIssue->ordMaxQty,
             pIssue->ordMinQty, pIssue->issuePrice, pIssue->ceilPrice,
             pIssue->floorPrice);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -504,6 +542,8 @@ OesClientMySpi::OnQueryStock(const OesStockItemT *pStock,
             pStock->prevClose, pStock->bondInterest,
             pStock->priceLimit[OES_TRD_SESS_TYPE_T].ceilPrice,
             pStock->priceLimit[OES_TRD_SESS_TYPE_T].floorPrice);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -522,6 +562,8 @@ OesClientMySpi::OnQueryEtf(const OesEtfItemT *pEtf,
             pEtf->fundId, pEtf->securityId, pEtf->mktId, pEtf->creRdmUnit,
             pEtf->maxCashRatio, pEtf->navPerCU, pEtf->cashCmpoent,
             pEtf->componentCnt);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -539,6 +581,8 @@ OesClientMySpi::OnQueryEtfComponent(const OesEtfComponentItemT *pEtfComponent,
             pEtfComponent->subFlag, pEtfComponent->prevClose,
             pEtfComponent->qty, pEtfComponent->premiumRate,
             pEtfComponent->creationSubCash, pEtfComponent->redemptionCashSub);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 
@@ -552,6 +596,8 @@ OesClientMySpi::OnQueryMarketState(const OesMarketStateItemT *pMarketState,
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pMarketState->exchId, pMarketState->platformId,
             pMarketState->mktId, pMarketState->mktState);
+
+      fprintf(stdout, sendJsonDataStr);
 }
 
 

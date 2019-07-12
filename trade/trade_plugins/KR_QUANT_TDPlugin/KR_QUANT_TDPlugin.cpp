@@ -165,11 +165,23 @@ bool CKR_QUANT_TDPlugin::Start()
 	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
       	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());
 
-      	// 	if(topic == 'order2server')
-      	// 	{
-      	// 		ptree cfg;
-    			// boost::property_tree::read_json(msg, cfg);
-      	// 	}
+        //example
+        if(msg == 'querycc') //查询持仓
+        {
+            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
+        }
+
+        if(msg == 'buy')
+        {
+            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SH_A, "601881", NULL,
+                OES_ORD_TYPE_LMT, OES_BS_TYPE_BUY, 200, 126700);
+        }
+
+        if(msg == 'sell')
+        {
+            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SH_A, "601881", NULL,
+                OES_ORD_TYPE_LMT, OES_BS_TYPE_SELL, 100, 86700);
+        }
 
     });
 
