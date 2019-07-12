@@ -29,48 +29,16 @@
 #include "CTP_FUTURE_TDPlugin/CTP_FUTURE_TDPlugin.h"
 #endif
 
-#ifdef DFITC_SOP_MDPlugin
-#include "DFITC_SOP_MDPlugin/DFITC_SOP_MDPlugin.h"
-#endif
-
-#ifdef DFITC_SOP_TDPlugin
-#include "DFITC_SOP_TDPlugin/DFITC_SOP_TDPlugin.h"
-#endif
-
-#ifdef DFITC_STOCK_MDPlugin
-#include "DFITC_STOCK_MDPlugin/DFITC_STOCK_MDPlugin.h"
-#endif
-
 #ifdef QT_STOCK_MDPlugin
 #include "QT_STOCK_MDPlugin/QT_STOCK_MDPlugin.h"
 #endif
 
-#ifdef TEMPLATE_ANY_TDPlugin
-#include "TEMPLATE_ANY_TDPlugin/TEMPLATE_ANY_TDPlugin.h"
-#endif
-
-#ifdef FIX_CYCLE_PRICE_MDPlugin
-#include "FIX_CYCLE_PRICE_MDPlugin/FIX_CYCLE_PRICE_MDPlugin.h"
-#endif
-
-#ifdef FEMAS_FUTURE_MDPlugin
-#include "FEMAS_FUTURE_MDPlugin/FEMAS_FUTURE_MDPlugin.h"
-#endif
-
-#ifdef FEMAS_FUTURE_TDPlugin
-#include "FEMAS_FUTURE_TDPlugin/FEMAS_FUTURE_TDPlugin.h"
-#endif
-
-#ifdef TWS_MDPlugin
-#include "TWS_MDPlugin/TWS_MDPlugin.h"
-#endif
-
-#ifdef TWS_TDPlugin
-#include "TWS_TDPlugin/TWS_TDPlugin.h"
-#endif
-
 #ifdef KR_QUANT_MDPlugin
 #include "KR_QUANT_MDPlugin/KR_QUANT_MDPlugin.h"
+#endif
+
+#ifdef KR_QUANT_TDPlugin
+#include "KR_QUANT_TDPlugin/KR_QUANT_TDPlugin.h"
 #endif
 
 #include <functional>
@@ -194,9 +162,8 @@ class CTradeService :
 #endif
 
 #ifdef KR_QUANT_MDPlugin
-        PLUGIN("kr_quant",CKrQuantMDPluginImp)
+        PLUGIN("kr_md_quant",CKrQuantMDPluginImp)
 #endif
-
     };
 
     const unordered_map<string, pair<TPluginFactory, string> > m_mapATradePFactories =
@@ -213,8 +180,9 @@ class CTradeService :
 #ifdef TWS_TDPlugin
         PLUGIN("tws",CTWS_TDPlugin),
 #endif
-#ifdef TEMPLATE_ANY_TDPlugin
-        PLUGIN("template",CTEMPLATE_ANY_TDPlugin)
+
+#ifdef KR_QUANT_TDPlugin
+        PLUGIN("kr_td_quant",CKR_QUANT_TDPlugin)
 #endif
     };
     typedef void (CTradeService::*TPackageHandlerFuncType)(PackageHandlerParamType, const ptree & in, ptree &out);
