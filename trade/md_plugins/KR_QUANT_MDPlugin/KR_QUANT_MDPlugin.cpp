@@ -8,8 +8,8 @@ extern char ProcessName[256];
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
 MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
-redox::Redox publisher; // Initialize Redox (default host/port)
-redox::Subscriber subscriber;
+// redox::Redox publisher; // Initialize Redox (default host/port)
+// redox::Subscriber subscriber;
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {

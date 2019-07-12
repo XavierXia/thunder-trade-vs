@@ -64,6 +64,8 @@ class CKrQuantMDPluginImp:
 	unordered_map< MStrategy*, list<string> > m_mapStrategy2Insids;
 
 	//MdsApiClientEnvT    cliEnv;
+	redox::Redox publisher; // Initialize Redox (default host/port)
+	redox::Subscriber subscriber;
 
 public:
 	static const string s_strAccountKeyword;

@@ -47,6 +47,9 @@ class CKR_QUANT_TDPlugin :
 
 	Quant360::OesClientApi  *pOesApi;
 	Quant360::OesClientSpi  *pOesSpi;
+
+	redox::Subscriber subscriber;
+	redox::Redox publisher;
 	
 public:
 	static const string s_strAccountKeyword;
