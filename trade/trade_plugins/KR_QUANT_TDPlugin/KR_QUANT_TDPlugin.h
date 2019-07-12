@@ -48,9 +48,6 @@ class CKR_QUANT_TDPlugin :
 	Quant360::OesClientApi  *pOesApi;
 	Quant360::OesClientSpi  *pOesSpi;
 
-	redox::Subscriber subscriber;
-	redox::Redox publisher;
-	
 public:
 	static const string s_strAccountKeyword;
 	CKR_QUANT_TDPlugin();
@@ -58,6 +55,10 @@ public:
 	int m_intRefCount = 0;
 	atomic_bool m_abIsPending;
 	bool IsPedding();
+
+	redox::Subscriber subscriber;
+	redox::Redox publisher;
+
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
 	virtual void DescreaseRefCount();

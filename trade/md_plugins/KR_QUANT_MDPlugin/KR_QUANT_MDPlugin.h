@@ -64,8 +64,6 @@ class CKrQuantMDPluginImp:
 	unordered_map< MStrategy*, list<string> > m_mapStrategy2Insids;
 
 	//MdsApiClientEnvT    cliEnv;
-	redox::Redox publisher; // Initialize Redox (default host/port)
-	redox::Subscriber subscriber;
 
 public:
 	static const string s_strAccountKeyword;
@@ -74,6 +72,10 @@ public:
 	int m_intRefCount = 0;
 	atomic_bool m_abIsPending;
 	bool IsPedding();
+
+	redox::Redox publisher; // Initialize Redox (default host/port)
+	redox::Subscriber subscriber;
+
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
 	virtual void DescreaseRefCount();
