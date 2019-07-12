@@ -182,6 +182,9 @@ bool CKR_QUANT_TDPlugin::Start()
         {
             OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SH_A, "601881", NULL,
                 OES_ORD_TYPE_LMT, OES_BS_TYPE_SELL, 100, 86700);
+
+            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SZ_A, "000001", NULL,
+                OES_ORD_TYPE_LMT, OES_BS_TYPE_SELL, 300, 16700);
         }
 
     });
