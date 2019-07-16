@@ -260,11 +260,17 @@ bool CKR_QUANT_TDPlugin::Start()
                     mmbz = 2;
                 }
 
+                if(sclb == "1"){
+                    mktId = 1; //OES_BS_TYPE_BUY
+                }else{
+                    mktId = 2;
+                }
+
                 if(wtfs == "0"){//限价
-                    OesClientMain_SendOrder(pOesApi, atoi(sclb), code, NULL,
+                    OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
                                             OES_ORD_TYPE_LMT, mmbz, amount, price);
                 }else{ //市价
-                    OesClientMain_SendOrder(pOesApi, atoi(sclb), code, NULL,
+                    OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
                                             OES_ORD_TYPE_SZ_MTL_BEST, mmbz, amount, price);                        
                 }
             }
