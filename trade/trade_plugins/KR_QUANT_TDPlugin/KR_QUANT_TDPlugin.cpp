@@ -241,17 +241,22 @@ bool CKR_QUANT_TDPlugin::Start()
                     }
                 }
             }else if(sType == "buy" || sType == "sell"){
-                auto code = c_Config.find("code");
-                auto sclb = c_Config.find("sclb");
-                auto wtfs = c_Config.find("wtfs");
-                auto amount = c_Config.find("amount");
-                auto price = c_Config.find("price");
+                auto scode = c_Config.find("code");
+                auto ssclb = c_Config.find("sclb");
+                auto swtfs = c_Config.find("wtfs");
+                auto samount = c_Config.find("amount");
+                auto sprice = c_Config.find("price");
+                string code;
+                string sclb;
+                string wtfs;
+                string amount;
+                string price;
 
-                if (code != in.not_found()) code = code->second.data();
-                if (sclb != in.not_found()) sclb = sclb->second.data();
-                if (wtfs != in.not_found()) wtfs = wtfs->second.data();
-                if (amount != in.not_found()) amount = amount->second.data();
-                if (price != in.not_found()) price = price->second.data();
+                if (scode != in.not_found()) code = scode->second.data();
+                if (ssclb != in.not_found()) sclb = ssclb->second.data();
+                if (swtfs != in.not_found()) wtfs = swtfs->second.data();
+                if (samount != in.not_found()) amount = samount->second.data();
+                if (sprice != in.not_found()) price = sprice->second.data();
 
                 uint8 mmbz,mktId;
                 if(sType == "buy"){
@@ -268,10 +273,10 @@ bool CKR_QUANT_TDPlugin::Start()
 
                 if(wtfs == "0"){//限价
                     OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
-                                            OES_ORD_TYPE_LMT, mmbz, amount, price);
+                                            OES_ORD_TYPE_LMT, mmbz, atoi(amount), atoi(price));
                 }else{ //市价
                     OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
-                                            OES_ORD_TYPE_SZ_MTL_BEST, mmbz, amount, price);                        
+                                            OES_ORD_TYPE_SZ_MTL_BEST, mmbz, atoi(amount), atoi(price));                        
                 }
             }
             else if(sType == "cancelOrder"){
