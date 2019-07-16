@@ -206,24 +206,24 @@ bool CKR_QUANT_TDPlugin::Start()
         auto temp = c_Config.find("type");
         if (temp != in.not_found())
         {
-            temp = temp->second.data();
-            if(temp == "query")
+            string sType = temp->second.data();
+            if(sType == "query")
             {
-                temp = c_Config.find("category");
-                if (temp != in.not_found()) temp = temp->second.data();
-                if(temp == "clientOverview"){
+                auto cate = c_Config.find("category");
+                if (cate != in.not_found()) sCate = cate->second.data();
+                if(sCate == "clientOverview"){
                     /* 查询 客户端总览信息 */
                     OesClientMain_QueryClientOverview(pOesApi);
 
-                }else if(temp == "cashAsset"){
+                }else if(sCate == "cashAsset"){
                     /* 查询 所有关联资金账户的资金信息 */
                     OesClientMain_QueryCashAsset(pOesApi, NULL);
-                }else if(temp == "stkInfo"){
+                }else if(sCate == "stkInfo"){
                     /* 查询 指定上证 600000 的产品信息 */
                     auto code = c_Config.find("code");
                     if (code != in.not_found()) code = code->second.data();
                     OesClientMain_QueryStock(pOesApi, code,OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
-                }else if(temp == "stkHolding"){
+                }else if(sCate == "stkHolding"){
                     auto code = c_Config.find("code");
                     auto sclb = c_Config.find("sclb");
                     if (code != in.not_found()) code = code->second.data();
@@ -240,7 +240,7 @@ bool CKR_QUANT_TDPlugin::Start()
                         }
                     }
                 }
-            }else if(temp == "buy" || temp == "sell"){
+            }else if(sType == "buy" || sType == "sell"){
                 auto code = c_Config.find("code");
                 auto sclb = c_Config.find("sclb");
                 auto wtfs = c_Config.find("wtfs");
@@ -254,7 +254,7 @@ bool CKR_QUANT_TDPlugin::Start()
                 if (price != in.not_found()) price = price->second.data();
 
                 uint8 mmbz,mktId;
-                if(temp == "buy"){
+                if(sType == "buy"){
                     mmbz = 1; //OES_BS_TYPE_BUY
                 }else{
                     mmbz = 2;
@@ -268,7 +268,7 @@ bool CKR_QUANT_TDPlugin::Start()
                                             OES_ORD_TYPE_SZ_MTL_BEST, mmbz, amount, price);                        
                 }
             }
-            else if(temp == "cancelOrder"){
+            else if(sType == "cancelOrder"){
 
             }else{
 
