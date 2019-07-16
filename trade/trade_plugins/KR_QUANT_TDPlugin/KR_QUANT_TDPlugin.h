@@ -48,6 +48,9 @@ class CKR_QUANT_TDPlugin :
 	Quant360::OesClientApi  *pOesApi;
 	Quant360::OesClientSpi  *pOesSpi;
 
+	string m_strUsername;//Init at TDInit
+	string m_strPassword;//Init at TDInit
+
 public:
 	static const string s_strAccountKeyword;
 	CKR_QUANT_TDPlugin();

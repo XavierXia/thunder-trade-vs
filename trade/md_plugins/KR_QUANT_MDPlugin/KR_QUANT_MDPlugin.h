@@ -49,6 +49,7 @@ class CKrQuantMDPluginImp:
 	std::future<bool> m_futTimerThreadFuture;
 
 	string m_strUsername;
+	string m_strPassword;
 
 //账号线程关键属性
 	unsigned int m_uRequestID = 0;

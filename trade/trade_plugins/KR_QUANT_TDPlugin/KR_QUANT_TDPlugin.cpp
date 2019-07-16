@@ -5,7 +5,7 @@
 #include "AutoPend.h"
 #include <iostream>
 
-const string CKR_QUANT_TDPlugin::s_strAccountKeyword = "serveraddress;username;";
+const string CKR_QUANT_TDPlugin::s_strAccountKeyword = "username;password;";
 extern char ProcessName[256];
 #define NOTIFY_LOGIN_SUCCEED {m_boolIsOnline = true; std::unique_lock<std::mutex> lk(m_mtxLoginSignal);m_cvLoginSignalCV.notify_all();}
 #define NOTIFY_LOGIN_FAILED  {m_boolIsOnline = false;std::unique_lock<std::mutex> lk(m_mtxLoginSignal);m_cvLoginSignalCV.notify_all();}
@@ -82,8 +82,42 @@ void CKR_QUANT_TDPlugin::GetState(ptree & out)
 	out.put("online", "true");
 }
 
+/*
+./thunder-trader|0: ...ReqAddSource, ptree, in: {
+    "type": "reqaddmarketdatasource",
+    "sourcetype": "kr_td_quant",
+    "username": "1111",
+    "password": "11"
+}
+*/
 void CKR_QUANT_TDPlugin::TDInit(const ptree & in, MTradePluginContextInterface * pTradePluginContext, unsigned int AccountNumber)
 {
+
+    auto temp = in.find("username");
+    if (temp != in.not_found())
+    {
+        m_strUsername = temp->second.data();
+        if(m_strUsername.size()>150)
+            throw std::runtime_error("kr360:username is too long");
+        else if(m_strUsername.empty())
+            throw std::runtime_error("kr360:username is empty");
+    }
+    else
+        throw std::runtime_error("kr360:Can not find <username>");
+
+    temp = in.find("password");
+    if (temp != in.not_found())
+    {
+        m_strPassword = temp->second.data();
+        if(m_strPassword.size()>50)
+            throw std::runtime_error("kr360:password is too long");
+        else if(m_strPassword.empty())
+            throw std::runtime_error("kr360:password is empty");
+    }
+    else
+        throw std::runtime_error("kr360:Can not find <password>");
+
+
     pOesApi = new Quant360::OesClientApi();
     pOesSpi = new OesClientMySpi();
 

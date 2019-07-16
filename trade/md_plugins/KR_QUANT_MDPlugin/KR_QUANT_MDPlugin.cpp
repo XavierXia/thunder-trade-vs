@@ -3,7 +3,7 @@
 #include <thread>
 #include "AutoPend.h"
 
-const string CKrQuantMDPluginImp::s_strAccountKeyword="serveraddress;username;";
+const string CKrQuantMDPluginImp::s_strAccountKeyword="username;password;";
 extern char ProcessName[256];
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
@@ -94,6 +94,15 @@ void CKrQuantMDPluginImp::GetState(ptree & out)
 	out.put("username", m_strUsername);
 }
 
+
+/*
+./thunder-trader|0: ...ReqAddSource, ptree, in: {
+    "type": "reqaddmarketdatasource",
+    "sourcetype": "kr_md_quant",
+    "username": "1111",
+    "password": "11"
+}
+*/
 void CKrQuantMDPluginImp::MDInit(const ptree & in)
 {
 	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::MDInit!\n");
@@ -105,12 +114,25 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	{
 		m_strUsername = temp->second.data();
 		if(m_strUsername.size()>150)
-			throw std::runtime_error("ctp:username is too long");
+			throw std::runtime_error("kr360:username is too long");
 		else if(m_strUsername.empty())
-			throw std::runtime_error("ctp:username is empty");
+			throw std::runtime_error("kr360:username is empty");
 	}
 	else
-		throw std::runtime_error("ctp:Can not find <username>");
+		throw std::runtime_error("kr360:Can not find <username>");
+
+	temp = in.find("password");
+	if (temp != in.not_found())
+	{
+		m_strPassword = temp->second.data();
+		if(m_strPassword.size()>50)
+			throw std::runtime_error("kr360:password is too long");
+		else if(m_strPassword.empty())
+			throw std::runtime_error("kr360:password is empty");
+	}
+	else
+		throw std::runtime_error("kr360:Can not find <password>");
+
     // Start();
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
@@ -308,90 +330,6 @@ void CKrQuantMDPluginImp::MDAttachStrategy(MStrategy * strategy,TMarketDataIdTyp
 {
 	ShowMessage(severity_levels::normal,"... CKrQuantMDPluginImp::MDAttachStrategy!\n");
 
-	// boost::unique_lock<boost::shared_mutex> lg(m_mapObserverStructProtector);//Ð´Ëø
-
-	// auto InstrumentID = insConfig.find("instrumentid")->second;
-	// auto findres = m_mapInsid2Strategys.find(InstrumentID);
-	// m_mapStrategy2Insids[strategy].push_back(InstrumentID);
-	// if (findres != m_mapInsid2Strategys.end())
-	// 	findres->second.second.push_back(make_tuple(strategy, dataid, &mtx));
-	// else
-	// {
-	// 	m_mapInsid2Strategys[InstrumentID].second.push_back(make_tuple(strategy, dataid, &mtx, updatetime));
-	// 	auto & tick = m_mapInsid2Strategys[InstrumentID].first;
-		
-	// 	memset(tick.m_strInstrumentID, 0, sizeof(TInstrumentIDType));
-	// 	tick.m_datetimeUTCDateTime = not_a_date_time;
-	// 	tick.m_dbLastPrice=0;
-	// 	tick.m_intVolume = 0;
-	// 	//bid是买价,ask是卖价
-	// 	for (unsigned int i = 0;i < MAX_QUOTATIONS_DEPTH;i++)
-	// 	{
-	// 		tick.m_dbBidPrice[i] = 0.0;
-	// 		tick.m_intBidVolume[i] = 0;
-	// 		tick.m_dbAskPrice[i] = 0.0;
-	// 		tick.m_intAskVolume[i] = 0;
-	// 	}
-
-	// 	tick.m_dbLowerLimitPrice = 0;
-	// 	tick.m_dbUpperLimitPrice = 0;
-	// 	tick.m_dbOpenPrice = 0;
-	// 	tick.m_dbHighestPrice = 0;
-	// 	tick.m_dbLowestPrice = 0;
-	// 	tick.m_dbClosePrice = 0;
-	// 	tick.m_dbPreClosePrice = 0;
-		
-	// 	if (m_boolIsOnline)
-	// 	{
-	// 		typedef char * NAME;
-	// 		char * * ppInstrumentID = new NAME[1];
-	// 		ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
-	// 		strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
-	// 		if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
-	// 			ShowMessage(
-	// 				severity_levels::error,
-	// 				"send subscribemarketdata(%s) failed.", 
-	// 				InstrumentID.c_str());
-	// 		else
-	// 			ShowMessage(
-	// 				severity_levels::normal,
-	// 				"trying to subscribe %s",
-	// 				InstrumentID.c_str());
-	// 		delete[] ppInstrumentID[0];
-	// 		delete[] ppInstrumentID;
-	// 	}
-
-
-		// if (m_boolIsOnline&&(m_mapInsid2Strategys[InstrumentID].second.size()==1))
-		// {
-		// 	typedef char * NAME;
-		// 	char * * ppInstrumentID = new NAME[1];
-		// 	ppInstrumentID[0] = new char[31];//TThostFtdcInstrumentIDType
-		// 	strncpy(ppInstrumentID[0], InstrumentID.c_str(), 31);
-		// 	// if (0 != m_pUserApi->SubscribeMarketData(ppInstrumentID, 1))
-		// 	// 	ShowMessage(
-		// 	// 		severity_levels::error,
-		// 	// 		"send subscribemarketdata(%s) failed.", 
-		// 	// 		InstrumentID.c_str());
-
-		// 	/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-  //       	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,InstrumentID.c_str())) 
-  //       	{
-  //       		ShowMessage(
-		// 			severity_levels::error,
-		// 			"send MdsApiSample_ResubscribeByCodePrefix(%s) failed.", 
-		// 			InstrumentID.c_str());
-  //           	MDDestoryAll();
-  //      		}
-
-		// 	delete[] ppInstrumentID[0];
-		// 	delete[] ppInstrumentID;
-
-		// 	OnWaitOnMsg();
-		// }
-
-
-	// }
 }
 
 void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
