@@ -200,27 +200,82 @@ bool CKR_QUANT_TDPlugin::Start()
 	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
       	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());
 
-        //example
-        if(msg == "querycc") //查询持仓
+        ptree c_Config;
+        boost::property_tree::read_json(msg, c_Config);
+
+        auto temp = c_Config.find("type");
+        if (temp != in.not_found())
         {
-            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
+            temp = temp->second.data();
+            if(temp == "query")
+            {
+                temp = c_Config.find("category");
+                if (temp != in.not_found()) temp = temp->second.data();
+                if(temp == "clientOverview"){
+                    /* 查询 客户端总览信息 */
+                    OesClientMain_QueryClientOverview(pOesApi);
+
+                }else if(temp == "cashAsset"){
+                    /* 查询 所有关联资金账户的资金信息 */
+                    OesClientMain_QueryCashAsset(pOesApi, NULL);
+                }else if(temp == "stkInfo"){
+                    /* 查询 指定上证 600000 的产品信息 */
+                    auto code = c_Config.find("code");
+                    if (code != in.not_found()) code = code->second.data();
+                    OesClientMain_QueryStock(pOesApi, code,OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
+                }else if(temp == "stkHolding"){
+                    auto code = c_Config.find("code");
+                    auto sclb = c_Config.find("sclb");
+                    if (code != in.not_found()) code = code->second.data();
+                    if (sclb != in.not_found()) sclb = sclb->second.data();
+
+                    if(code == ""){
+                        /* 查询 沪深两市 所有股票持仓 */
+                        OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
+                    }else{
+                        if(sclb == "1"){ //上海
+                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code);
+                        }else{ //上海
+                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_S_A, code);
+                        }
+                    }
+                }
+            }else if(temp == "buy" || temp == "sell"){
+                auto code = c_Config.find("code");
+                auto sclb = c_Config.find("sclb");
+                auto wtfs = c_Config.find("wtfs");
+                auto amount = c_Config.find("amount");
+                auto price = c_Config.find("price");
+
+                if (code != in.not_found()) code = code->second.data();
+                if (sclb != in.not_found()) sclb = sclb->second.data();
+                if (wtfs != in.not_found()) wtfs = wtfs->second.data();
+                if (amount != in.not_found()) amount = amount->second.data();
+                if (price != in.not_found()) price = price->second.data();
+
+                uint8 mmbz,mktId;
+                if(temp == "buy"){
+                    mmbz = 1; //OES_BS_TYPE_BUY
+                }else{
+                    mmbz = 2;
+                }
+
+                if(wtfs == "0"){//限价
+                    OesClientMain_SendOrder(pOesApi, atoi(sclb), code, NULL,
+                                            OES_ORD_TYPE_LMT, mmbz, amount, price);
+                }else{ //市价
+                    OesClientMain_SendOrder(pOesApi, atoi(sclb), code, NULL,
+                                            OES_ORD_TYPE_SZ_MTL_BEST, mmbz, amount, price);                        
+                }
+            }
+            else if(temp == "cancelOrder"){
+
+            }else{
+
+            }
         }
-
-        if(msg == "buy")
-        {
-            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SH_A, "601881", NULL,
-                OES_ORD_TYPE_LMT, OES_BS_TYPE_BUY, 200, 126700);
-        }
-
-        if(msg == "sell")
-        {
-            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SH_A, "601881", NULL,
-                OES_ORD_TYPE_LMT, OES_BS_TYPE_SELL, 100, 86700);
-
-            OesClientMain_SendOrder(pOesApi, OES_MKT_ID_SZ_A, "000001", NULL,
-                OES_ORD_TYPE_LMT, OES_BS_TYPE_SELL, 300, 16700);
-        }
-
+        else
+            throw std::runtime_error("order2server:Can not find <type>");
     });
 
 	return true;
