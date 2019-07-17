@@ -202,9 +202,9 @@ bool CKR_QUANT_TDPlugin::Start()
 
         ptree c_Config;
         //boost::property_tree::read_json(msg, c_Config);
-
+        std::stringstream jmsg(msg.c_str());  
         try {
-            boost::property_tree::read_json(msg, c_Config);
+            boost::property_tree::read_json(jmsg, c_Config);
         }
         catch(std::exception & e){
             fprintf(stdout, "cannot parse from string 'msg' \n");
