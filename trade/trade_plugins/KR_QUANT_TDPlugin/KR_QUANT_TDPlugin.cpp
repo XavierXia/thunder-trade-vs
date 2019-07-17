@@ -212,7 +212,7 @@ bool CKR_QUANT_TDPlugin::Start()
                 auto cate = c_Config.find("category");
                 string sCate;
 
-                if (cate != in.not_found()) sCate = cate->second.data();
+                if (cate != c_Config.not_found()) sCate = cate->second.data();
                 if(sCate == "clientOverview"){
                     /* 查询 客户端总览信息 */
                     OesClientMain_QueryClientOverview(pOesApi);
@@ -224,7 +224,7 @@ bool CKR_QUANT_TDPlugin::Start()
                     /* 查询 指定上证 600000 的产品信息 */
                     auto scode = c_Config.find("code");
                     string code;
-                    if (scode != in.not_found()) code = scode->second.data();
+                    if (scode != c_Config.not_found()) code = scode->second.data();
                     OesClientMain_QueryStock(pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
                 }else if(sCate == "stkHolding"){
                     auto scode = c_Config.find("code");
@@ -232,8 +232,8 @@ bool CKR_QUANT_TDPlugin::Start()
                     string code;
                     string sclb;
 
-                    if (scode != in.not_found()) code = scode->second.data();
-                    if (ssclb != in.not_found()) sclb = ssclb->second.data();
+                    if (scode != c_Config.not_found()) code = scode->second.data();
+                    if (ssclb != c_Config.not_found()) sclb = ssclb->second.data();
 
                     if(code == ""){
                         /* 查询 沪深两市 所有股票持仓 */
@@ -258,11 +258,11 @@ bool CKR_QUANT_TDPlugin::Start()
                 string amount;
                 string price;
 
-                if (scode != in.not_found()) code = scode->second.data();
-                if (ssclb != in.not_found()) sclb = ssclb->second.data();
-                if (swtfs != in.not_found()) wtfs = swtfs->second.data();
-                if (samount != in.not_found()) amount = samount->second.data();
-                if (sprice != in.not_found()) price = sprice->second.data();
+                if (scode != c_Config.not_found()) code = scode->second.data();
+                if (ssclb != c_Config.not_found()) sclb = ssclb->second.data();
+                if (swtfs != c_Config.not_found()) wtfs = swtfs->second.data();
+                if (samount != c_Config.not_found()) amount = samount->second.data();
+                if (sprice != c_Config.not_found()) price = sprice->second.data();
 
                 uint8 mmbz,mktId;
                 if(sType == "buy"){
