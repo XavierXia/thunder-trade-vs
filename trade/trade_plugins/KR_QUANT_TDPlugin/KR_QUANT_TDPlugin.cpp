@@ -220,14 +220,18 @@ bool CKR_QUANT_TDPlugin::Start()
                     OesClientMain_QueryCashAsset(pOesApi, NULL);
                 }else if(sCate == "stkInfo"){
                     /* 查询 指定上证 600000 的产品信息 */
-                    auto code = c_Config.find("code");
-                    if (code != in.not_found()) code = code->second.data();
+                    auto scode = c_Config.find("code");
+                    string code;
+                    if (scode != in.not_found()) code = scode->second.data();
                     OesClientMain_QueryStock(pOesApi, code,OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
                 }else if(sCate == "stkHolding"){
-                    auto code = c_Config.find("code");
-                    auto sclb = c_Config.find("sclb");
-                    if (code != in.not_found()) code = code->second.data();
-                    if (sclb != in.not_found()) sclb = sclb->second.data();
+                    auto scode = c_Config.find("code");
+                    auto ssclb = c_Config.find("sclb");
+                    string code;
+                    string sclb;
+
+                    if (scode != in.not_found()) code = scode->second.data();
+                    if (ssclb != in.not_found()) sclb = ssclb->second.data();
 
                     if(code == ""){
                         /* 查询 沪深两市 所有股票持仓 */
