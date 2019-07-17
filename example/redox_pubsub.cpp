@@ -115,13 +115,7 @@ int main(int argc, char *argv[]) {
           }
       }
 
-      if(cnt == 160)
-      {
-          cout << "...sell" << endl;
-          publisher.publish("order2server", "sell");
-      }
-
-      if(cnt > 180)
+      if(cnt > 150)
       {
           cnt = 0;
       }
