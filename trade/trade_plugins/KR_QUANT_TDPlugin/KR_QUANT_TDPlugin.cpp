@@ -204,12 +204,14 @@ bool CKR_QUANT_TDPlugin::Start()
         boost::property_tree::read_json(msg, c_Config);
 
         auto temp = c_Config.find("type");
-        if (temp != in.not_found())
+        if (temp != c_Config.not_found())
         {
             string sType = temp->second.data();
             if(sType == "query")
             {
                 auto cate = c_Config.find("category");
+                string sCate;
+
                 if (cate != in.not_found()) sCate = cate->second.data();
                 if(sCate == "clientOverview"){
                     /* 查询 客户端总览信息 */
@@ -223,7 +225,7 @@ bool CKR_QUANT_TDPlugin::Start()
                     auto scode = c_Config.find("code");
                     string code;
                     if (scode != in.not_found()) code = scode->second.data();
-                    OesClientMain_QueryStock(pOesApi, code,OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
+                    OesClientMain_QueryStock(pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
                 }else if(sCate == "stkHolding"){
                     auto scode = c_Config.find("code");
                     auto ssclb = c_Config.find("sclb");
@@ -238,9 +240,9 @@ bool CKR_QUANT_TDPlugin::Start()
                         OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
                     }else{
                         if(sclb == "1"){ //上海
-                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code);
+                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code.c_str());
                         }else{ //上海
-                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_S_A, code);
+                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_S_A, code.c_str());
                         }
                     }
                 }
