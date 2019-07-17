@@ -36,46 +36,46 @@ int main(int argc, char *argv[]) {
 
       if(cnt >= 20 && cnt < 41) //查询持仓实例
       {
-          switch(cnt)
-          {
-            case 20: //查询 客户端总览信息
-            {
-              str = "{\"type\":\"query\",\"category\":\"clientOverview\",\"code\":\"\",\"sclb\":\"\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 25: //查询 所有关联资金账户的资金信息
-            {
-              str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 30: //查询 指定上证 600000 的产品信息
-            {
-              str = "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"600000\",\"sclb\":\"2\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 35: //查询 上证 600000 股票的持仓
-            {
-              str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"600000\",\"sclb\":\"2\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 40: //查询 沪深两市 所有股票持仓
-            {
-              str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"\",\"sclb\":\"\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            default:
-              break;
-          }
+          // switch(cnt)
+          // {
+          //   case 20: //查询 客户端总览信息
+          //   {
+          //     str = "{\"type\":\"query\",\"category\":\"clientOverview\",\"code\":\"\",\"sclb\":\"\"}";
+          //     cout << "...query...cnt: " << cnt << endl;
+          //     publisher.publish("order2server", str);
+          //     break;
+          //   }
+          //   case 25: //查询 所有关联资金账户的资金信息
+          //   {
+          //     str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
+          //     cout << "...query...cnt: " << cnt << endl;
+          //     publisher.publish("order2server", str);
+          //     break;
+          //   }
+          //   case 30: //查询 指定上证 600000 的产品信息
+          //   {
+          //     str = "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"600000\",\"sclb\":\"2\"}";
+          //     cout << "...query...cnt: " << cnt << endl;
+          //     publisher.publish("order2server", str);
+          //     break;
+          //   }
+          //   case 35: //查询 上证 600000 股票的持仓
+          //   {
+          //     str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"600000\",\"sclb\":\"2\"}";
+          //     cout << "...query...cnt: " << cnt << endl;
+          //     publisher.publish("order2server", str);
+          //     break;
+          //   }
+          //   case 40: //查询 沪深两市 所有股票持仓
+          //   {
+          //     str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"\",\"sclb\":\"\"}";
+          //     cout << "...query...cnt: " << cnt << endl;
+          //     publisher.publish("order2server", str);
+          //     break;
+          //   }
+          //   default:
+          //     break;
+          // }
       }
 
       if(cnt >= 80 && cnt < 121)
@@ -89,27 +89,27 @@ int main(int argc, char *argv[]) {
               publisher.publish("order2server", str);
               break;
             }
-            case 90: //* 以 市价 卖出  601881 100股 */
-            {
-              str = "{\"type\":\"sell\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 100: ///* 以 12.67元 购买 平安银行(000001) 200股 */
-            {
-              str = "{\"type\":\"buy\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"0\",\"amount\":\"200\",\"price\":\"126700\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
-            case 110: ///* 以 市价 卖出 平安银行(000001) 100股 */
-            {
-              str = "{\"type\":\"sell\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
-              cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
-              break;
-            }
+            // case 90: //* 以 市价 卖出  601881 100股 */
+            // {
+            //   str = "{\"type\":\"sell\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
+            //   cout << "...query...cnt: " << cnt << endl;
+            //   publisher.publish("order2server", str);
+            //   break;
+            // }
+            // case 100: ///* 以 12.67元 购买 平安银行(000001) 200股 */
+            // {
+            //   str = "{\"type\":\"buy\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"0\",\"amount\":\"200\",\"price\":\"126700\"}";
+            //   cout << "...query...cnt: " << cnt << endl;
+            //   publisher.publish("order2server", str);
+            //   break;
+            // }
+            // case 110: ///* 以 市价 卖出 平安银行(000001) 100股 */
+            // {
+            //   str = "{\"type\":\"sell\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
+            //   cout << "...query...cnt: " << cnt << endl;
+            //   publisher.publish("order2server", str);
+            //   break;
+            // }
             default:
               break;
           }
