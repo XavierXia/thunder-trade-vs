@@ -82,16 +82,16 @@ int main(int argc, char *argv[]) {
       {
           switch(cnt)
           {
-            case 80: //* 以 12.67元 购买 浦发银行(600000) 200股 */
+            case 80: //* 以 12.67元 购买 601881 200股 */
             {
-              str = "{\"type\":\"buy\",\"code\":\"600000\",\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"126700\"}";
+              str = "{\"type\":\"buy\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"126700\"}";
               cout << "...query...cnt: " << cnt << endl;
               publisher.publish("order2server", str);
               break;
             }
-            case 90: //* 以 市价 卖出  浦发银行(600000) 100股 */
+            case 90: //* 以 市价 卖出  601881 100股 */
             {
-              str = "{\"type\":\"sell\",\"code\":\"600000\",\"sclb\":\"1\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
+              str = "{\"type\":\"sell\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
               cout << "...query...cnt: " << cnt << endl;
               publisher.publish("order2server", str);
               break;
