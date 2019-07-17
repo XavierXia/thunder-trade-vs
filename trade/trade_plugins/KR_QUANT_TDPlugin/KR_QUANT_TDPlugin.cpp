@@ -276,10 +276,10 @@ bool CKR_QUANT_TDPlugin::Start()
                 }
 
                 if(wtfs == "0"){//限价
-                    OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
+                    OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_LMT, mmbz, atoi(amount.c_str()), atoi(price.c_str()));
                 }else{ //市价
-                    OesClientMain_SendOrder(pOesApi, mktId, code, NULL,
+                    OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_SZ_MTL_BEST, mmbz, atoi(amount.c_str()), atoi(price.c_str()));                        
                 }
             }
