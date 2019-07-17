@@ -241,8 +241,8 @@ bool CKR_QUANT_TDPlugin::Start()
                     }else{
                         if(sclb == "1"){ //上海
                             OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code.c_str());
-                        }else{ //上海
-                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_S_A, code.c_str());
+                        }else{ //深圳
+                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SZ_A, code.c_str());
                         }
                     }
                 }
