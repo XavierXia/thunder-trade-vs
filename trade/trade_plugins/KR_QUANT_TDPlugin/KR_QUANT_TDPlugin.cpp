@@ -201,7 +201,15 @@ bool CKR_QUANT_TDPlugin::Start()
       	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());
 
         ptree c_Config;
-        boost::property_tree::read_json(msg, c_Config);
+        //boost::property_tree::read_json(msg, c_Config);
+
+        try {
+            boost::property_tree::read_json(msg, c_Config);
+        }
+        catch(std::exception & e){
+            fprintf(stdout, "cannot parse from string 'msg' \n");
+            return false;
+        }
 
         auto temp = c_Config.find("type");
         if (temp != c_Config.not_found())
