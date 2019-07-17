@@ -28,7 +28,10 @@ date CKR_QUANT_TDPlugin::GetTradeday(ptime _Current)
 }
 CKR_QUANT_TDPlugin::CKR_QUANT_TDPlugin():m_abIsPending(false)
 {
-
+    if(!publisher.connect())
+        throw std::runtime_error("CKR_QUANT_TDPlugin,Can not connect redis,publisher!!!");
+    if(!subscriber.connect())
+        throw std::runtime_error("CKR_QUANT_TDPlugin,Can not connect redis,subscriber!!!");
 }
 
 CKR_QUANT_TDPlugin::~CKR_QUANT_TDPlugin()
@@ -195,7 +198,7 @@ bool CKR_QUANT_TDPlugin::Start()
     //             ret, strerror(ret));
     // }
 
-   	if(!subscriber.connect()) return false;
+   	//if(!subscriber.connect()) return false;
 	
 	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
       	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());

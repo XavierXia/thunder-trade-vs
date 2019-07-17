@@ -14,9 +14,9 @@ MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
 	if(!publisher.connect())
-		throw std::runtime_error("Can not connect redis,publisher!!!");
+		throw std::runtime_error("...CKrQuantMDPluginImp,Can not connect redis,publisher!!!");
 	if(!subscriber.connect())
-		throw std::runtime_error("Can not connect redis,subscriber!!!");
+		throw std::runtime_error("...CKrQuantMDPluginImp,Can not connect redis,subscriber!!!");
 }
 
 CKrQuantMDPluginImp::~CKrQuantMDPluginImp()
