@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 "__collectedTime":1563258905.839050,"__processedTime":1563258905.839084,"__pushingTime":1563258905.839124}}
 */
   subscriber.subscribe("mds_data", [&cnt,&publisher](const string& topic, const string& msg) {
-      cout << "...client...subscribe,topic:" << topic << ",msg: " << msg << endl;
+      cout << "...client,mds_data...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
       string str;
 
@@ -62,16 +62,28 @@ int main(int argc, char *argv[]) {
       if(mktD != c_Config.not_found())
       {
         auto securityIDNode = mktD->second.find("SecurityID");
+        if(securityIDNode == mktD->second.not_found())
+        {
+          return 0;
+        } 
         securityID = securityIDNode->second.data();
 
         auto tradeBSFlagNode = mktD->second.find("TradeBSFlag");
         tradeBSFlag = tradeBSFlagNode->second.data(); 
 
         auto tradePriceNode = mktD->second.find("TradePrice");
+        if(tradePriceNode == mktD->second.not_found())
+        {
+          return 0;
+        } 
         tradePrice = tradePriceNode->second.data();
 
         auto tradeQtyNode = mktD->second.find("TradeQty");
         tradeQty = tradeQtyNode->second.data();            
+      }
+      else
+      {
+        return 0;
       }
 
       // if(cnt >= 20 && cnt < 79) //查询持仓实例
@@ -196,6 +208,13 @@ int main(int argc, char *argv[]) {
       {
           cnt++; 
       }
+  });
+
+  subscriber.subscribe("oes_resp", [&cnt,&publisher](const string& topic, const string& msg) {
+      cout << "...client,oes_resp...subscribe,topic:" << topic << ",msg: " << msg << endl;
+      cout << "...cnt: " << cnt << endl;
+
+
   });
 
 
