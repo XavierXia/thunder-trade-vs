@@ -130,9 +130,8 @@ int main(int argc, char *argv[]) {
                   "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}",
                   securityID.c_str(),tradePrice.c_str());
               }
-              string sendStr(sendJsonDataStr);
               cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", sendStr);
+              publisher.publish("order2server", sendJsonDataStr);
               break;
             }
             // case 90: //* 以 市价 卖出  601881 100股 */
