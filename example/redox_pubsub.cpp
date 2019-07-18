@@ -74,48 +74,60 @@ int main(int argc, char *argv[]) {
         tradeQty = tradeQtyNode->second.data();            
       }
 
-      if(cnt >= 20 && cnt < 41) //查询持仓实例
+      if(cnt >= 20 && cnt < 79) //查询持仓实例
       {
-          // switch(cnt)
-          // {
-          //   case 20: //查询 客户端总览信息
-          //   {
-          //     str = "{\"type\":\"query\",\"category\":\"clientOverview\",\"code\":\"\",\"sclb\":\"\"}";
-          //     cout << "...query...cnt: " << cnt << endl;
-          //     publisher.publish("order2server", str);
-          //     break;
-          //   }
-          //   case 25: //查询 所有关联资金账户的资金信息
-          //   {
-          //     str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
-          //     cout << "...query...cnt: " << cnt << endl;
-          //     publisher.publish("order2server", str);
-          //     break;
-          //   }
-          //   case 30: //查询 指定上证 600000 的产品信息
-          //   {
-          //     str = "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"600000\",\"sclb\":\"2\"}";
-          //     cout << "...query...cnt: " << cnt << endl;
-          //     publisher.publish("order2server", str);
-          //     break;
-          //   }
-          //   case 35: //查询 上证 600000 股票的持仓
-          //   {
-          //     str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"600000\",\"sclb\":\"2\"}";
-          //     cout << "...query...cnt: " << cnt << endl;
-          //     publisher.publish("order2server", str);
-          //     break;
-          //   }
-          //   case 40: //查询 沪深两市 所有股票持仓
-          //   {
-          //     str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"\",\"sclb\":\"\"}";
-          //     cout << "...query...cnt: " << cnt << endl;
-          //     publisher.publish("order2server", str);
-          //     break;
-          //   }
-          //   default:
-          //     break;
-          // }
+        switch(cnt)
+        {
+          case 20: //查询 客户端总览信息
+          {
+            str = "{\"type\":\"query\",\"category\":\"clientOverview\",\"code\":\"\",\"sclb\":\"\"}";
+            cout << "...query...cnt: " << cnt << endl;
+            publisher.publish("order2server", str);
+            break;
+          }
+          case 35: //查询 所有关联资金账户的资金信息
+          {
+            str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
+            cout << "...query...cnt: " << cnt << endl;
+            publisher.publish("order2server", str);
+            break;
+          }
+          case 50: //查询 指定上证 601881 的产品信息
+          {
+            if(securityID == "601881")
+            {
+              sprintf(sendJsonDataStr, 
+                "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"2\"}",
+                securityID.c_str());
+            }
+            cout << "...query...cnt: " << cnt << endl;
+            publisher.publish("order2server", sendJsonDataStr);
+
+            break;
+          }
+          case 65: //查询 上证 601881 股票的持仓
+          {
+            if(securityID == "601881")
+            {
+              sprintf(sendJsonDataStr, 
+                "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"2\"}",
+                securityID.c_str());
+            }
+            cout << "...query...cnt: " << cnt << endl;
+            publisher.publish("order2server", sendJsonDataStr);
+
+            break;
+          }
+          case 78: //查询 沪深两市 所有股票持仓
+          {
+            str = "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"\",\"sclb\":\"\"}";
+            cout << "...query...cnt: " << cnt << endl;
+            publisher.publish("order2server", str);
+            break;
+          }
+          default:
+            break;
+        }
       }
 
       if(cnt >= 80 && cnt < 121)
