@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
   subscriber.subscribe("mds_data", [&cnt,&publisher](const string& topic, const string& msg) {
       cout << "...client...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
-      string str;
+      char str[200];
 
       ptree c_Config;
       std::stringstream jmsg(msg.c_str());  
