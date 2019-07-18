@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
   subscriber.subscribe("mds_data", [&cnt,&publisher](const string& topic, const string& msg) {
       cout << "...client...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
-      char str[200];
+      string str;
 
       ptree c_Config;
       std::stringstream jmsg(msg.c_str());  
@@ -126,8 +126,9 @@ int main(int argc, char *argv[]) {
             {
               if(securityID == "601881")
               {
-                str = "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}";
-                sprintf(sendJsonDataStr, str,securityID.c_str(),tradePrice.c_str());
+                sprintf(sendJsonDataStr, 
+                  "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}",
+                  ecurityID.c_str(),tradePrice.c_str());
               }
               string sendStr(sendJsonDataStr);
               cout << "...query...cnt: " << cnt << endl;
