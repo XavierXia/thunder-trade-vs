@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
               if(securityID == "601881")
               {
                 sprintf(sendJsonDataStr, 
-                  "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}",
+                  "{\"type\":\"buy\",\"code\":\"%s\",\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}",
                   securityID.c_str(),tradePrice.c_str());
               }
               cout << "...query...cnt: " << cnt << endl;
