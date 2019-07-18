@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
       string tradeBSFlag;
       string tradePrice;
       string tradeQty;
-      char sendJsonDataStr[4096];
+      char sendJsonDataStr[400];
 
       auto mktD = c_Config.find("mktData");
       if(mktD != c_Config.not_found())
@@ -134,27 +134,43 @@ int main(int argc, char *argv[]) {
               publisher.publish("order2server", sendJsonDataStr);
               break;
             }
-            // case 90: //* 以 市价 卖出  601881 100股 */
-            // {
-            //   str = "{\"type\":\"sell\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
-            //   cout << "...query...cnt: " << cnt << endl;
-            //   publisher.publish("order2server", str);
-            //   break;
-            // }
-            // case 100: ///* 以 12.67元 购买 平安银行(000001) 200股 */
-            // {
-            //   str = "{\"type\":\"buy\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"0\",\"amount\":\"200\",\"price\":\"126700\"}";
-            //   cout << "...query...cnt: " << cnt << endl;
-            //   publisher.publish("order2server", str);
-            //   break;
-            // }
-            // case 110: ///* 以 市价 卖出 平安银行(000001) 100股 */
-            // {
-            //   str = "{\"type\":\"sell\",\"code\":\"000001\",\"sclb\":\"2\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}";
-            //   cout << "...query...cnt: " << cnt << endl;
-            //   publisher.publish("order2server", str);
-            //   break;
-            // }
+            case 90: //* 以 市价 卖出  601881 100股 */
+            {
+              if(securityID == "601881")
+              {
+                sprintf(sendJsonDataStr, 
+                  "{\"type\":\"sell\",\"code\":\"%s\",\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"0\"}",
+                  securityID.c_str());
+              }
+              cout << "...query...cnt: " << cnt << endl;
+              publisher.publish("order2server", sendJsonDataStr);
+              break;
+            }
+            case 100: ///* 以 12.67元 购买 平安银行(000001) 200股 */
+            {
+              if(securityID == "000001")
+              {
+                sprintf(sendJsonDataStr, 
+                  "{\"type\":\"buy\",\"code\":\"%s\",\"sclb\":\"2\",\"wtfs\":\"0\",\"amount\":\"200\",\"price\":\"%s\"}",
+                  securityID.c_str(),tradePrice.c_str());
+              }
+              cout << "...query...cnt: " << cnt << endl;
+              publisher.publish("order2server", sendJsonDataStr);
+              break;
+            }
+            case 110: ///* 以 市价 卖出 平安银行(000001) 100股 */
+            {
+              if(securityID == "000001")
+              {
+                sprintf(sendJsonDataStr, 
+                  "{\"type\":\"sell\",\"code\":\"%s\",\"sclb\":\"2\",\"wtfs\":\"1\",\"amount\":\"100\",\"price\":\"0\"}",
+                  securityID.c_str());
+              }
+              cout << "...query...cnt: " << cnt << endl;
+              publisher.publish("order2server", sendJsonDataStr);
+
+              break;
+            }
             default:
               break;
           }
