@@ -62,16 +62,16 @@ int main(int argc, char *argv[]) {
       if(mktD != c_Config.not_found())
       {
         auto securityIDNode = mktD->second.find("SecurityID");
-        securityID = securityIDNode->secode.data();
+        securityID = securityIDNode->second.data();
 
         auto tradeBSFlagNode = mktD->second.find("TradeBSFlag");
-        tradeBSFlag = tradeBSFlagNode->secode.data(); 
+        tradeBSFlag = tradeBSFlagNode->second.data(); 
 
         auto tradePriceNode = mktD->second.find("TradePrice");
-        tradePrice = tradePriceNode->secode.data();
+        tradePrice = tradePriceNode->second.data();
 
         auto tradeQtyNode = mktD->second.find("TradeQty");
-        tradeQty = tradeQtyNode->secode.data();            
+        tradeQty = tradeQtyNode->second.data();            
       }
 
       if(cnt >= 20 && cnt < 41) //查询持仓实例
