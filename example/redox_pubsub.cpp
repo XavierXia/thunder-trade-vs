@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
  
       string securityID;
       string tradeBSFlag;
-      int tradePrice;
-      int tradeQty;
+      string tradePrice;
+      string tradeQty;
       char sendJsonDataStr[4096];
 
       auto mktD = c_Config.find("mktData");
@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
             {
               if(securityID == "601881")
               {
-                str = "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%d\"}";
-                sprintf(sendJsonDataStr, str,securityID.c_str(),tradePrice+1000);
+                str = "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%s\"}";
+                sprintf(sendJsonDataStr, str,securityID.c_str(),tradePrice.c_str());
               }
               string sendStr(sendJsonDataStr);
               cout << "...query...cnt: " << cnt << endl;
