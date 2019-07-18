@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <iostream>
 #include "redox.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp> 
 
 using namespace std;
-
+using namespace boost::property_tree;
 
 /*
 说明：本demo主要作用是 说明Zpquant与三方策略通信的数据格式实现细节
@@ -33,6 +35,44 @@ int main(int argc, char *argv[]) {
       cout << "...client...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
       string str;
+
+      ptree c_Config;
+      std::stringstream jmsg(msg.c_str());  
+      try {
+          boost::property_tree::read_json(jmsg, c_Config);
+      }
+      catch(std::exception & e){
+          fprintf(stdout, "...client,cannot parse from string 'msg' \n");
+          return 0;
+      }
+
+      auto msgType = c_Config.find("msgType");
+      if(msgType != c_Config.not_found())
+      {
+        string msgT = msgType->second.data();
+      }
+ 
+      string securityID;
+      string tradeBSFlag;
+      int tradePrice;
+      int tradeQty;
+      char sendJsonDataStr[4096];
+
+      auto mktD = c_Config.find("mktData");
+      if(mktD != c_Config.not_found())
+      {
+        auto securityIDNode = mktD->second.find("SecurityID");
+        securityID = securityIDNode->secode.data();
+
+        auto tradeBSFlagNode = mktD->second.find("TradeBSFlag");
+        tradeBSFlag = tradeBSFlagNode->secode.data(); 
+
+        auto tradePriceNode = mktD->second.find("TradePrice");
+        tradePrice = tradePriceNode->secode.data();
+
+        auto tradeQtyNode = mktD->second.find("TradeQty");
+        tradeQty = tradeQtyNode->secode.data();            
+      }
 
       if(cnt >= 20 && cnt < 41) //查询持仓实例
       {
@@ -84,9 +124,14 @@ int main(int argc, char *argv[]) {
           {
             case 80: //* 以 12.67元 购买 601881 200股 */
             {
-              str = "{\"type\":\"buy\",\"code\":\"601881\",\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"126700\"}";
+              if(securityID == "601881")
+              {
+                str = "{\"type\":\"buy\",\"code\":%s,\"sclb\":\"1\",\"wtfs\":\"0\",\"amount\":\"100\",\"price\":\"%d\"}";
+                sprintf(sendJsonDataStr, str,securityID.c_str(),tradePrice+1000);
+              }
+              string sendStr(sendJsonDataStr);
               cout << "...query...cnt: " << cnt << endl;
-              publisher.publish("order2server", str);
+              publisher.publish("order2server", sendStr);
               break;
             }
             // case 90: //* 以 市价 卖出  601881 100股 */
