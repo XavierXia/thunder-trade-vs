@@ -10,14 +10,8 @@ namespace Zpquant {
 
 
 CZpquantTradeApi::CZpquantTradeApi() {
-    isCfg = FALSE;
-    isRunning = FALSE;
-    terminatedFlag = 0;
-
     pSpi = NULL;
-
-    memset(&apiCfg, 0, sizeof(OesApiClientCfgT));
-    memset(&apiEnv, 0, sizeof(OesApiClientEnvT));
+    memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
 
@@ -52,11 +46,12 @@ CZpquantTradeApi::Start() {
     if(!publisher.connect()) return false;
 
     //执行报告消息进行接收和处理
-    subscriber.subscribe("oes_resp", [&this](const string& topic, const string& msg) {
+    subscriber.subscribe("oes_resp", [this](const string& topic, const string& msg) {
       cout << "...client,oes_resp...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
 
     });
+    return true;
 }
 
 void
@@ -75,70 +70,70 @@ CZpquantTradeApi::Stop() {
  *
  * @return  大于等于0，成功；小于0，失败（错误号）
  */
-int32
-CZpquantTradeApi::HandleReportMsg(OesApiSessionInfoT *pRptChannel,
-        SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
-    OesClientSpi        *pSpi = (OesClientSpi *) pCallbackParams;
-    OesRspMsgBodyT      *pRspMsg = (OesRspMsgBodyT *) pMsgBody;
-    OesRptMsgT          *pRptMsg = &pRspMsg->rptMsg;
+// int32
+// CZpquantTradeApi::HandleReportMsg(OesApiSessionInfoT *pRptChannel,
+//         SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
+//     OesClientSpi        *pSpi = (OesClientSpi *) pCallbackParams;
+//     OesRspMsgBodyT      *pRspMsg = (OesRspMsgBodyT *) pMsgBody;
+//     OesRptMsgT          *pRptMsg = &pRspMsg->rptMsg;
 
-    assert(pRptChannel && pMsgHead && pRspMsg);
+//     assert(pRptChannel && pMsgHead && pRspMsg);
 
-    switch (pMsgHead->msgId) {
-    case OESMSG_RPT_ORDER_INSERT:               /* OES委托已生成 (已通过风控检查) */
-        pSpi->OnOrderInsert(&pRptMsg->rptBody.ordInsertRsp);
-        break;
+//     switch (pMsgHead->msgId) {
+//     case OESMSG_RPT_ORDER_INSERT:               /* OES委托已生成 (已通过风控检查) */
+//         pSpi->OnOrderInsert(&pRptMsg->rptBody.ordInsertRsp);
+//         break;
 
-    case OESMSG_RPT_BUSINESS_REJECT:            /* OES业务拒绝 (未通过风控检查等) */
-        pSpi->OnBusinessReject(pRptMsg->rptHead.ordRejReason,
-                &pRptMsg->rptBody.ordRejectRsp);
-        break;
+//     case OESMSG_RPT_BUSINESS_REJECT:            /* OES业务拒绝 (未通过风控检查等) */
+//         pSpi->OnBusinessReject(pRptMsg->rptHead.ordRejReason,
+//                 &pRptMsg->rptBody.ordRejectRsp);
+//         break;
 
-    case OESMSG_RPT_ORDER_REPORT:               /* 交易所委托回报 (包括交易所委托拒绝、委托确认和撤单完成通知) */
-        pSpi->OnOrderReport(pRptMsg->rptHead.ordRejReason,
-                &pRptMsg->rptBody.ordCnfm);
-        break;
+//     case OESMSG_RPT_ORDER_REPORT:               /* 交易所委托回报 (包括交易所委托拒绝、委托确认和撤单完成通知) */
+//         pSpi->OnOrderReport(pRptMsg->rptHead.ordRejReason,
+//                 &pRptMsg->rptBody.ordCnfm);
+//         break;
 
-    case OESMSG_RPT_TRADE_REPORT:               /* 交易所成交回报 */
-        pSpi->OnTradeReport(&pRptMsg->rptBody.trdCnfm);
-        break;
+//     case OESMSG_RPT_TRADE_REPORT:               /* 交易所成交回报 */
+//         pSpi->OnTradeReport(&pRptMsg->rptBody.trdCnfm);
+//         break;
 
-    case OESMSG_RPT_CASH_ASSET_VARIATION:       /* 资金变动信息 */
-        pSpi->OnCashAssetVariation(&pRptMsg->rptBody.cashAssetRpt);
-        break;
+//     case OESMSG_RPT_CASH_ASSET_VARIATION:       /* 资金变动信息 */
+//         pSpi->OnCashAssetVariation(&pRptMsg->rptBody.cashAssetRpt);
+//         break;
 
-    case OESMSG_RPT_STOCK_HOLDING_VARIATION:    /* 持仓变动信息 (股票) */
-        pSpi->OnStockHoldingVariation(&pRptMsg->rptBody.stkHoldingRpt);
-        break;
+//     case OESMSG_RPT_STOCK_HOLDING_VARIATION:    /* 持仓变动信息 (股票) */
+//         pSpi->OnStockHoldingVariation(&pRptMsg->rptBody.stkHoldingRpt);
+//         break;
 
-    case OESMSG_RPT_FUND_TRSF_REJECT:           /* 出入金委托响应-业务拒绝 */
-        pSpi->OnFundTrsfReject(pRptMsg->rptHead.ordRejReason,
-                &pRptMsg->rptBody.fundTrsfRejectRsp);
-        break;
+//     case OESMSG_RPT_FUND_TRSF_REJECT:           /* 出入金委托响应-业务拒绝 */
+//         pSpi->OnFundTrsfReject(pRptMsg->rptHead.ordRejReason,
+//                 &pRptMsg->rptBody.fundTrsfRejectRsp);
+//         break;
 
-    case OESMSG_RPT_FUND_TRSF_REPORT:           /* 出入金委托执行报告 */
-        pSpi->OnFundTrsfReport(pRptMsg->rptHead.ordRejReason,
-                &pRptMsg->rptBody.fundTrsfCnfm);
-        break;
+//     case OESMSG_RPT_FUND_TRSF_REPORT:           /* 出入金委托执行报告 */
+//         pSpi->OnFundTrsfReport(pRptMsg->rptHead.ordRejReason,
+//                 &pRptMsg->rptBody.fundTrsfCnfm);
+//         break;
 
-    case OESMSG_RPT_MARKET_STATE:               /* 市场状态信息 */
-        pSpi->OnMarketState(&pRspMsg->mktStateRpt);
-        break;
+//     case OESMSG_RPT_MARKET_STATE:               /* 市场状态信息 */
+//         pSpi->OnMarketState(&pRspMsg->mktStateRpt);
+//         break;
 
-    case OESMSG_RPT_REPORT_SYNCHRONIZATION: /* 回报同步响应 */
-        break;
+//     case OESMSG_RPT_REPORT_SYNCHRONIZATION: /* 回报同步响应 */
+//         break;
 
-    case OESMSG_SESS_HEARTBEAT:
-        break;
+//     case OESMSG_SESS_HEARTBEAT:
+//         break;
 
-    default:
-        fprintf(stderr, "收到未定义处理方式的回报消息! msgId[0x%02X]\n",
-                pMsgHead->msgId);
-        break;
-    }
+//     default:
+//         fprintf(stderr, "收到未定义处理方式的回报消息! msgId[0x%02X]\n",
+//                 pMsgHead->msgId);
+//         break;
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 /**
  * 发送委托申报请求
