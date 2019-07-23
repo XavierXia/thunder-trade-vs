@@ -93,6 +93,31 @@ struct ZpquantUserLoginField
 	CZpquantUserPassword UserPassword;
 };
 
+typedef enum _zpquantInvestorClass {
+    INVESTOR_CLASS_NORMAL               = 0,        /**< 普通投资者 */
+    INVESTOR_CLASS_PROFESSIONAL_A       = 1,        /**< A类专业投资者 */
+    INVESTOR_CLASS_PROFESSIONAL_B       = 2,        /**< B类专业投资者 */
+    INVESTOR_CLASS_PROFESSIONAL_C       = 3         /**< C类专业投资者 */
+} ZpquantInvestorClassT;
+
+/**
+ * 出入金方向定义
+ */
+typedef enum _zpquantFundTrsfDirect {
+    FUND_TRSF_DIRECT_IN                 = 0,        /**< 转入 (入金) */
+    FUND_TRSF_DIRECT_OUT                = 1         /**< 转出 (出金) */
+} ZpquantFundTrsfDirectT;
+
+/**
+ * OES 竞价时段定义
+ */
+typedef enum _zpquantTrdSessType {
+    TRD_SESS_TYPE_O                     = 0,        /**< 开盘集合竞价时段 */
+    TRD_SESS_TYPE_T                     = 1,        /**< 连续竞价时段 */
+    TRD_SESS_TYPE_C                     = 2,        /**< 收盘集合竞价 */
+    __TRD_SESS_TYPE_MAX                             /**< 时段类型最大值 (时段类型数量) */
+} pquantTrdSessTypeT;
+
 /**
  * 发送委托请求
  *
@@ -790,7 +815,6 @@ typedef struct _ZpquantPriceLimit {
 struct ZpquantStockBaseInfo {
     __ZPQUANT_STOCK_BASE_INFO_PKT;
 };
-
 
 
 /**

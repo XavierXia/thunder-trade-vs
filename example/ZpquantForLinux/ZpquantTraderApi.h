@@ -87,7 +87,6 @@ public:
     int32               SendCancelOrder(const ZpquantOrdCancelReqT *pCancelReq);
     /* 发送出入金请求，非线程安全实现 */
     int32               SendFundTrsf(const ZpquantOrdCancelReqT *pFundTrsfReq);
-    const char          *GetVersion(void);
     /* 获取交易日期 */
     int32               GetTradingDay(void);
     /* 获取客户端总览信息 */

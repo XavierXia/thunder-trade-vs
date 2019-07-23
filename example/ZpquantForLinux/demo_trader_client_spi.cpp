@@ -427,7 +427,7 @@ demoTraderClientSpi::OnQueryCustInfo(const ZpquantCustItemT *pCust,
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pCust->custId, pCust->custType, pCust->status,
             pCust->riskLevel, pCust->institutionFlag,
-            pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
+            pCust->investorClass == INVESTOR_CLASS_NORMAL ?
                     '0' : pCust->investorClass + 'A' - 1);
 
       fprintf(stdout, sendJsonDataStr);
@@ -464,7 +464,7 @@ demoTraderClientSpi::OnQueryFundTransferSerial(
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pFundTrsf->clEnvId, pFundTrsf->clSeqNo,
             pFundTrsf->cashAcctId,
-            pFundTrsf->direct == OES_FUND_TRSF_DIRECT_IN ? "Bank->Broker" : "Broker->Bank",
+            pFundTrsf->direct == FUND_TRSF_DIRECT_IN ? "Bank->Broker" : "Broker->Bank",
             pFundTrsf->occurAmt, pFundTrsf->trsfStatus, pFundTrsf->rejReason,
             pFundTrsf->counterErrCode, pFundTrsf->errorInfo,
             pFundTrsf->counterEntrustNo, pFundTrsf->operDate,
@@ -495,8 +495,8 @@ demoTraderClientSpi::OnQueryStock(const ZpquantStockBaseInfo *pStock,
             pStock->qualificationClass, pStock->isDayTrading,
             pStock->priceUnit, pStock->buyQtyUnit, pStock->sellQtyUnit,
             pStock->prevClose, pStock->bondInterest,
-            pStock->priceLimit[OES_TRD_SESS_TYPE_T].ceilPrice,
-            pStock->priceLimit[OES_TRD_SESS_TYPE_T].floorPrice);
+            pStock->priceLimit[TRD_SESS_TYPE_T].ceilPrice,
+            pStock->priceLimit[TRD_SESS_TYPE_T].floorPrice);
 
       fprintf(stdout, sendJsonDataStr);
 }
