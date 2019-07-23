@@ -6,7 +6,7 @@ OBJS := $(patsubst %cpp,%o,$(SRCS))
 
 INC_DIR   =  ../redox_reader
 
-CC_CFLAGS = -g -Wall
+CC_CFLAGS = -g -Wall -std=c++11 -fno-strict-aliasing
 CC_LFLAGS = -lm -lredox -lev -lhiredis
 
 all : $(TARGET) cleanObjs
