@@ -709,6 +709,16 @@ struct ZpquantInvAcctItem {
 };
 
 /**
+ * 竞价的限价参数配置
+ */
+typedef struct _ZpquantPriceLimit {
+    /** 上涨限价, 单位精确到元后四位, 即1元 = 10000 */
+    int32               ceilPrice;
+    /** 下跌限价, 单位精确到元后四位, 即1元 = 10000 */
+    int32               floorPrice;
+} ZpquantPriceLimitT;
+
+/**
  * 现货产品基础信息的内容定义
  */
 #define __ZPQUANT_STOCK_BASE_INFO_PKT                       \
@@ -767,7 +777,7 @@ struct ZpquantInvAcctItem {
         int32               cashHoldDays; \
         \
         /** 竞价限价参数表, 数组下标为当前时段标志 @see eOesTrdSessTypeT */ \
-        OesPriceLimitT      priceLimit[3]; \
+        ZpquantPriceLimitT      priceLimit[3]; \
         \
         /** 产品名称 */ \
         char                securityName[24]; \

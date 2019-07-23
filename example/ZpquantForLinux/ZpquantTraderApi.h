@@ -114,8 +114,6 @@ private:
     CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
 
 public:
-    OesApiClientCfgT    apiCfg;
-    OesApiClientEnvT    apiEnv;
     char sendJsonDataStr[4096];
 
 private:

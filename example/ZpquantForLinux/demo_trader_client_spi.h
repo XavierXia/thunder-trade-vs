@@ -51,6 +51,7 @@ public:
 
 private:
     int32               something;
+    char sendJsonDataStr[4096];
 };
 
 

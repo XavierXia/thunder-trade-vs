@@ -19,6 +19,9 @@ typedef unsigned short              uint16;
 typedef int                         int32;
 typedef unsigned int                uint32;
 
+typedef long           				int64;
+typedef unsigned long   			uint64;
+
 /** 密码最大长度 */
 #define ZP_PWD_MAX_LEN                     (40)
 /** 资金账户代码最大长度 */
