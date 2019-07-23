@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 "__origTickSeq":87804806,"__channelNo":4,"__origNetTime":131512288,"__recvTime":1563258905.839050,
 "__collectedTime":1563258905.839050,"__processedTime":1563258905.839084,"__pushingTime":1563258905.839124}}
 */
-  subscriber.subscribe("mds_data", [&cnt,&publisher](const string& topic, const string& msg) {
+  subscriber.subscribe("mds_data_onTrade", [&cnt,&publisher](const string& topic, const string& msg) {
       cout << "...client,mds_data...subscribe,topic:" << topic << ",msg: " << msg << endl;
       cout << "...cnt: " << cnt << endl;
       string str;

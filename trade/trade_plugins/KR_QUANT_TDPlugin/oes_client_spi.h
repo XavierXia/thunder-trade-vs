@@ -3,6 +3,7 @@
 
 
 #include "oes_client_api.h"
+#include "redox.hpp"
 
 
 class   OesClientMySpi: public Quant360::OesClientSpi {
@@ -58,10 +59,12 @@ public:
 public:
     OesClientMySpi(int32 something = 0);
     virtual ~OesClientMySpi();
+    redox::Redox publisher;
 
 private:
     int32               something;
-    char sendJsonDataStr[4086];
+    char sendJsonDataStr[4096];
+    char sendRespData2client[4096];
 };
 
 
