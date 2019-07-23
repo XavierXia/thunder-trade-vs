@@ -4,10 +4,10 @@ TARGET := zpquant_client_main_demo
 SRCS := $(wildcard *.cpp)  
 OBJS := $(patsubst %cpp,%o,$(SRCS))
 
-INC_DIR   =  ./
+INC_DIR   =  ../redox_reader
 
 CC_CFLAGS = -g -Wall
-CC_LFLAGS = -lm
+CC_LFLAGS = -lm -lredox -lev -lhiredis
 
 all : $(TARGET) cleanObjs
 

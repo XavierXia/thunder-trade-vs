@@ -14,6 +14,8 @@
 
 #include "ZpquantUserApiStruct.h"
 
+using namespace std;
+
 namespace   Zpquant {
 
 class   CZpquantTradeSpi {
