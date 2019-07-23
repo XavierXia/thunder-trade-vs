@@ -24,7 +24,7 @@ CZpquantTradeApi::CZpquantTradeApi() {
 CZpquantTradeApi::~CZpquantTradeApi() {
     /* Do nothing */
 }
-
+s
 
 /**
  * 注册spi回调接口
@@ -215,7 +215,6 @@ CZpquantTradeApi::GetTradingDay(void) {
 int32
 CZpquantTradeApi::QueryCashAsset(int32 requestId = 0)
 {
-
     string str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
     cout << "...QueryCashAsset...str: " << str << endl;
     publisher.publish("order2server", str);
