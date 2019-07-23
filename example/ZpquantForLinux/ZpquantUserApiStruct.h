@@ -319,7 +319,7 @@ struct ZpquantTrdCnfm {
         /** PBU代码 (席位号) */ 
         int32           pbuId; 
         /** 营业部代码 */ 
-        int32           branchId
+        int32           branchId;
         /** 客户委托流水号 */ 
         int32           clSeqNo; 
         /** 客户端编号 */ 
@@ -812,6 +812,6 @@ typedef ZpquantFundTrsfReport      ZpquantFundTransferSerialItemT;
 /**
  * 现货产品信息内容
  */
-typedef OesStockBaseInfoT       OesStockItemT;
+typedef ZpquantStockBaseInfo      OesStockItemT;
 
-
+#endif

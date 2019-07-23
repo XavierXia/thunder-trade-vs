@@ -40,3 +40,6 @@ typedef char CZpquantSourceType[20];
 typedef char CZpquantUserIDType[20];
 //登录密码
 typedef char CZpquantUserPassword[20];
+
+#endif
+

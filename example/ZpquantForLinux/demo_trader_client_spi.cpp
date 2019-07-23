@@ -1,5 +1,11 @@
 #include    <iostream>
 #include    "demo_trader_client_spi.h"
+#include    <stdio.h>
+#include    <string.h>
+
+#define  __SPK_FMT_LL__                  "I64"
+#define  __SPK_FMT_HH__                  ""
+#define  __SPK_FMT_SHORT__               ""
 
 
 /* 委托业务拒绝回报 */

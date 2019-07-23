@@ -78,7 +78,7 @@ public:
     //初始化交易源
     void                InitTraderSource(ZpquantUserLoginField* userLogin);
     /* 启动连通数据通道 */
-    BOOL                Start();
+    bool                Start();
     /* 停止连通数据通道 */
     void                Stop();
     /* 发送交易委托请求，非线程安全实现 */
@@ -117,8 +117,8 @@ public:
     char sendJsonDataStr[4096];
 
 private:
-    BOOL                isCfg;
-    BOOL                isRunning;
+    bool                isCfg;
+    bool                isRunning;
     volatile int32      terminatedFlag;
 
     CZpquantTradeSpi        *pSpi;
