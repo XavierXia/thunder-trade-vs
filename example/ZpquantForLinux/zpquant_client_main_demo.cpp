@@ -66,7 +66,7 @@ main(void) {
     ZpquantQryTrd zQryTrd;
     zQryTrd.code = "601881";
     zQryTrd.sclb = 1;
-    pZpquantTradeApi->QueryStkHolding(zQryTrd,0);
+    pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
 
 
     /* 等待回报消息接收完成 */
