@@ -239,7 +239,7 @@ CZpquantTradeApi::QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId)
  * 查询现货产品信息
  */
 int32
-CZpquantTradeApi:: QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId) 
+CZpquantTradeApi::QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId) 
 {
     sprintf(sendJsonDataStr, 
           "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);

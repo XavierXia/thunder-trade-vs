@@ -30,13 +30,7 @@ main(void) {
 
     /* 注册spi回调接口 */
     pZpquantTradeApi->RegisterSpi(pZpquantTradeSpi);
-
-    /* 加载配置文件 */
-    if (! pZpquantTradeApi->LoadCfg(THE_CONFIG_FILE_NAME)) {
-        fprintf(stderr, "加载配置文件失败!\n");
-        return EINVAL;
-    }
-
+    
     /*
      * 设置登录OES时使用的用户名和密码
      * @note 如通过API接口设置，则可以不在配置文件中配置;
