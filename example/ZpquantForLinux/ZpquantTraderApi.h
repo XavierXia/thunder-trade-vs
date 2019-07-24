@@ -113,9 +113,8 @@ private:
     CZpquantTradeApi(const CZpquantTradeApi&);
     /* 禁止赋值函数 */
     CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
+    char sendJsonDataStr[4096];
 
-public:
-    char* sendJsonDataStr;
 
 private:
     bool                isCfg;

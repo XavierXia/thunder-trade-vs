@@ -48,7 +48,7 @@ public:
 public:
     demoTraderClientSpi(int32 something = 0);
     virtual ~demoTraderClientSpi();
-    char* sendJsonDataStr;
+    char sendJsonDataStr[4096];
 
 private:
     int32               something;

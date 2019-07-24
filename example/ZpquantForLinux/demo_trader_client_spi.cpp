@@ -7,8 +7,6 @@
 #define  __SPK_FMT_HH__                  ""
 #define  __SPK_FMT_SHORT__               ""
 
-char sendJsonDataStr[4096];
-
 /* 委托业务拒绝回报 */
 void
 demoTraderClientSpi::OnBusinessReject(int32 errorCode, const ZpquantOrdReject *pOrderReject) {
