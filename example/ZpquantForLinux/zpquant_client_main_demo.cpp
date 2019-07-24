@@ -1,6 +1,7 @@
 #include    <iostream>
 #include    "ZpquantTraderApi.h"
 #include    "demo_trader_client_spi.h"
+#include    <unistd.h>
 
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/oes_client.conf";
 
@@ -69,7 +70,10 @@ main(void) {
 
 
     /* 等待回报消息接收完成 */
-    sleep(10);
+    while(1)
+    {
+        sleep(100);
+    }
 
     /* 停止 */
     pZpquantTradeApi->Stop();
