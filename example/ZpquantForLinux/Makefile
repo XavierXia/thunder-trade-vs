@@ -13,7 +13,7 @@ CC_LFLAGS = -std=c++11 -lredox -lev -lhiredis
 all : $(TARGET) cleanObjs
 
 $(TARGET) : $(OBJS)
-	g++ -L$(LIB_DIR) -o $(TARGET) $(OBJS) $(CC_LFLAGS)
+	g++ -o $(TARGET) $(OBJS) $(CC_LFLAGS)
 
 %.o : %.cpp
 	g++ $(CC_CFLAGS) -I$(INC_DIR) -I$(INC_DIR1) -o $@ -c $< 
