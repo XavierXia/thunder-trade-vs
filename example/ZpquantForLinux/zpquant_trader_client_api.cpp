@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include "ZpquantTraderApi.h"
 #include "redox.hpp"
 
@@ -18,7 +19,6 @@ CZpquantTradeApi::CZpquantTradeApi() {
 CZpquantTradeApi::~CZpquantTradeApi() {
     /* Do nothing */
 }
-s
 
 /**
  * 注册spi回调接口
@@ -29,18 +29,18 @@ s
  * @retval  FALSE: 设置失败
  */
 void
-CZpquantTradeApi::RegisterSpi(OesClientSpi *pSpi) {
+CZpquantTradeApi::RegisterSpi(CZpquantTradeSpi *pSpi) {
     this->pSpi = pSpi;
 }
 
 //初始化交易源
 void
-CZpquantTradeApi::InitTraderSource(CZpquantUserLoginField* userLogin) {
+CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
     
 }
 
 //采集报单回调数据
-BOOL
+bool
 CZpquantTradeApi::Start() {
     if(!subscriber.connect()) return false;
     if(!publisher.connect()) return false;
@@ -142,10 +142,10 @@ int32
 CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq) 
 {
     string buyorsell;
-    if(pOrderReq.bsType == 1) //买入
+    if(pOrderReq->bsType == 1) //买入
     {
         buyorsell = "buy";
-    }else if(pOrderReq.bsType == 2){ //卖出
+    }else if(pOrderReq->bsType == 2){ //卖出
         buyorsell = "sell";
     }else{ //其他
         buyorsell = "other";
@@ -153,7 +153,7 @@ CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq)
 
     sprintf(sendJsonDataStr, 
           "{\"type\":\"%s\",\"code\":\"%s\",\"sclb\":\"%d\",\"wtfs\":\"%d\",\"amount\":\"%d\",\"price\":\"%d\"}",
-          buyorsell.c_str(),pOrderReq.pSecurityId,pOrderReq.mktId,pOrderReq.ordType,pOrderReq.ordQty,pOrderReq.ordPrice);
+          buyorsell.c_str(),pOrderReq->pSecurityId,pOrderReq->mktId,pOrderReq->ordType,pOrderReq->ordQty,pOrderReq->ordPrice);
     cout << "...SendOrder...sendJsonDataStr: " << sendJsonDataStr << endl;
     publisher.publish("order2server", sendJsonDataStr);
 
@@ -208,7 +208,7 @@ CZpquantTradeApi::GetTradingDay(void) {
  * 查询客户资金信息
  */
 int32
-CZpquantTradeApi::QueryCashAsset(int32 requestId = 0)
+CZpquantTradeApi::QueryCashAsset(int32 requestId)
 {
     string str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
     cout << "...QueryCashAsset...str: " << str << endl;
@@ -218,10 +218,10 @@ CZpquantTradeApi::QueryCashAsset(int32 requestId = 0)
 
 //查询 上证或深圳 股票的持仓
 int32
-CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId = 0) 
+CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId) 
 {
     sprintf(sendJsonDataStr, 
-          "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter.code,pQryFilter.sclb);
+          "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkHolding...sendJsonDataStr: " << sendJsonDataStr << endl;
     publisher.publish("order2server", sendJsonDataStr);
     return 0;
@@ -239,10 +239,10 @@ CZpquantTradeApi::QueryInvAcct(const ZpquantInvAcctItem *pInvAcct, const Zpquant
  * 查询现货产品信息
  */
 int32
-CZpquantTradeApi:: QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId = 0) 
+CZpquantTradeApi:: QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId) 
 {
     sprintf(sendJsonDataStr, 
-          "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter.code,pQryFilter.sclb);
+          "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkInfo...sendJsonDataStr: " << sendJsonDataStr << endl;
     publisher.publish("order2server", sendJsonDataStr);
     return 0;
