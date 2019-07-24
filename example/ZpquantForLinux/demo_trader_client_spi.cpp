@@ -519,7 +519,7 @@ demoTraderClientSpi::OnQueryMarketState(const ZpquantMarketStateInfo *pMarketSta
 demoTraderClientSpi::demoTraderClientSpi(int32 something) {
     this->something = something;
     fprintf(stdout, "demoTraderClientSpi::demoTraderClientSpi");
-    memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
+    //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
 
