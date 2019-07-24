@@ -248,3 +248,5 @@ CZpquantTradeApi:: QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId)
     return 0;
 }
 
+}
+
