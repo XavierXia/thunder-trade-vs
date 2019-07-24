@@ -69,13 +69,13 @@ main(void) {
 
 
     /* 等待回报消息接收完成 */
-    SPK_SLEEP_MS(1000);
+    sleep(10);
 
     /* 停止 */
-    pOesApi->Stop();
+    pZpquantTradeApi->Stop();
 
-    delete pOesApi;
-    delete pOesSpi;
+    delete pZpquantTradeApi;
+    delete pZpquantTradeSpi;
 
     return 0;
 }
