@@ -17,8 +17,10 @@ main(void) {
     //连接后端server TOD
     //connectServer("127.0.0.1","8800");
 
+    fprintf(stdout, "...zpquant_client_main_demo start");
+
     Zpquant::CZpquantTradeApi  *pZpquantTradeApi = new Zpquant::CZpquantTradeApi();
-    Zpquant::CZpquantTradeSpi  *pZpquantTradeSpi = new demoTraderClientSpi();
+    CZpquantTradeSpi  *pZpquantTradeSpi = new demoTraderClientSpi();
 
     if (!pZpquantTradeApi || !pZpquantTradeSpi) {
         fprintf(stderr, "内存不足!\n");
