@@ -188,7 +188,7 @@ struct ZpquantFundTrsfReqT
 
 //查询 客户端总览信息
 struct ZpquantQryTrd {
-	char code[10];
+	char code[7];
 	uint8 sclb;
 };
 

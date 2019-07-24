@@ -30,7 +30,7 @@ main(void) {
 
     /* 注册spi回调接口 */
     pZpquantTradeApi->RegisterSpi(pZpquantTradeSpi);
-    
+
     /*
      * 设置登录OES时使用的用户名和密码
      * @note 如通过API接口设置，则可以不在配置文件中配置;
@@ -39,12 +39,6 @@ main(void) {
     // pOesApi->SetThreadUsername("customer1");
     // pOesApi->SetThreadPassword("txt:123456");
     // pOesApi->SetThreadPassword("md5:e10adc3949ba59abbe56e057f20f883e");
-
-    /*
-     * 设置客户端本地的设备序列号
-     * @note 为满足监管需求，需要设置客户端本机的硬盘序列号
-     */
-    pZpquantTradeApi->SetCustomizedDriverId("C02TL13QGVC8");
 
     /* 启动 */
     if (! pZpquantTradeApi->Start()) {
