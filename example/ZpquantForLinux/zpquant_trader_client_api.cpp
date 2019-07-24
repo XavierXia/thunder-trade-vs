@@ -6,15 +6,12 @@
 redox::Subscriber subscriber;
 redox::Redox publisher;
 
-char sendJsonDataStr[4096];
-
-
 namespace Zpquant {
 
 
 CZpquantTradeApi::CZpquantTradeApi() {
     pSpi = NULL;
-    memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
+    //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
 
