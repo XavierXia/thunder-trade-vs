@@ -2,6 +2,7 @@
 #include    "ZpquantTraderApi.h"
 #include    "demo_trader_client_spi.h"
 #include    <unistd.h>
+#include    <string.h>
 
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/oes_client.conf";
 
@@ -52,7 +53,7 @@ main(void) {
 
     //查询持仓
     ZpquantQryTrd zQryTrd;
-    strncpy(ZpquantQryTrd.code, "601881",sizeof(ZpquantQryTrd.code) - 1);
+    strncpy(zQryTrd.code, "601881",sizeof(zQryTrd.code) - 1);
     zQryTrd.sclb = 1;
     pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
 
