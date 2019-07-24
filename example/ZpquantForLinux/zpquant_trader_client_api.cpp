@@ -231,6 +231,7 @@ CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 reques
  */
 int32
 CZpquantTradeApi::QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId)
+{
     return 0;
 }
 
