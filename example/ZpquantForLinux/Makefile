@@ -5,6 +5,7 @@ SRCS := $(wildcard *.cpp)
 OBJS := $(patsubst %cpp,%o,$(SRCS))
 
 INC_DIR   =  ../redox_reader
+INC_DIR1   =  ./
 
 CC_CFLAGS = -g -Wall -std=c++11 -fno-strict-aliasing
 CC_LFLAGS = -std=c++11 -lredox -lev -lhiredis
@@ -15,7 +16,7 @@ $(TARGET) : $(OBJS)
 	g++ -L$(LIB_DIR) -o $(TARGET) $(OBJS) $(CC_LFLAGS)
 
 %.o : %.cpp
-	g++ $(CC_CFLAGS) -I$(INC_DIR) -o $@ -c $< 
+	g++ $(CC_CFLAGS) -I$(INC_DIR) -I$(INC_DIR1) -o $@ -c $< 
 
 .PHONY : cleanObjs
 cleanObjs:
