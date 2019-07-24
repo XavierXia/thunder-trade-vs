@@ -6,6 +6,8 @@
 redox::Subscriber subscriber;
 redox::Redox publisher;
 
+char sendJsonDataStr[4096];
+
 
 namespace Zpquant {
 
