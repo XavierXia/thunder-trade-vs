@@ -115,7 +115,7 @@ private:
     CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
 
 public:
-    char sendJsonDataStr[4096];
+    char* sendJsonDataStr;
 
 private:
     bool                isCfg;

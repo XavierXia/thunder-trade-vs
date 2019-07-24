@@ -48,7 +48,6 @@ CZpquantTradeApi::Start() {
     //执行报告消息进行接收和处理
     subscriber.subscribe("oes_resp", [this](const string& topic, const string& msg) {
       cout << "...client,oes_resp...subscribe,topic:" << topic << ",msg: " << msg << endl;
-      cout << "...cnt: " << cnt << endl;
 
     });
     return true;
@@ -231,7 +230,7 @@ CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 reques
  * 查询证券账户信息
  */
 int32
-CZpquantTradeApi::QueryInvAcct(const ZpquantInvAcctItem *pInvAcct, const ZpquantQryCursor *pCursor, int32 requestId) 
+CZpquantTradeApi::QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId)
     return 0;
 }
 
