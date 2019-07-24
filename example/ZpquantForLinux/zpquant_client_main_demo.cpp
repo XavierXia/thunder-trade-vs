@@ -52,7 +52,7 @@ main(void) {
 
     //查询持仓
     ZpquantQryTrd zQryTrd;
-    zQryTrd.code = "601881";
+    strncpy(ZpquantQryTrd.code, "601881",sizeof(ZpquantQryTrd.code) - 1);
     zQryTrd.sclb = 1;
     pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
 
