@@ -14,7 +14,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ThostFtdcUserApiStruct.h"
+#include "ZpquantUserApiDataType.h"
 
 #if defined(ISLIB) && defined(WIN32)
 #ifdef LIB_MD_API_EXPORT
