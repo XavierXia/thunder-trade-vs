@@ -9,13 +9,13 @@ class   demoMdClientSpi: public Zpquant::CZpquantMdSpi {
 
 public:
     ///深度tick行情通知
-    virtual void OnTickRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+    virtual void OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData);
 
     ///深度trade行情通知
-    virtual void OnTradeRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+    virtual void OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData);
 
     ///深度order行情通知
-    virtual void OnOrderRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+    virtual void OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData);
 
 public:
     demoMdClientSpi(int32 something = 0);

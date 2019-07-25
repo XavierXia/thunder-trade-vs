@@ -1,5 +1,5 @@
 #include    <iostream>
-#include    "demo_trader_client_spi.h"
+#include    "demo_md_client_spi.h"
 #include    <stdio.h>
 #include    <string.h>
 
@@ -9,20 +9,20 @@
 
 
 void 
-OnTickRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
+OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
 
 
 void 
-OnTradeRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
+OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
 
 void 
-OnOrderRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
+OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
