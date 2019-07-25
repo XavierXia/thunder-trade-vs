@@ -44,6 +44,9 @@ public:
 class MD_API_EXPORT CZpquantMdApi
 {
 public:
+    static const char * GetVersion(void);
+
+public:
 	CZpquantMdApi();
 
     virtual ~CZpquantMdApi();
@@ -51,7 +54,10 @@ public:
 	///获取API的版本信息
 	///@retrun 获取到的版本号
 	const char *GetApiVersion();
-	
+	    /* 启动连通数据通道 */
+    bool                Start();
+    /* 停止连通数据通道 */
+    void                Stop();
 	///连接server端
 	///@param pszFrontAddress：前置机网络地址。
 	///@remark 网络地址的格式为：ipaddress,port，如：”tcp://127.0.0.1:17001”。 
@@ -70,11 +76,6 @@ public:
 	///@param mdsSubMode 订阅模式 (重新订阅/追加订阅/删除订阅)
 	///@remark 
 	int SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode);
-public:
-	char sendJsonDataStr[4096];
-
-protected:
-	~CZpquantMdApi(){};
 
 private:
     /* 禁止拷贝构造函数 */
