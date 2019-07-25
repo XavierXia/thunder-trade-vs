@@ -149,7 +149,7 @@ SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode)
     char sendJsonDataStr[1024];
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
     std::cout << "...SendOrder...SubscribeMarketData: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
+    this->publisher.publish("order2server", sendJsonDataStr);
 
     return 0;
 }
