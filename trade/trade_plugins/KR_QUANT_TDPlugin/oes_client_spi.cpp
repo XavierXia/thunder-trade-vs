@@ -23,15 +23,13 @@ OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderRej
                   "{\"msgId\":\"6\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"invAcctId\":\"%s\", " \
                   "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
                   "ordQty\":\"%d\",\"ordPrice\":\"%d\", " \
-                  "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
+                  "origClOrdId\":\"%d\",\"errorCode\":\"%d\", " \
                   "}",
-                  pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
-                  pOrderInsert->invAcctId,
-                  pOrderInsert->securityId, pOrderInsert->mktId,
-                  pOrderInsert->ordType, pOrderInsert->bsType,
-                  pOrderInsert->ordQty, pOrderInsert->ordPrice,
-                  pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
-                  pOrderInsert->exchErrCode);
+                  pOrderReject->clEnvId, pOrderReject->clSeqNo,
+                  pOrderReject->invAcctId, pOrderReject->securityId,
+                  pOrderReject->mktId, pOrderReject->ordType,
+                  pOrderReject->bsType, pOrderReject->ordQty,
+                  pOrderReject->ordPrice, pOrderReject->origClOrdId, errorCode);
 
       publisher.publish("oes_resp",sendRespData2client);
 
@@ -134,19 +132,19 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
                   "cumFee\":\"%d\",\"frzAmt\":\"%d\",\"frzInterest\":\"%d\",\"frzFee\":\"%d\", " \
                   "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
                   "}",
-                  pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
-                  pOrderInsert->clOrdId, pOrderInsert->invAcctId,
-                  pOrderInsert->securityId, pOrderInsert->mktId,
-                  pOrderInsert->ordType, pOrderInsert->bsType,
-                  pOrderInsert->ordStatus, pOrderInsert->ordDate,
-                  pOrderInsert->ordTime, pOrderInsert->ordCnfmTime,
-                  pOrderInsert->ordQty, pOrderInsert->ordPrice,
-                  pOrderInsert->canceledQty, pOrderInsert->cumQty,
-                  pOrderInsert->cumAmt, pOrderInsert->cumInterest,
-                  pOrderInsert->cumFee, pOrderInsert->frzAmt,
-                  pOrderInsert->frzInterest, pOrderInsert->frzFee,
-                  pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
-                  pOrderInsert->exchErrCode);
+                  pOrderReport->clEnvId, pOrderReport->clSeqNo,
+                  pOrderReport->clOrdId, pOrderReport->invAcctId,
+                  pOrderReport->securityId, pOrderReport->mktId,
+                  pOrderReport->ordType, pOrderReport->bsType,
+                  pOrderReport->ordStatus, pOrderReport->ordDate,
+                  pOrderReport->ordTime, pOrderReport->ordCnfmTime,
+                  pOrderReport->ordQty, pOrderReport->ordPrice,
+                  pOrderReport->canceledQty, pOrderReport->cumQty,
+                  pOrderReport->cumAmt, pOrderReport->cumInterest,
+                  pOrderReport->cumFee, pOrderReport->frzAmt,
+                  pOrderReport->frzInterest, pOrderReport->frzFee,
+                  pOrderReport->origClOrdId, pOrderReport->ordRejReason,
+                  pOrderReport->exchErrCode);
 
       publisher.publish("oes_resp",sendRespData2client);
 }
