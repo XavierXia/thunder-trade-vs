@@ -86,6 +86,8 @@ private:
     /* 禁止赋值函数 */
     CZpquantMdApi& operator=(const CZpquantMdApi&);
 
+    
+private:
     CZpquantMdSpi        *pSpi;
 };
 
