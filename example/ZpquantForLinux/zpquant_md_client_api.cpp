@@ -46,17 +46,17 @@ CZpquantMdApi::Start() {
 
     //执行报告消息进行接收和处理
     subscriber.subscribe("mds_data_onTrade", [this](const string& topic, const string& msg) {
-      cout << "...client,mds_data_onTrade...subscribe,topic:" << topic << ",msg: " << msg << endl;
+      std::cout << "...client,mds_data_onTrade...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
     });
 
     subscriber.subscribe("mds_data_onOrder", [this](const string& topic, const string& msg) {
-      cout << "...client,mds_data_onOrder...subscribe,topic:" << topic << ",msg: " << msg << endl;
+      std::cout << "...client,mds_data_onOrder...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
     });
 
     subscriber.subscribe("mds_data_onTick", [this](const string& topic, const string& msg) {
-      cout << "...client,mds_data_onTick...subscribe,topic:" << topic << ",msg: " << msg << endl;
+      std::cout << "...client,mds_data_onTick...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
     });
     return true;
@@ -149,7 +149,7 @@ int
 SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode)
 {
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
-    cout << "...SendOrder...SubscribeMarketData: " << sendJsonDataStr << endl;
+    std::cout << "...SendOrder...SubscribeMarketData: " << sendJsonDataStr << endl;
     publisher.publish("order2server", sendJsonDataStr);
 
     return 0;
