@@ -102,7 +102,7 @@ public:
 public:
 	void MDDestoryAll();
 	BOOL MDResubscribeByCodePrefix(MdsApiSessionInfoT *pTcpChannel,
-        const char *pCodeListString,,eMdsSubscribeModeT subMode);
+        const char *pCodeListString,eMdsSubscribeModeT subMode);
 	void OnWaitOnMsg();
     void ShowMessage(severity_levels,const char * fmt, ...);
 
