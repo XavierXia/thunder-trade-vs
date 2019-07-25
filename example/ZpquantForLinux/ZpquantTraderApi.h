@@ -13,6 +13,7 @@
 #endif
 
 #include "ZpquantUserApiStruct.h"
+#include "redox.hpp"
 
 using namespace std;
 
@@ -69,6 +70,8 @@ public:
 class  TRADER_API_EXPORT CZpquantTradeApi {
 public:
     static const char * GetVersion(void);
+    redox::Subscriber subscriber;
+    redox::Redox publisher;
 
 public:
     CZpquantTradeApi();

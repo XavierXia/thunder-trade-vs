@@ -15,6 +15,7 @@
 #endif // _MSC_VER > 1000
 
 #include "ZpquantUserApiStruct.h"
+#include "redox.hpp"
 
 #if defined(ISLIB) && defined(WIN32)
 #ifdef LIB_MD_API_EXPORT
@@ -45,6 +46,8 @@ class MD_API_EXPORT CZpquantMdApi
 {
 public:
     static const char * GetVersion(void);
+    redox::Subscriber subscriber;
+	redox::Redox publisher;
 
 public:
 	CZpquantMdApi();

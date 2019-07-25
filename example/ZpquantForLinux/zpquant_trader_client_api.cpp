@@ -1,13 +1,8 @@
 #include <iostream>
 #include <string.h>
 #include "ZpquantTraderApi.h"
-#include "redox.hpp"
-
-redox::Subscriber subscriber;
-redox::Redox publisher;
 
 namespace Zpquant {
-
 
 CZpquantTradeApi::CZpquantTradeApi() {
     pSpi = NULL;

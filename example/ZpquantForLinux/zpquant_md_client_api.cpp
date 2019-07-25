@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include "ZpquantMdApi.h"
-#include "redox.hpp"
 
-redox::Subscriber subscriber;
-redox::Redox publisher;
 using namespace std;
 
 namespace Zpquant {

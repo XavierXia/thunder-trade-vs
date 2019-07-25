@@ -9,20 +9,20 @@
 
 
 void 
-OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
+demoMdClientSpi::OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
 
 
 void 
-OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
+demoMdClientSpi::OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
 
 void 
-OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
+demoMdClientSpi::OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
 
 }
