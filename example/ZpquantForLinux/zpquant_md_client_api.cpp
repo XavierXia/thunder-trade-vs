@@ -144,12 +144,12 @@ CZpquantMdApi::Stop() {
 
 
 int 
-SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode)
+CZpquantMdApi::SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode)
 {
     char sendJsonDataStr[1024];
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
     std::cout << "...SendOrder...SubscribeMarketData: " << sendJsonDataStr << endl;
-    this->publisher.publish("order2server", sendJsonDataStr);
+    publisher.publish("order2server", sendJsonDataStr);
 
     return 0;
 }
