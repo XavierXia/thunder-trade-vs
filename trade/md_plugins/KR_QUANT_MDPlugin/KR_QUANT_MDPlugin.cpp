@@ -160,7 +160,24 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 		temp = c_Config.find("mdsSubMode");
 		if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
 		
-		emodeT = atoi(mdsSubMode.c_str());
+		switch(atoi(mdsSubMode.c_str()))
+		{
+			case 0:
+			{
+				emodeT = MDS_SUB_MODE_SET;
+				break;
+			}
+			case 1:
+			{
+				emodeT = MDS_SUB_MODE_APPEND;
+				break;
+			}
+			case 2:
+			{
+				emodeT = MDS_SUB_MODE_DELETE;
+				break;
+			}
+		}
 
 		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
 		if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
@@ -394,18 +411,6 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
 			// 		ins.c_str());
 
 			//ins.c_str()
-
-			/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-        	if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,"")) 
-        	{
-        		ShowMessage(
-					severity_levels::error,
-					"send unsubscribemarketdata(%s) failed.", 
-					GetCurrentKeyword().c_str());
-            	MDDestoryAll();
-       		}
-
-
 			m_mapInsid2Strategys.erase(ins);
 		}
 	}
