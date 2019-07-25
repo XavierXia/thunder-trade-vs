@@ -37,6 +37,20 @@ CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
 }
 
 //采集报单回调数据
+/*
+...client,mds_data_onTrade...subscribe,topic:mds_data_onTrade,
+msg: {"msgType":22, "sendDCT":53533711, "LastRecvT":1564037533,
+ "mktData":{"exchId":2,"securityType":1,"tradeDate":20190430,"TransactTime":132421330,
+ "ChannelNo":2011,"ApplSeqNum":8976101,"SecurityID":"000001","ExecType":"F","TradeBSFlag":"N",
+ "TradePrice":139400,"TradeQty":300,"TradeMoney":41820000,"BidApplSeqNum":8976100,
+ "OfferApplSeqNum":8976040,"__origTickSeq":91555155,"__channelNo":8,"__origNetTime":132420994,
+ "__recvTime":1564037533.700277,"__collectedTime":1564037533.700277,"__processedTime":1564037533.700333,
+ "__pushingTime":1564037533.700370}}
+
+
+ 
+*/
+
 bool
 CZpquantMdApi::Start() {
     if(!subscriber.connect()) return false;

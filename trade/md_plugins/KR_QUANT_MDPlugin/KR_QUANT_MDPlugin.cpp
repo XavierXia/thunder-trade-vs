@@ -137,6 +137,37 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
     //**************************************************
 	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
       cout << "...server,order2server...subscribe,topic:" << topic << ",msg: " << msg << endl;
+
+      	ptree c_Config;
+      	std::stringstream jmsg(msg.c_str());  
+        try {
+            boost::property_tree::read_json(jmsg, c_Config);
+        }
+        catch(std::exception & e){
+            fprintf(stdout, "cannot parse from string 'msg' \n");
+            return false;
+        }
+
+        string stype;
+        string codelistStr;
+        string mdsSubMode;
+
+	    auto temp = c_Config.find("type");
+		if (temp != c_Config.not_found()) stype = temp->second.data();
+	    temp = c_Config.find("codelistStr");
+		if (temp != c_Config.not_found()) codelistStr = temp->second.data();
+		temp = c_Config.find("mdsSubMode");
+		if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
+		
+		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
+		if (!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),atoi(mdsSubMode.c_str()))) 
+		{
+			ShowMessage(
+				severity_levels::error,
+				"send unsubscribemarketdata(%s) failed.", 
+				codelistStr.c_str());
+		}
+
     });
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
@@ -387,7 +418,7 @@ void CKrQuantMDPluginImp::MDDetachStrategy(MStrategy * strategy)
  * @return  TRUE 成功; FALSE 失败
  */
 BOOL CKrQuantMDPluginImp::MDResubscribeByCodePrefix(MdsApiSessionInfoT *pTcpChannel,
-        const char *pCodeListString) {
+        const char *pCodeListString,eMdsSubscribeModeT subMode) {
     /* 上海证券代码前缀 */
     static const char       SSE_CODE_PREFIXES[] = \
             "009, 01, 02, "                 /* 国债 */ \
@@ -408,9 +439,8 @@ BOOL CKrQuantMDPluginImp::MDResubscribeByCodePrefix(MdsApiSessionInfoT *pTcpChan
     return MdsApi_SubscribeByStringAndPrefixes(pTcpChannel,
             pCodeListString, (char *) NULL,
             SSE_CODE_PREFIXES, SZSE_CODE_PREFIXES,
-            MDS_SECURITY_TYPE_STOCK, MDS_SUB_MODE_SET,
-            MDS_SUB_DATA_TYPE_L1_SNAPSHOT
-                    | MDS_SUB_DATA_TYPE_L2_SNAPSHOT
+            MDS_SECURITY_TYPE_STOCK, subMode,
+			MDS_SUB_DATA_TYPE_L2_SNAPSHOT
                     | MDS_SUB_DATA_TYPE_L2_BEST_ORDERS
                     | MDS_SUB_DATA_TYPE_L2_ORDER
                     | MDS_SUB_DATA_TYPE_L2_TRADE);
