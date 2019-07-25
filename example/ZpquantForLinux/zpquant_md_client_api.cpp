@@ -5,6 +5,7 @@
 
 redox::Subscriber subscriber;
 redox::Redox publisher;
+using namespace std;
 
 namespace Zpquant {
 
@@ -165,18 +166,6 @@ const char *
 CZpquantMdApi::GetVersion(void) {
     string vStr = "0.0.1";
     return vStr.c_str();
-}
-
-/**
- * 获取当前交易日
- *
- * @retval  >0          当前交易日 (格式：YYYYMMDD)
- * @retval  0           尚未连接查询服务
- * @retval  <0          失败 (负的错误号)
- */
-int32
-CZpquantMdApi::GetTradingDay(void) {
-    return 0;
 }
 
 }
