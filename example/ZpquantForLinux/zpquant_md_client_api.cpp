@@ -148,7 +148,7 @@ CZpquantMdApi::SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMo
 {
     char sendJsonDataStr[1024];
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
-    std::cout << "...SendOrder...SubscribeMarketData: " << sendJsonDataStr << endl;
+    std::cout << "...SubscribeMd...SubscribeMarketData: " << sendJsonDataStr << endl;
     publisher.publish("order2server", sendJsonDataStr);
 
     return 0;
