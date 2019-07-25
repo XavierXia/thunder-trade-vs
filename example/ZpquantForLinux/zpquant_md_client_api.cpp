@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include "ZpquantTraderApi.h"
+#include "ZpquantMdApi.h"
 #include "redox.hpp"
 
 redox::Subscriber subscriber;
@@ -166,7 +166,6 @@ CZpquantMdApi::GetVersion(void) {
     return vStr.c_str();
 }
 
-
 /**
  * 获取当前交易日
  *
@@ -176,51 +175,6 @@ CZpquantMdApi::GetVersion(void) {
  */
 int32
 CZpquantMdApi::GetTradingDay(void) {
-    return 0;
-}
-
-/*
- * 查询客户资金信息
- */
-int32
-CZpquantMdApi::QueryCashAsset(int32 requestId)
-{
-    string str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
-    cout << "...QueryCashAsset...str: " << str << endl;
-    publisher.publish("order2server", str);
-    return 0;
-}
-
-//查询 上证或深圳 股票的持仓
-int32
-CZpquantMdApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId) 
-{
-    sprintf(sendJsonDataStr, 
-          "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
-    cout << "...stkHolding...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
-    return 0;
-}
-
-/**
- * 查询证券账户信息
- */
-int32
-CZpquantMdApi::QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId)
-{
-    return 0;
-}
-
-/**
- * 查询现货产品信息
- */
-int32
-CZpquantMdApi::QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId) 
-{
-    sprintf(sendJsonDataStr, 
-          "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
-    cout << "...stkInfo...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
     return 0;
 }
 

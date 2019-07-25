@@ -375,7 +375,7 @@ typedef struct _MdsL2Trade {
     int32               ApplSeqNum;             /**< 成交序号/消息记录号 (从1开始, 按频道连续) */
 
     /** 产品代码 C6 / C8 (如: '600000' 等) */
-    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+    char                SecurityID[9];
 
     /**
      * 成交类别 (仅适用于深交所, '4'=撤销, 'F'=成交)
@@ -421,7 +421,7 @@ typedef struct _MdsL2Order {
     int32               ApplSeqNum;             /**< 委托序号 (从1开始, 按频道连续) */
 
     /** 产品代码 C6 / C8 (如: '000001' 等) */
-    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+    char                SecurityID[9];
 
     /** 买卖方向 ('1'=买 '2'=卖 'G'=借入 'F'=出借) */
     char                Side;
@@ -479,7 +479,7 @@ typedef struct _MdsTradingSessionStatusMsg {
      * 第 2 位: ‘1’表示开盘集合竞价结束标志, 未结束取‘0’。
      * 第 3 位: ‘1’表示市场行情闭市标志, 未闭市取‘0’。
      */
-    char                TradingSessionID[MDS_MAX_TRADING_SESSION_ID_LEN];
+    char                TradingSessionID[9];
 
     uint8               __filler3[3];           /**< 按64位对齐的填充域 */
     uint32              __dataVersion;          /**< 行情数据的更新版本号 (当__isRepeated!=0时, 该值仅作为参考值) */
@@ -504,14 +504,14 @@ typedef struct _MdsSecurityStatusMsg {
     int32               instrId;                /**< 产品代码 */
 
     /** 产品代码 C6 / C8 (如: '000001' 等) */
-    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+    char                SecurityID[9];
 
     /**
      * 证券状态 (C8)
      * A=上市公司早间披露提示
      * B=上市公司午间披露提示
      */
-    char                FinancialStatus[MDS_MAX_FINANCIAL_STATUS_LEN];
+    char                FinancialStatus[9];
 
     uint8               __filler2;              /**< 按64位对齐的填充域 */
     uint8               __channelNo;            /**< 内部频道号 (供内部使用, 取值范围{1,2,4,8}) */
@@ -555,7 +555,7 @@ typedef struct _MdsSecurityStatusMsg {
 
         /** 开关状态 (0 关闭, 1 开启) */
         uint8           switchStatus;
-    } switches[MDS_MAX_SECURITY_SWITCH_CNT];
+    } switches[32];
 
 } MdsSecurityStatusMsgT;
 

@@ -70,6 +70,8 @@ public:
 	///@param mdsSubMode 订阅模式 (重新订阅/追加订阅/删除订阅)
 	///@remark 
 	int SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMode mdsSubMode);
+public:
+	char sendJsonDataStr[4096];
 
 protected:
 	~CZpquantMdApi(){};
