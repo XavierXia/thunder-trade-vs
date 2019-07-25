@@ -175,22 +175,22 @@ OesClientMySpi::OnTradeReport(const OesTrdCnfmT *pTradeReport) {
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"9\",\"exchTrdNum\":\"%d\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"clOrdId\":\"%d\",\"invAcctId\":\"%s\", " \
+                  "{\"msgId\":\"9\",\"exchTrdNum\":\"%d\",\"clOrdId\":\"%d\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"invAcctId\":\"%s\", " \
                   "securityId\":\"%s\",\"mktId\":\"%d\",\"trdSide\":\"%d\", " \
                   "ordBuySellType\":\"%d\",\"trdDate\":\"%d\",\"trdTime\":\"%d\", " \
                   "trdQty\":\"%d\",\"trdPrice\":\"%d\",\"trdAmt\":\"%d\",\"cumQty\":\"%d\", " \
-                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\",\"cumFee\":\"%d\"," \
+                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\"," \
                   "cumFee\":\"%d\",\"pbuId\":\"%d\", " \
                   "}",
-                  pTradeReport->exchTrdNum,pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
-                  pOrderInsert->clOrdId, pOrderInsert->invAcctId,
-                  pOrderInsert->securityId, pOrderInsert->mktId,
-                  pOrderInsert->trdSide, pOrderInsert->ordBuySellType,pTradeReport->trdDate,
-                  pOrderInsert->trdTime, 
-                  pOrderInsert->trdQty, pOrderInsert->trdPrice,
-                  pOrderInsert->trdAmt, pOrderInsert->cumQty,
-                  pOrderInsert->cumAmt, pOrderInsert->cumInterest,
-                  pOrderInsert->cumFee, pOrderInsert->pbuId);
+                  pTradeReport->exchTrdNum, pTradeReport->clOrdId,
+                  pTradeReport->clEnvId, pTradeReport->clSeqNo,
+                  pTradeReport->invAcctId, pTradeReport->securityId,
+                  pTradeReport->mktId, pTradeReport->trdSide,
+                  pTradeReport->ordBuySellType, pTradeReport->trdDate,
+                  pTradeReport->trdTime, pTradeReport->trdQty, pTradeReport->trdPrice,
+                  pTradeReport->trdAmt, pTradeReport->cumQty, pTradeReport->cumAmt,
+                  pTradeReport->cumInterest, pTradeReport->cumFee,
+                  pTradeReport->pbuId);
 
       publisher.publish("oes_resp",sendRespData2client);
 }
