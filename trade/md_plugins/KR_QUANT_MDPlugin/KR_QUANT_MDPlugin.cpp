@@ -133,7 +133,11 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	else
 		throw std::runtime_error("kr360:Can not find <password>");
 
-    // Start();
+    
+    //**************************************************
+	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
+      cout << "...server,order2server...subscribe,topic:" << topic << ",msg: " << msg << endl;
+    });
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
 	m_StartAndStopCtrlTimer.async_wait(boost::bind(
@@ -635,13 +639,70 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     } 
 
     //发布者
-    ((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data", sendJsonDataStr);
+    //((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data", sendJsonDataStr);
 
     //fprintf(stdout, sendJsonDataStr);
 	// subscriber.subscribe("allHQData", [pCallbackParams](const string& topic, const string& msg) {
 	// 	((CKrQuantMDPluginImp *) pCallbackParams)->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", topic.c_str(),msg.c_str());
 
 	// });
+
+	    /*
+     * 根据消息类型对行情消息进行处理
+     */
+    switch (pMsgHead->msgId) {
+    case MDS_MSGTYPE_L2_TRADE:
+        /* 处理Level2逐笔成交消息 */
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTrade", sendJsonDataStr);
+
+        break;
+
+    case MDS_MSGTYPE_L2_ORDER:
+        /* 处理Level2逐笔委托消息 */
+		((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onOrder", sendJsonDataStr);
+        break;
+
+    case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
+    // case MDS_MSGTYPE_L2_BEST_ORDERS_SNAPSHOT:
+    // case MDS_MSGTYPE_L2_MARKET_DATA_INCREMENTAL:
+    // case MDS_MSGTYPE_L2_BEST_ORDERS_INCREMENTAL:
+    // case MDS_MSGTYPE_L2_MARKET_OVERVIEW:
+    // case MDS_MSGTYPE_L2_VIRTUAL_AUCTION_PRICE:
+        /* 处理Level2快照行情消息 */
+        //ShowMessage(severity_levels::normal,"... 接收到Level2快照行情消息 (exchId[%u], instrId[%d])\n",
+        //        pRspMsg->mktDataSnapshot.head.exchId,
+         //       pRspMsg->mktDataSnapshot.head.instrId);
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTick", sendJsonDataStr);
+        break;
+
+    case MDS_MSGTYPE_MARKET_DATA_REQUEST:
+        /* 处理行情订阅请求的应答消息 */
+        if (pMsgHead->status == 0) {
+            ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 行情订阅请求应答, 行情订阅成功!\n");
+        } else {
+            ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"... 行情订阅请求应答, 行情订阅失败! " \
+                    "errCode[%02u %02u]\n",
+                    pMsgHead->status, pMsgHead->detailStatus);
+        }
+        break;
+
+    case MDS_MSGTYPE_TEST_REQUEST:
+        /* 处理测试请求的应答消息 */
+        ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到测试请求的应答消息 (origSendTime[%s], respTime[%s])\n",
+                pRspMsg->testRequestRsp.origSendTime,
+                pRspMsg->testRequestRsp.respTime);
+        break;
+
+    case MDS_MSGTYPE_HEARTBEAT:
+        /* 忽略心跳消息 */
+        break;
+
+    default:
+        ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"无效的消息类型, 忽略之! msgId[0x%02X], server[%s:%d]",
+                pMsgHead->msgId, pSessionInfo->channel.remoteAddr,
+                pSessionInfo->channel.remotePort);
+        return EFTYPE;
+    }
 
     return 0;
 }

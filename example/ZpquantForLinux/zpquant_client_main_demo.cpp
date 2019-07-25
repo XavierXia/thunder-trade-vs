@@ -1,10 +1,10 @@
 #include    <iostream>
-#include    "ZpquantTraderApi.h"
-#include    "demo_trader_client_spi.h"
 #include    <unistd.h>
 #include    <string.h>
-
-const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/oes_client.conf";
+#include    "ZpquantTraderApi.h"
+#include    "demo_trader_client_spi.h"
+#include    "ZpquantMdApi.h"
+#include    "demo_md_client_spi.h"
 
 void connectServer(char *netaddress,char* port)
 {
@@ -18,13 +18,28 @@ main(void) {
     //connectServer("127.0.0.1","8800");
     fprintf(stdout, "...zpquant_client_main_demo start");
 
+    //交易
     Zpquant::CZpquantTradeApi  *pZpquantTradeApi = new Zpquant::CZpquantTradeApi();
     Zpquant::CZpquantTradeSpi  *pZpquantTradeSpi = new demoTraderClientSpi();
+    //行情
+    Zpquant::CZpquantMdApi  *pZpquantMdApi = new Zpquant::CZpquantMdApi();
+    Zpquant::CZpquantMdSpi  *pZpquantMdSpi = new demoMdClientSpi();
 
     if (!pZpquantTradeApi || !pZpquantTradeSpi) {
-        fprintf(stderr, "内存不足!\n");
+        fprintf(stderr, "pZpquantTradeApi/pZpquantTradeSpi内存不足!\n");
         return ENOMEM;
     }
+
+    if (!pZpquantMdApi || !pZpquantMdSpi) {
+        fprintf(stderr, "pZpquantMdSpi/pZpquantMdSpi 内存不足!\n");
+        return ENOMEM;
+    }
+
+
+    /*
+    *************************************
+    交易类接口实现
+    */
 
     /* 打印API版本信息 */
     fprintf(stdout, "OesClientApi 版本: %s\n",
@@ -52,6 +67,27 @@ main(void) {
     fprintf(stdout, "服务端交易日: %08d\n", pZpquantTradeApi->GetTradingDay());
 
 
+    /*
+    *************************************
+    行情类接口实现
+    */
+    /* 打印API版本信息 */
+    fprintf(stdout, "ZpquantClientApi 版本: %s\n",
+            Zpquant::CZpquantMdApi::GetVersion());
+    /* 注册spi回调接口 */
+    pZpquantMdApi->RegisterSpi(pZpquantMdSpi);
+
+    if (! pZpquantMdApi->Start()) {
+        fprintf(stderr, "启动API失败!\n");
+        return EINVAL;
+    }
+
+    pZpquantMdApi->SubscribeMarketData("601881,000001",MDS_SUB_MODE_SET);
+
+    /*
+    *************************************
+    交易下单接口实例
+    */
     //查询持仓
     ZpquantQryTrd zQryTrd;
     strncpy(zQryTrd.code, "601881",sizeof(zQryTrd.code) - 1);
@@ -70,6 +106,8 @@ main(void) {
 
     delete pZpquantTradeApi;
     delete pZpquantTradeSpi;
+    delete pZpquantMdApi;
+    delete pZpquantMdSpi;
 
     return 0;
 }

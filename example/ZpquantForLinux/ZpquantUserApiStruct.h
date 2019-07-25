@@ -17,7 +17,579 @@
 #include "ZpquantUserApiDataType.h"
 
 /**
- * 通信消息的消息类型定义
+ ******************************************************
+ * 通信消息的消息类型定义 -- 行情类
+ ******************************************************
+**/
+
+/**
+ * 订阅模式 (SubMode) 定义
+ * - 0: (Set) 重新订阅, 设置为订阅列表中的股票
+ * - 1: (Append) 追加订阅, 增加订阅列表中的股票
+ * - 2: (Delete) 删除订阅, 删除订阅列表中的股票
+ */
+typedef enum _zpquantMdsSubscribeMode {
+    /** 重新订阅, 设置为订阅列表中的股票 */
+    MDS_SUB_MODE_SET                            = 0,
+
+    /** 追加订阅, 增加订阅列表中的股票 */
+    MDS_SUB_MODE_APPEND                         = 1,
+
+    /** 删除订阅, 删除订阅列表中的股票 */
+    MDS_SUB_MODE_DELETE                         = 2,
+
+    __MAX_MDS_SUB_MODE
+} ZpquantMdsSubscribeMode;
+
+/**
+ * 可订阅的数据种类 (DataType) 定义
+ * - 0:      默认数据种类 (所有)
+ * - 0x0001: L1快照/指数/期权
+ * - 0x0002: L2快照
+ * - 0x0004: L2委托队列
+ * - 0x0008: L2逐笔成交
+ * - 0x0010: L2逐笔委托 (深圳)
+ * - 0x0020: L2虚拟集合竞价 (上海)
+ * - 0x0040: L2市场总览 (上海)
+ * - 0x0100: 市场状态 (上海)
+ * - 0x0200: 证券实时状态 (深圳)
+ * - 0x0400: 指数行情 (与0x0001的区别在于, 0x0400可以单独订阅指数行情)
+ * - 0x0800: 期权行情 (与0x0001的区别在于, 0x0800可以单独订阅期权行情)
+ * - 0xFFFF: 所有数据种类
+ */
+typedef enum _zpquantMdsSubscribeDataType {
+    /** 默认数据种类 (所有种类) */
+    MDS_SUB_DATA_TYPE_DEFAULT                   = 0,
+
+    /** L1快照/指数/期权 (L1快照行情 + 指数行情 + 期权行情) */
+    MDS_SUB_DATA_TYPE_L1_SNAPSHOT               = 0x0001,
+
+    /** L2快照 */
+    MDS_SUB_DATA_TYPE_L2_SNAPSHOT               = 0x0002,
+
+    /** L2委托队列 */
+    MDS_SUB_DATA_TYPE_L2_BEST_ORDERS            = 0x0004,
+
+    /** L2逐笔成交 */
+    MDS_SUB_DATA_TYPE_L2_TRADE                  = 0x0008,
+
+    /** L2逐笔委托 (*深圳, 0x10/16) */
+    MDS_SUB_DATA_TYPE_L2_ORDER                  = 0x0010,
+
+    /** L2虚拟集合竞价 (*上海, 0x20/32) */
+    MDS_SUB_DATA_TYPE_L2_VIRTUAL_AUCTION_PRICE  = 0x0020,
+
+    /** L2市场总览 (*上海, 0x40/64) */
+    MDS_SUB_DATA_TYPE_L2_MARKET_OVERVIEW        = 0x0040,
+
+    /** 市场状态 (*上海, 0x100/256) */
+    MDS_SUB_DATA_TYPE_TRADING_SESSION_STATUS    = 0x0100,
+
+    /** 证券实时状态 (*深圳, 0x200/512) */
+    MDS_SUB_DATA_TYPE_SECURITY_STATUS           = 0x0200,
+
+    /** 指数行情 (与L1_SNAPSHOT的区别在于, INDEX_SNAPSHOT可以单独订阅指数行情) */
+    MDS_SUB_DATA_TYPE_INDEX_SNAPSHOT            = 0x400,
+
+    /** 期权行情 (与L1_SNAPSHOT的区别在于, OPTION_SNAPSHOT可以单独订阅期权行情) */
+    MDS_SUB_DATA_TYPE_OPTION_SNAPSHOT           = 0x800,
+
+    /** 空数据种类 (可用于不指定任何数量种类的情况) */
+    MDS_SUB_DATA_TYPE_NONE                      = 0x8000,
+
+    /** 所有数据种类 */
+    MDS_SUB_DATA_TYPE_ALL                       = 0xFFFF,
+
+    __MAX_MDS_SUB_DATA_TYPE                     = 0x7FFFFFFF
+} ZpquantMdsSubscribeDataType;
+
+typedef enum _ZpquantMdsMsgType {
+    /*
+     * 会话类消息
+     */
+    /** 心跳消息 (1/0x01) */
+    MDS_MSGTYPE_HEARTBEAT                           = 1,
+    /** 测试请求消息 (2/0x02) */
+    MDS_MSGTYPE_TEST_REQUEST                        = 2,
+    /** 登录消息 (3/0x03) */
+    MDS_MSGTYPE_LOGON                               = 3,
+    /** 注销消息 (4/0x04) */
+    MDS_MSGTYPE_LOGOUT                              = 4,
+    /** 证券行情订阅消息 (5/0x05) */
+    MDS_MSGTYPE_MARKET_DATA_REQUEST                 = 5,
+    /** 压缩的数据包 (6/0x06, 内部使用) */
+    MDS_MSGTYPE_COMPRESSED_PACKETS                  = 6,
+    /** 最大的会话消息类型 */
+    __MDS_MSGTYPE_SESSION_MAX,
+
+    /*
+     * Level1 行情消息
+     */
+    /** Level1 市场行情快照 (10/0x0A) */
+    MDS_MSGTYPE_MARKET_DATA_SNAPSHOT_FULL_REFRESH   = 10,
+    /** Level1/Level2 指数行情快照 (11/0x0B) */
+    MDS_MSGTYPE_INDEX_SNAPSHOT_FULL_REFRESH         = 11,
+    /** Level1/Level2 期权行情快照 (12/0x0C) */
+    MDS_MSGTYPE_OPTION_SNAPSHOT_FULL_REFRESH        = 12,
+
+    /** 市场状态消息 (13/0x0D, 仅上海) */
+    MDS_MSGTYPE_TRADING_SESSION_STATUS              = 13,
+    /** 证券状态消息 (14/0x0E, 仅深圳) */
+    MDS_MSGTYPE_SECURITY_STATUS                     = 14,
+    /** 最大的Level-1行情消息类型 */
+    __MDS_MSGTYPE_L1_MAX,
+
+    /*
+     * Level2 行情消息
+     */
+    /** Level2 市场行情快照 (20/0x14) */
+    MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT             = 20,
+    /** Level2 委托队列快照 (买一/卖一前五十笔) (21/0x15) */
+    MDS_MSGTYPE_L2_BEST_ORDERS_SNAPSHOT             = 21,
+
+    /** Level2 逐笔成交行情 (22/0x16) */
+    MDS_MSGTYPE_L2_TRADE                            = 22,
+    /** Level2 逐笔委托行情 (23/0x17, 仅深圳) */
+    MDS_MSGTYPE_L2_ORDER                            = 23,
+
+    /** Level2 快照行情的增量更新消息 (24/0x18, 仅上海) */
+    MDS_MSGTYPE_L2_MARKET_DATA_INCREMENTAL          = 24,
+    /** Level2 委托队列快照的增量更新消息 (25/0x19, 仅上海) */
+    MDS_MSGTYPE_L2_BEST_ORDERS_INCREMENTAL          = 25,
+
+    /** Level2 市场总览消息 (26/0x1A, 仅上海) */
+    MDS_MSGTYPE_L2_MARKET_OVERVIEW                  = 26,
+    /** Level2 虚拟集合竞价消息 (27/0x1B, 仅上海) */
+    MDS_MSGTYPE_L2_VIRTUAL_AUCTION_PRICE            = 27,
+    /** 最大的Level-2行情消息类型 */
+    __MDS_MSGTYPE_L2_MAX,
+
+    /*
+     * 查询类消息
+     */
+    /** 查询证券行情 (80/0x50) */
+    MDS_MSGTYPE_QRY_MARKET_DATA_SNAPSHOT            = 80,
+    /** 查询(深圳)证券状态 (81/0x51) */
+    MDS_MSGTYPE_QRY_SECURITY_STATUS                 = 81,
+    /** 查询(上证)市场状态 (82/0x52) */
+    MDS_MSGTYPE_QRY_TRADING_SESSION_STATUS          = 82,
+    /** 最大的查询消息类型 */
+    __MDS_MSGTYPE_QRY_MAX
+
+} ZpquantMdsMsgTypeT;
+
+/**
+ * 行情订阅请求的应答报文
+ */
+typedef struct _MdsMktDataRequestRsp {
+    /**
+     * 订阅模式
+     * - 0: (Set) 重新订阅, 设置为订阅列表中的股票
+     * - 1: (Append) 追加订阅, 增加订阅列表中的股票
+     * - 2: (Delete) 删除订阅, 删除订阅列表中的股票
+     *
+     * @see eMdsSubscribeModeT
+     */
+    uint8               subMode;
+
+    /**
+     * 数据模式, 订阅最新的行情快照还是所有时点的数据
+     * -  0: (LatestSimplified) 只订阅最新的行情快照数据, 并忽略和跳过已经过时的数据
+     *       - 该模式推送的数据量最小, 没有重复数据, 也不会重复发送最新快照
+     *       - 该模式在时延和带宽方面都相对优秀, 如果没有特殊需求, 推荐使用该模式即可
+     * -  1: (LatestTimely) 只订阅最新的行情快照数据, 并立即发送最新数据
+     *       - 只要有行情更新事件, 便立即推送该产品的最新行情, 但也会因此重复发送多次相同的最新行情
+     *       - 如果某些产品的交易很活跃, 而客户端处理又比较耗时的话, 那么该模式可能会更及时的获取到
+     *         这些产品的最新行情
+     *       - 此外, 因为与 AllIncrements 模式下的数据一一对应, 可以方便与增量更新消息进行比对测试
+     *       - 通常情况下, 推荐使用 LatestSimplified 模式即可
+     * -  2: (AllIncrements) 订阅所有时点的行情快照数据 (包括Level2增量更新消息)
+     *       - 该模式会推送所有时点的行情数据, 包括Level2行情快照的增量更新消息
+     *       - 如果需要获取全量的行情明细, 或者需要直接使用Level2的增量更新消息, 可以使用该模式
+     *
+     * @see eMdsSubscribedTickTypeT
+     */
+    uint8               tickType;
+
+    /**
+     * 在推送实时行情数据之前, 是否需要推送已订阅产品的初始的行情快照
+     * 该参数只在初始订阅时有效, 会话过程中的实时订阅将不支持该参数, 也不会再次推送初始行情快照
+     */
+    uint8               isRequireInitialMktData;
+
+    /** 订阅的内部频道号 (供内部使用, 尚未对外开放) */
+    uint8               __channelNos;
+
+    /**
+     * 逐笔数据的过期时间类型
+     * -  0: 不过期
+     * -  1: 立即过期 (1秒, 若落后于快照1秒则视为过期)
+     * -  2: 及时过期 (3秒)
+     * -  3: 超时过期 (30秒)
+     *
+     * @see     eMdsSubscribedTickExpireTypeT
+     * @note    因为存在不可控的网络因素, 所以做不到百分百的精确过滤, 如果对数据的
+     *          时效性有精确要求, 就需要在前端对数据再进行一次过滤
+     */
+    uint8               tickExpireType;
+
+    /** 按64位对齐的填充域 */
+    uint8               __filler[3];
+
+    /**
+     * 订阅的数据种类
+     * - 0:      默认数据种类 (所有)
+     * - 0x0001: L1快照/指数/期权
+     * - 0x0002: L2快照
+     * - 0x0004: L2委托队列
+     * - 0x0008: L2逐笔成交
+     * - 0x0010: L2逐笔委托 (深圳)
+     * - 0x0020: L2虚拟集合竞价 (上海)
+     * - 0x0040: L2市场总览 (上海)
+     * - 0x0100: 市场状态 (上海)
+     * - 0x0200: 证券实时状态 (深圳)
+     * - 0x0400: 指数行情 (与0x0001的区别在于, 0x0400可以单独订阅指数行情)
+     * - 0x0800: 期权行情 (与0x0001的区别在于, 0x0800可以单独订阅期权行情)
+     * - 0xFFFF: 所有数据
+     *
+     * @see eMdsSubscribeDataTypeT
+     */
+    int32               dataTypes;
+
+    /**
+     * 请求订阅的行情数据的起始时间 (格式为: HHMMSS 或 HHMMSSsss)
+     * - -1: 从头开始获取
+     * -  0: 从最新位置开始获取实时行情
+     * - >0: 从指定的起始时间开始获取 (HHMMSS / HHMMSSsss)
+     * - 对于应答数据, 若为 0 则表示当前没有比起始时间更加新的行情数据
+     */
+    int32               beginTime;
+
+    /**
+     * 上证股票(债券/基金)产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               sseStockSubscribed;
+
+    /**
+     * 上证指数产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               sseIndexSubscribed;
+
+    /**
+     * 上证期权产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               sseOptionSubscribed;
+
+    /**
+     * 深圳股票(债券/基金)产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               szseStockSubscribed;
+
+    /**
+     * 深圳指数产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               szseIndexSubscribed;
+
+    /**
+     * 深圳期权产品的订阅结果 (实际已订阅的产品数量)
+     * - -1: 订阅了所有产品;
+     * -  0: 未订阅或已禁用;
+     * - >0: 已订阅的产品数量(按照订阅列表成功订阅的产品数量)
+     */
+    int32               szseOptionSubscribed;
+
+} MdsMktDataRequestRspT;
+
+/**
+ * 测试请求的应答报文
+ */
+typedef struct _MdsTestRequestRsp {
+    /** 测试请求标识符 */
+    char                testReqId[32];
+
+    /** 测试请求的原始发送时间 (timeval结构或形如'YYYYMMDD-HH:mm:SS.sss'的字符串) */
+    char                origSendTime[22];
+
+    /** 按64位对齐的填充域 */
+    char                __filler1[2];
+
+    /** 测试请求应答的发送时间 (timeval结构或形如'YYYYMMDD-HH:mm:SS.sss'的字符串) */
+    char                respTime[22];
+
+    /** 按64位对齐的填充域 */
+    char                __filler2[2];
+
+} MdsTestRequestRspT;
+
+/**
+ * 登录请求的应答报文
+ */
+typedef struct _MdsLogonRsp {
+    /** 加密方法 */
+    int32               encryptMethod;
+    /** 心跳间隔, 单位为秒 */
+    int32               heartBtInt;
+
+    /** 用户名 */
+    char                username[40];
+    /** 服务器端采用的协议版本号 */
+    char                applVerId[32];
+    /** 服务器端兼容的最低协议版本号 */
+    char                minVerId[32];
+
+    uint8               hostNum;                /**< 服务端主机编号 */
+    uint8               isLeader;               /**< 是否是'主节点' */
+    uint8               leaderHostNum;          /**< '主节点'的主机编号 */
+    uint8               __filler[5];            /**< 按64位对齐的填充域 */
+} MdsLogonRspT;
+
+/**
+ * Level2 逐笔成交行情定义
+ */
+typedef struct _MdsL2Trade {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               securityType;           /**< 证券类型(股票/期权) @see eMdsSecurityTypeT */
+    int8                __isRepeated;           /**< 是否是重复的行情 (内部使用, 小于0表示数据倒流) */
+    uint8               __filler1;              /**< 按64位对齐的填充域 */
+
+    int32               tradeDate;              /**< 交易日期 (YYYYMMDD, 非官方数据) */
+    int32               TransactTime;           /**< 成交时间 (HHMMSSsss) */
+
+    int32               instrId;                /**< 产品代码 */
+    int32               ChannelNo;              /**< 成交通道/频道代码 [0..9999] */
+    int32               ApplSeqNum;             /**< 成交序号/消息记录号 (从1开始, 按频道连续) */
+
+    /** 产品代码 C6 / C8 (如: '600000' 等) */
+    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+
+    /**
+     * 成交类别 (仅适用于深交所, '4'=撤销, 'F'=成交)
+     * 对于上证, 将固定设置为 'F'(成交)
+     * @see eMdsL2TradeExecTypeT
+     */
+    char                ExecType;
+
+    /**
+     * 内外盘标志 (仅适用于上证, 'B'=外盘,主动买, 'S'=内盘,主动卖, 'N'=未知)
+     * 对于深交所, 将固定设置为 'N'(未知)
+     * @see eMdsL2TradeBSFlagT
+     */
+    char                TradeBSFlag;
+
+    uint8               __filler3[4];           /**< 按64位对齐的填充域 */
+    uint8               __channelNo;            /**< 内部频道号 (供内部使用, 取值范围{1,2,4,8}) */
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号 (内部使用) */
+
+    int32               TradePrice;             /**< 成交价格 (价格单位精确到元后四位, 即: 1元=10000) */
+    int32               TradeQty;               /**< 成交数量 (上海债券的数量单位为: 手) */
+    int64               TradeMoney;             /**< 成交金额 (金额单位精确到元后四位, 即: 1元=10000) */
+
+    int64               BidApplSeqNum;          /**< 买方订单号 (从 1 开始计数, 0 表示无对应委托) */
+    int64               OfferApplSeqNum;        /**< 卖方订单号 (从 1 开始计数, 0 表示无对应委托) */
+
+} MdsL2TradeT;
+
+/**
+ * Level2 逐笔委托行情定义 (仅适用于深交所)
+ */
+typedef struct _MdsL2Order {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               securityType;           /**< 证券类型(股票/期权) @see eMdsSecurityTypeT */
+    int8                __isRepeated;           /**< 是否是重复的行情 (内部使用, 小于0表示数据倒流) */
+    uint8               __filler1;              /**< 按64位对齐的填充域 */
+
+    int32               tradeDate;              /**< 交易日期 YYYYMMDD (自然日) */
+    int32               TransactTime;           /**< 委托时间 HHMMSSsss */
+
+    int32               instrId;                /**< 产品代码 */
+    int32               ChannelNo;              /**< 频道代码 [0..9999] */
+    int32               ApplSeqNum;             /**< 委托序号 (从1开始, 按频道连续) */
+
+    /** 产品代码 C6 / C8 (如: '000001' 等) */
+    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+
+    /** 买卖方向 ('1'=买 '2'=卖 'G'=借入 'F'=出借) */
+    char                Side;
+
+    /** 订单类型 ('1'=市价 '2'=限价 'U'=本方最优) */
+    char                OrderType;
+
+    uint8               __filler3[4];           /**< 按64位对齐的填充域 */
+    uint8               __channelNo;            /**< 内部频道号 (供内部使用, 取值范围{1,2,4,8}) */
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号 (内部使用) */
+
+    int32               Price;                  /**< 委托价格 (价格单位精确到元后四位, 即: 1元=10000) */
+    int32               OrderQty;               /**< 委托数量 */
+} MdsL2OrderT;
+
+/**
+ * Level2 逐笔数据丢失消息定义
+ * 逐笔数据(逐笔成交/逐笔委托)发生了数据丢失, 并且无法重建, 将放弃这些丢失的逐笔数据
+ * @depricated 已废弃
+ */
+typedef struct _MdsL2TickLost {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               __filler3[3];           /**< 按64位对齐的填充域 */
+
+    int32               tradeDate;              /**< 交易日期 YYYYMMDD (自然日) */
+    int32               lostTime;               /**< 发生数据丢失的时间 HHMMSSsss */
+
+    int32               channelNo;              /**< 频道代码 */
+    int32               beginApplSeqNum;        /**< 已丢失逐笔数据的起始序号 */
+    int32               endApplSeqNum;          /**< 已丢失逐笔数据的结束序号 */
+
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号 (内部使用) */
+} MdsL2TickLostT;
+
+/**
+ * 市场状态消息(MsgType=h)定义 (仅适用于上海市场, 深圳市场没有该行情)
+ */
+typedef struct _MdsTradingSessionStatusMsg {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               securityType;           /**< 证券类型(股票/期权) @see eMdsSecurityTypeT */
+    int8                __isRepeated;           /**< 是否是重复的行情 (供内部使用, 小于0 表示数据倒流) */
+    uint8               __filler1;              /**< 按64位对齐的填充域 */
+
+    int32               tradeDate;              /**< 交易日期 (YYYYMMDD, 通过拆解SendingTime得到, 并非官方数据) */
+    int32               updateTime;             /**< 行情时间 (HHMMSSsss, 交易所时间, 通过拆解SendingTime得到, 并非官方数据) */
+    int32               __exchSendingTime;      /**< 交易所发送时间 (HHMMSSsss) */
+    int32               __mdsRecvTime;          /**< MDS接收到时间 (HHMMSSsss) */
+
+    int32               TotNoRelatedSym;        /**< 最大产品数目 (包括指数) */
+
+    /**
+     * 全市场行情状态 (*C8)
+     * 该字段为 8 位字符串,左起每位表示特定的含义,无定义则填空格。
+     * 第 1 位: ‘S’表示全市场启动期间(开市前), ‘T’表示全市场处于交易期间 (含中间休市), ‘E’表示全市场处于闭市期间。
+     * 第 2 位: ‘1’表示开盘集合竞价结束标志, 未结束取‘0’。
+     * 第 3 位: ‘1’表示市场行情闭市标志, 未闭市取‘0’。
+     */
+    char                TradingSessionID[MDS_MAX_TRADING_SESSION_ID_LEN];
+
+    uint8               __filler3[3];           /**< 按64位对齐的填充域 */
+    uint32              __dataVersion;          /**< 行情数据的更新版本号 (当__isRepeated!=0时, 该值仅作为参考值) */
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号(供内部使用) */
+
+} MdsTradingSessionStatusMsgT;
+
+/**
+ * 证券实时状态定义 (仅适用于深圳市场, 上海市场没有该行情)
+ */
+typedef struct _MdsSecurityStatusMsg {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               securityType;           /**< 证券类型(股票/期权) @see eMdsSecurityTypeT */
+    int8                __isRepeated;           /**< 是否是重复的行情 (供内部使用, 小于0 表示数据倒流) */
+    uint8               __filler1;              /**< 按64位对齐的填充域 */
+
+    int32               tradeDate;              /**< 交易日期 (YYYYMMDD, 通过拆解数据生成时间OrigTime得到) */
+    int32               updateTime;             /**< 行情时间 (HHMMSSsss, 交易所时间, 通过拆解数据生成时间OrigTime得到) */
+    int32               __exchSendingTime;      /**< 交易所发送时间 (HHMMSSsss, 目前获取不到深交所的发送时间, 固定为 0) */
+    int32               __mdsRecvTime;          /**< MDS接收到时间 (HHMMSSsss) */
+
+    int32               instrId;                /**< 产品代码 */
+
+    /** 产品代码 C6 / C8 (如: '000001' 等) */
+    char                SecurityID[MDS_MAX_INSTR_CODE_LEN];
+
+    /**
+     * 证券状态 (C8)
+     * A=上市公司早间披露提示
+     * B=上市公司午间披露提示
+     */
+    char                FinancialStatus[MDS_MAX_FINANCIAL_STATUS_LEN];
+
+    uint8               __filler2;              /**< 按64位对齐的填充域 */
+    uint8               __channelNo;            /**< 内部频道号 (供内部使用, 取值范围{1,2,4,8}) */
+    uint32              __dataVersion;          /**< 行情数据的更新版本号 (当__isRepeated!=0时, 该值仅作为参考值) */
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号(供内部使用) */
+
+    int32               NoSwitch;               /**< 开关个数 */
+    int32               __filler4;              /**< 按64位对齐的填充域 */
+
+    /**
+     * 证券业务开关列表
+     * 业务开关列表为定长数组, 数组的下标位置对应于各个业务开关, 业务开关说明如下:
+     *  -  1: 融资买入, 适用于融资标的证券
+     *  -  2: 融券卖出, 适用于融券标的证券
+     *  -  3: 申购, 适用于 ETF/LOF 等开放式基金, 对于黄金 ETF 是指现金申购
+     *  -  4: 赎回, 适用于 ETF/LOF 等开放式基金, 对于黄金 ETF 是指现金赎回开关
+     *  -  5: 认购, 适用于网上发行认购代码
+     *  -  6: 转股, 适用于处于转股回售期的可转债
+     *  -  7: 回售, 适用于处于转股回售期的可转债
+     *  -  8: 行权, 适用于处于行权期的权证或期权
+     *  - 10: 买开仓, 适用于期权等衍生品
+     *  - 11: 卖开仓, 适用于期权等衍生品
+     *  - 12: 黄金ETF实物申购, 适用于黄金 ETF
+     *  - 13: 黄金ETF实物赎回, 适用于黄金 ETF
+     *  - 14: 预受要约, 适用于处于要约收购期的股票
+     *  - 15: 解除要约, 适用于处于要约收购期的股票
+     *  - 18: 转股撤单, 适用于处于转股回售期的可转债
+     *  - 19: 回售撤单, 适用于处于转股回售期的可转债
+     *  - 20: 质押, 适用于质押式回购可质押入库证券
+     *  - 21: 解押, 适用于质押式回购可质押入库证券
+     *  - 22: 表决权, 适用于优先股
+     *  - 23: 股票质押式回购, 适用于可开展股票质押式回购业务的证券
+     *  - 24: 实时分拆, 适用于分级基金
+     *  - 25: 实时合并, 适用于分级基金
+     *  - 26: 备兑开仓, 适用于期权等衍生品
+     *  - 27: 做市商报价, 适用于期权等支持做市商报价的证券
+     */
+    struct {
+        /** 业务开关的使能标志 (0 未启用, 1 启用) */
+        uint8           switchFlag;
+
+        /** 开关状态 (0 关闭, 1 开启) */
+        uint8           switchStatus;
+    } switches[MDS_MAX_SECURITY_SWITCH_CNT];
+
+} MdsSecurityStatusMsgT;
+
+/**
+ * 汇总的应答消息的消息体定义
+ */
+typedef union _MdsMktRspMsgBody {
+    /** 行情订阅请求的应答报文 */
+    MdsMktDataRequestRspT           mktDataRequestRsp;
+    /** 测试请求的应答报文 */
+    MdsTestRequestRspT              testRequestRsp;
+    /** 登录请求的应答报文 */
+    MdsLogonRspT                    logonRsp;
+
+    /** 证券行情全幅消息 */
+    //MdsMktDataSnapshotT             mktDataSnapshot;
+    /** Level2 逐笔成交行情 */
+    MdsL2TradeT                     trade;
+    /** Level2 逐笔委托行情 */
+    MdsL2OrderT                     order;
+    /** Level2 逐笔数据丢失消息 @depricated 已废弃 */
+    MdsL2TickLostT                  tickLost;
+
+    /** 市场状态消息 */
+    MdsTradingSessionStatusMsgT     trdSessionStatus;
+    /** 证券实时状态消息 */
+    MdsSecurityStatusMsgT           securityStatus;
+} MdsMktRspMsgBodyT;
+
+
+/**
+ ******************************************************
+ * 通信消息的消息类型定义 -- 交易类
+ ******************************************************
  */
 enum ZpquantMsgType {
     /*
