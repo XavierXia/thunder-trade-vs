@@ -32,13 +32,13 @@ class CZpquantMdSpi
 {
 public:
     ///深度tick行情通知
-    virtual void OnTickRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) = 0;
+    virtual void OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData) = 0;
 
     ///深度trade行情通知
-    virtual void OnTradeRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) = 0;
+    virtual void OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData) = 0;
 
     ///深度order行情通知
-    virtual void OnOrderRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) = 0;
+    virtual void OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData) = 0;
 };
 
 class MD_API_EXPORT CZpquantMdApi
