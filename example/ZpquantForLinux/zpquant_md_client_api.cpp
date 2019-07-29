@@ -113,9 +113,10 @@ CZpquantMdApi::Start() {
       auto mktDataConfig = c_Config.find("mktData");
       if (mktDataConfig != c_Config.not_found())
       {
-        auto exchIdNode = mktDataConfig->second.find("exchId");
-        if(!(exchIdNode== mktDataConfig->second.not_found())) exchId = exchIdNode->second.data();
-
+        // auto exchIdNode = mktDataConfig->second.find("exchId");
+        // if(!(exchIdNode== mktDataConfig->second.not_found())) exchId = exchIdNode->second.data();
+        exchId = c_Config.get<uint8>("mktData.exchId");
+        
         auto securityTypeNode = mktDataConfig->second.find("securityType");
         if(!(securityTypeNode== mktDataConfig->second.not_found())) securityType = securityTypeNode->second.data();
         auto tradeDateNode = mktDataConfig->second.find("tradeDate");
