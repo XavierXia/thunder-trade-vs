@@ -595,6 +595,15 @@ typedef struct _MdsL2MarketOverview {
 } MdsL2MarketOverviewT;
 
 /**
+ * 价位信息定义
+ */
+typedef struct _MdsPriceLevelEntry {
+    int32               Price;                  /**< 委托价格 */
+    int32               NumberOfOrders;         /**< 价位总委托笔数 (Level1不揭示该值, 固定为0) */
+    int64               OrderQty;               /**< 委托数量 */
+} MdsPriceLevelEntryT;
+
+/**
  * Level2 快照行情定义
  * 股票(A、B股)、债券、基金
  *
@@ -700,14 +709,6 @@ typedef struct _MdsMktDataSnapshot {
     };
 } MdsMktDataSnapshotT;
 
-/**
- * 价位信息定义
- */
-typedef struct _MdsPriceLevelEntry {
-    int32               Price;                  /**< 委托价格 */
-    int32               NumberOfOrders;         /**< 价位总委托笔数 (Level1不揭示该值, 固定为0) */
-    int64               OrderQty;               /**< 委托数量 */
-} MdsPriceLevelEntryT;
 
 /**
  * 汇总的应答消息的消息体定义
