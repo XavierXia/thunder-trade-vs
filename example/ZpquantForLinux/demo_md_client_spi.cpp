@@ -11,20 +11,35 @@
 void 
 demoMdClientSpi::OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
-
+    fprintf(stdout, ">>> OnTick: " \
+            "证券代码[%s], " \
+            "TradePx[%d], HighPx[%d], " \
+            "\n",
+            pDepthMarketData->mktDataSnapshot->securityId,
+            pDepthMarketData->mktDataSnapshot->TradePx,pDepthMarketData->mktDataSnapshot->HighPx);
 }
 
 
 void 
 demoMdClientSpi::OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
-
+    fprintf(stdout, ">>> OnTrade: " \
+            "证券代码[%s], " \
+            "TradePrice[%d], TradeQty[%d], " \
+            "\n",
+            pDepthMarketData->trade->securityId,
+            pDepthMarketData->trade->TradePrice,pDepthMarketData->trade->TradeQty);
 }
 
 void 
 demoMdClientSpi::OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 {
-
+    fprintf(stdout, ">>> OnOrder: " \
+            "证券代码[%s], " \
+            "Price[%d], OrderQty[%d], " \
+            "\n",
+            pDepthMarketData->order->securityId,
+            pDepthMarketData->order->Price,pDepthMarketData->order->OrderQty);
 }
 
 demoMdClientSpi::demoMdClientSpi(int32 something) {
