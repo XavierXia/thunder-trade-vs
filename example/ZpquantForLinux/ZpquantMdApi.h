@@ -14,8 +14,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include <boost/property_tree/ptree.hpp>  
+#include <boost/property_tree/json_parser.hpp> 
+using namespace boost::property_tree;
+
 #include "ZpquantUserApiStruct.h"
 #include "redox.hpp"
+
 
 #if defined(ISLIB) && defined(WIN32)
 #ifdef LIB_MD_API_EXPORT

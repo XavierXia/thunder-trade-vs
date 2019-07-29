@@ -388,35 +388,35 @@ CZpquantMdApi::Start() {
       }
 
       child_Bid = pt.get_child("mktData.body.bidNumberOfOrders");
-      int i = 0;
+      i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
         msgBody.mktDataSnapshot.BidLevels[i].NumberOfOrders = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.bidOrderQty");
-      int i = 0;
+      i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
         msgBody.mktDataSnapshot.BidLevels[i].OrderQty = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerPrice");
-      int i = 0;
+      i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
         msgBody.mktDataSnapshot.OfferLevels[i].Price = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerNumberOfOrders");
-      int i = 0;
+      i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
         msgBody.mktDataSnapshot.OfferLevels[i].NumberOfOrders = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerOrderQty");
-      int i = 0;
+      i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
         msgBody.mktDataSnapshot.OfferLevels[i].OrderQty = vt.second.get_value<int32>();
         i++;
