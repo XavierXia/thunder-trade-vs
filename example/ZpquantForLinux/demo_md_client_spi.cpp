@@ -15,8 +15,8 @@ demoMdClientSpi::OnTickRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
             "证券代码[%s], " \
             "TradePx[%d], HighPx[%d], " \
             "\n",
-            pDepthMarketData->mktDataSnapshot->securityId,
-            pDepthMarketData->mktDataSnapshot->TradePx,pDepthMarketData->mktDataSnapshot->HighPx);
+            pDepthMarketData->mktDataSnapshot.securityId,
+            pDepthMarketData->mktDataSnapshot.TradePx,pDepthMarketData->mktDataSnapshot.HighPx);
 }
 
 
@@ -27,8 +27,8 @@ demoMdClientSpi::OnTradeRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
             "证券代码[%s], " \
             "TradePrice[%d], TradeQty[%d], " \
             "\n",
-            pDepthMarketData->trade->securityId,
-            pDepthMarketData->trade->TradePrice,pDepthMarketData->trade->TradeQty);
+            pDepthMarketData->trade.securityId,
+            pDepthMarketData->trade.TradePrice,pDepthMarketData->trade.TradeQty);
 }
 
 void 
@@ -38,8 +38,8 @@ demoMdClientSpi::OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
             "证券代码[%s], " \
             "Price[%d], OrderQty[%d], " \
             "\n",
-            pDepthMarketData->order->securityId,
-            pDepthMarketData->order->Price,pDepthMarketData->order->OrderQty);
+            pDepthMarketData->order.securityId,
+            pDepthMarketData->order.Price,pDepthMarketData->order.OrderQty);
 }
 
 demoMdClientSpi::demoMdClientSpi(int32 something) {
