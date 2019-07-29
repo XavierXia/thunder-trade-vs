@@ -438,25 +438,6 @@ typedef struct _MdsL2Order {
 } MdsL2OrderT;
 
 /**
- * Level2 逐笔数据丢失消息定义
- * 逐笔数据(逐笔成交/逐笔委托)发生了数据丢失, 并且无法重建, 将放弃这些丢失的逐笔数据
- * @depricated 已废弃
- */
-typedef struct _MdsL2TickLost {
-    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
-    uint8               __filler3[3];           /**< 按64位对齐的填充域 */
-
-    int32               tradeDate;              /**< 交易日期 YYYYMMDD (自然日) */
-    int32               lostTime;               /**< 发生数据丢失的时间 HHMMSSsss */
-
-    int32               channelNo;              /**< 频道代码 */
-    int32               beginApplSeqNum;        /**< 已丢失逐笔数据的起始序号 */
-    int32               endApplSeqNum;          /**< 已丢失逐笔数据的结束序号 */
-
-    uint64              __origTickSeq;          /**< 对应的原始行情的序列号 (内部使用) */
-} MdsL2TickLostT;
-
-/**
  * 市场状态消息(MsgType=h)定义 (仅适用于上海市场, 深圳市场没有该行情)
  */
 typedef struct _MdsTradingSessionStatusMsg {
@@ -560,29 +541,189 @@ typedef struct _MdsSecurityStatusMsg {
 } MdsSecurityStatusMsgT;
 
 /**
+ * Level1/Level2 快照行情(证券行情全幅消息)的消息头定义
+ */
+typedef struct _MdsMktDataSnapshotHead {
+    uint8               exchId;                 /**< 交易所代码(沪/深) @see eMdsExchangeIdT */
+    uint8               securityType;           /**< 证券类型(股票/期权) @see eMdsSecurityTypeT */
+    int8                __isRepeated;           /**< 是否是重复的行情 (内部使用, 小于0表示数据倒流) */
+    uint8               __origMdSource;         /**< 原始行情数据来源 @see eMdsMsgSourceT */
+
+    int32               tradeDate;              /**< 交易日期 (YYYYMMDD, 8位整型数值) */
+    int32               updateTime;             /**< 行情时间 (HHMMSSsss, 交易所时间, 只有上海L1可能会通过拆解SendingTime得到) */
+
+    int32               instrId;                /**< 产品代码 */
+    int16               bodyLength;             /**< 实际数据长度 */
+    uint8               mdStreamType;           /**< 行情数据类型 @see eMdsMdStreamTypeT */
+    uint8               __channelNo;            /**< 内部频道号 (供内部使用, 取值范围{1,2,4,8}) */
+    uint32              __dataVersion;          /**< 行情数据的更新版本号 */
+    uint64              __origTickSeq;          /**< 对应的原始行情的序列号(供内部使用) */
+
+} MdsMktDataSnapshotHeadT;
+
+/**
+ * Level2 委托队列信息 (买一／卖一前五十笔委托明细)
+ */
+typedef struct _MdsL2BestOrdersSnapshotBody {
+    /** 产品代码 C6 / C8 (如: '600000' 等) */
+    char                SecurityID[9];
+    uint8               __filler[5];            /**< 按64位对齐的填充域 */
+    uint8               NoBidOrders;            /**< 买一价位的揭示委托笔数 */
+    uint8               NoOfferOrders;          /**< 卖一价位的揭示委托笔数 */
+
+    uint64              TotalVolumeTraded;      /**< 成交总量 (来自快照行情的冗余字段) */
+    int32               BestBidPrice;           /**< 最优申买价 */
+    int32               BestOfferPrice;         /**< 最优申卖价 */
+
+    /** 买一价位的委托明细(前50笔) */
+    int32               BidOrderQty[50];
+
+    /** 卖一价位的委托明细(前50笔) */
+    int32               OfferOrderQty[50];
+
+} MdsL2BestOrdersSnapshotBodyT;
+
+/**
+ * Level2 市场总览消息定义
+ */
+typedef struct _MdsL2MarketOverview {
+    int32               OrigDate;               /**< 市场日期 (YYYYMMDD) */
+    int32               OrigTime;               /**< 市场时间 (HHMMSSss0, 实际精度为百分之一秒(HHMMSSss)) */
+
+    int32               __exchSendingTime;      /**< 交易所发送时间 (HHMMSS000, 实际精度为秒(HHMMSS)) */
+    int32               __mdsRecvTime;          /**< MDS接收到时间 (HHMMSSsss) */
+} MdsL2MarketOverviewT;
+
+/**
+ * 完整的 Level1/Level2 证券行情全幅消息定义
+ */
+typedef struct _MdsMktDataSnapshot {
+    /** 行情数据的消息头 */
+    MdsMktDataSnapshotHeadT                 head;
+
+    union {
+        /** Level2 快照行情(股票、债券、基金) */
+        MdsL2StockSnapshotBodyT             l2Stock;
+        /** Level2 委托队列(买一／卖一前五十笔委托明细) */
+        //MdsL2BestOrdersSnapshotBodyT        l2BestOrders;
+        /** Level2 市场总览 (仅上证) */
+        //MdsL2MarketOverviewT                l2MarketOverview;
+    };
+} MdsMktDataSnapshotT;
+
+/**
+ * 价位信息定义
+ */
+typedef struct _MdsPriceLevelEntry {
+    int32               Price;                  /**< 委托价格 */
+    int32               NumberOfOrders;         /**< 价位总委托笔数 (Level1不揭示该值, 固定为0) */
+    int64               OrderQty;               /**< 委托数量 */
+} MdsPriceLevelEntryT;
+
+/**
+ * Level2 快照行情定义
+ * 股票(A、B股)、债券、基金
+ *
+ * 关于集合竞价期间的虚拟集合竞价行情 (上海L2、深圳L2):
+ * - 深圳L2集合竞价期间的虚拟成交价通过买卖盘档位揭示, 其中买一和卖一都揭示虚拟成交价格和成交数量,
+ *   买二或卖二揭示虚拟成交价位上的买剩余量或卖剩余量
+ * - 上海L2的虚拟集合竞价行情通过单独虚拟集合竞价快照消息(MdsL2VirtualAuctionPriceT)发布
+ */
+typedef struct _MdsL2StockSnapshotBody {
+    /** 产品代码 C6 / C8 (如: '600000' 等) */
+    char                SecurityID[9];
+
+    /**
+     * 产品实时阶段及标志 C8 / C4
+     *
+     * 上交所股票 (C8):
+     *  -# 第 1 位:
+     *      - ‘S’表示启动 (开市前) 时段, ‘C’表示集合竞价时段, ‘T’表示连续交易时段
+     *      - ‘B’表示休市时段, ‘E’表示闭市时段, ‘P’表示产品停牌
+     *      - ‘M’表示可恢复交易的熔断时段 (盘中集合竞价), ‘N’表示不可恢复交易的熔断时段 (暂停交易至闭市)
+     *      - ‘D’表示开盘集合竞价阶段结束到连续竞价阶段开始之前的时段 (如有) 。
+     *  -# 第 2 位:
+     *      - ‘0’表示此产品不可正常交易,
+     *      - ‘1’表示此产品可正常交易,
+     *      - 无意义填空格。
+     *  -# 第 3 位:
+     *      - ‘0’表示未上市, ‘1’表示已上市。
+     *  -# 第 4 位:
+     *      - ‘0’表示此产品在当前时段不接受进行新订单申报,
+     *      - ‘1’ 表示此产品在当前时段可接受进行新订单申报。
+     *      - 无意义填空格。
+     *
+     * 上交所期权 (C4):
+     *  -# 第 1 位:
+     *      - ‘S’表示启动(开市前)时段, ‘C’表示集合竞价时段, ‘T’表示连续交易时段,
+     *      - ‘B’表示休市时段, ‘E’表示闭市时段, ‘V’表示波动性中断, ‘P’ 表示临时停牌, ‘U’收盘集合竞价。
+     *      - ‘M’表示可恢复 交易的熔断(盘中集合竞价), ‘N’表示不可恢复交易的熔断(暂停交易至闭市)
+     *  -# 第 2 位:
+     *      - ‘0’表示未连续停牌, ‘1’表示连续停牌。(预留,暂填空格)
+     *  -# 第 3 位:
+     *      - ‘0’表示不限制开仓, ‘1’表示限制备兑开仓, ‘2’表示卖出开仓, ‘3’表示限制卖出开仓、备兑开仓,
+     *      - ‘4’表示限制买入开仓, ‘5’表示限制买入开 仓、备兑开仓,‘6’表示限制买入开仓、卖出开仓,
+     *      - ‘7’表示限制买入开仓、卖出开仓、备兑开仓
+     *  -# 第 4 位:
+     *      - ‘0’表示此产品在当前时段不接受进行新订单申报, ‘1’ 表示此产品在当前时段可接受进行新订单申报。
+     *
+     * 深交所 (C8):
+     *  -# 第 0 位:
+     *      - S=启动(开市前) O=开盘集合竞价 T=连续竞价
+     *      - B=休市 C=收盘集合竞价 E=已闭市 H=临时停牌
+     *      - A=盘后交易 V=波动性中断
+     *  -# 第 1 位:
+     *      - 0=正常状态
+     *      - 1=全天停牌
+     */
+    char                TradingPhaseCode[9];
+    char                __filler[6];            /**< 按64位对齐的填充域 */
+
+    uint64              NumTrades;              /**< 成交笔数 */
+    uint64              TotalVolumeTraded;      /**< 成交总量 */
+    int64               TotalValueTraded;       /**< 成交总金额 (金额单位精确到元后四位, 即: 1元=10000) */
+
+    int32               PrevClosePx;            /**< 昨日收盘价/期权合约昨日结算价 (价格单位精确到元后四位, 即: 1元=10000) */
+    int32               OpenPx;                 /**< 今开盘价 (价格单位精确到元后四位, 即: 1元=10000) */
+    int32               HighPx;                 /**< 最高价 */
+    int32               LowPx;                  /**< 最低价 */
+    int32               TradePx;                /**< 成交价 */
+    int32               ClosePx;                /**< 今收盘价/期权收盘价 (仅上海, 深圳行情没有单独的收盘价) */
+
+    int32               IOPV;                   /**< 基金份额参考净值/ETF申赎的单位参考净值 (适用于基金) */
+    int32               NAV;                    /**< 基金 T-1 日净值 (适用于基金) */
+    uint64              TotalLongPosition;      /**< 合约总持仓量 (适用于期权) */
+
+    int64               TotalBidQty;            /**< 委托买入总量 */
+    int64               TotalOfferQty;          /**< 委托卖出总量 */
+    int32               WeightedAvgBidPx;       /**< 加权平均委买价格 */
+    int32               WeightedAvgOfferPx;     /**< 加权平均委卖价格 */
+    int32               BidPriceLevel;          /**< 买方委托价位数 (实际的委托价位总数, 仅上海) */
+    int32               OfferPriceLevel;        /**< 卖方委托价位数 (实际的委托价位总数, 仅上海) */
+
+    /** 十档买盘价位信息 */
+    MdsPriceLevelEntryT BidLevels[10];
+
+    /** 十档卖盘价位信息 */
+    MdsPriceLevelEntryT OfferLevels[10];
+
+} MdsL2StockSnapshotBodyT;
+
+/**
  * 汇总的应答消息的消息体定义
  */
 typedef union _MdsMktRspMsgBody {
-    /** 行情订阅请求的应答报文 */
-    MdsMktDataRequestRspT           mktDataRequestRsp;
-    /** 测试请求的应答报文 */
-    MdsTestRequestRspT              testRequestRsp;
-    /** 登录请求的应答报文 */
-    MdsLogonRspT                    logonRsp;
-
     /** 证券行情全幅消息 */
-    //MdsMktDataSnapshotT             mktDataSnapshot;
+    MdsMktDataSnapshotT             mktDataSnapshot;
     /** Level2 逐笔成交行情 */
     MdsL2TradeT                     trade;
     /** Level2 逐笔委托行情 */
     MdsL2OrderT                     order;
-    /** Level2 逐笔数据丢失消息 @depricated 已废弃 */
-    MdsL2TickLostT                  tickLost;
 
     /** 市场状态消息 */
-    MdsTradingSessionStatusMsgT     trdSessionStatus;
+    //MdsTradingSessionStatusMsgT     trdSessionStatus;
     /** 证券实时状态消息 */
-    MdsSecurityStatusMsgT           securityStatus;
+    //MdsSecurityStatusMsgT           securityStatus;
 } MdsMktRspMsgBodyT;
 
 
