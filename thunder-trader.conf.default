@@ -8,21 +8,21 @@
     },
     "logconfig": 
     {
-        "logtype": "syslog|file|console",
+    	"logtype": "syslog|file|console",
         "syslog": 
-        {
+	{
             "serveraddress": "127.0.0.1",
             "port": "514"
         },
-        "file":
-         {
+        "file": 
+	{
             "target": "ATMLOG",
             "filenamehead": "atm_log_",
             "rotationsize": "1048576",
             "autoflush": "true"
         },
         "console": 
-        {
+	{
         }
     }
 }
