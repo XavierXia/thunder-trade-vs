@@ -146,9 +146,9 @@ CZpquantMdApi::Start() {
       msgBody.trade.TransactTime = TransactTime;
       msgBody.trade.ChannelNo = ChannelNo;
       msgBody.trade.ApplSeqNum = ApplSeqNum;
-      if (SecurityID == NULL) strncpy(msgBody.trade.SecurityID, SecurityID.c_str(), sizeof(msgBody.trade.SecurityID) - 1);
-      if (ExecType == NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str(), sizeof(msgBody.trade.ExecType) - 1);
-      if (TradeBSFlag == NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str(), sizeof(msgBody.trade.TradeBSFlag) - 1);
+      if (SecurityID == NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
+      if (ExecType == NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
+      if (TradeBSFlag == NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
       msgBody.trade.TradePrice = TradePrice;
       msgBody.trade.TradeQty = TradeQty;
       msgBody.trade.TradeMoney = TradeMoney;
