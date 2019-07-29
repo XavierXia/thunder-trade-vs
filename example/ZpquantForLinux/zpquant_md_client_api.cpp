@@ -93,58 +93,50 @@ CZpquantMdApi::Start() {
             return false;
         }
 
-      uint8 exchId;
-      uint8 securityType;
-      int32 tradeDate;
-      int32 TransactTime;
-      int32 ChannelNo;
-      int32 ApplSeqNum;
-      string SecurityID;
+      if (c_Config.find("mktData") == c_Config.not_found()) return false;
+      
+      uint8 exchId = c_Config.get<uint8>("mktData.exchId");
+      uint8 securityType = c_Config.get<uint8>("mktData.securityType");
+      int32 tradeDate = c_Config.get<int32>("mktData.tradeDate");
+      int32 TransactTime = c_Config.get<int32>("mktData.TransactTime");
+      int32 ChannelNo = c_Config.get<int32>("mktData.ChannelNo");
+      int32 ApplSeqNum = c_Config.get<int32>("mktData.ApplSeqNum");
+      string SecurityID = c_Config.get<string>("mktData.SecurityID");
+      string ExecType = c_Config.get<string>("mktData.ExecType");
+      string TradeBSFlag = c_Config.get<string>("mktData.TradeBSFlag");
+      int32 TradePrice = c_Config.get<int32>("mktData.TradePrice");
+      int32 TradeQty = c_Config.get<int32>("mktData.TradeQty");
+      int64 TradeMoney = c_Config.get<int64>("mktData.TradeMoney");
+      int64 BidApplSeqNum = c_Config.get<int64>("mktData.BidApplSeqNum");
+      int64 OfferApplSeqNum = c_Config.get<int64>("mktData.OfferApplSeqNum");
 
-      string ExecType;
-      string TradeBSFlag;
-      int32 TradePrice;
-      int32 TradeQty;
+        // auto securityTypeNode = mktDataConfig->second.find("securityType");
+        // if(!(securityTypeNode== mktDataConfig->second.not_found())) securityType = securityTypeNode->second.data();
+        // auto tradeDateNode = mktDataConfig->second.find("tradeDate");
+        // if(!(tradeDateNode== mktDataConfig->second.not_found())) tradeDate = tradeDateNode->second.data();
+        // auto TransactTimeNode = mktDataConfig->second.find("TransactTime");
+        // if(!(TransactTimeNode== mktDataConfig->second.not_found())) TransactTime = TransactTimeNode->second.data();
+        // auto ChannelNoNode = mktDataConfig->second.find("ChannelNo");
+        // if(!(ChannelNoNode== mktDataConfig->second.not_found())) ChannelNo = ChannelNoNode->second.data();
+        // auto ApplSeqNumNode = mktDataConfig->second.find("ApplSeqNum");
+        // if(!(ApplSeqNumNode== mktDataConfig->second.not_found())) ApplSeqNum = ApplSeqNumNode->second.data();
+        // auto SecurityIDNode = mktDataConfig->second.find("SecurityID");
+        // if(!(SecurityIDNode== mktDataConfig->second.not_found())) SecurityID = SecurityIDNode->second.data();
+        // auto ExecTypeNode = mktDataConfig->second.find("ExecType");
+        // if(!(ExecTypeNode== mktDataConfig->second.not_found())) ExecType = ExecTypeNode->second.data();
+        // auto TradeBSFlagNode = mktDataConfig->second.find("TradeBSFlag");
+        // if(!(TradeBSFlagNode== mktDataConfig->second.not_found())) TradeBSFlag = TradeBSFlagNode->second.data();
+        // auto TradePriceNode = mktDataConfig->second.find("TradePrice");
+        // if(!(TradePriceNode== mktDataConfig->second.not_found())) TradePrice = TradePriceNode->second.data();
+        // auto TradeQtyNode = mktDataConfig->second.find("TradeQty");
+        // if(!(TradeQtyNode== mktDataConfig->second.not_found())) TradeQty = TradeQtyNode->second.data();
 
-      int64 TradeMoney;
-      int64 BidApplSeqNumNode;
-      int64 OfferApplSeqNum;
-
-      auto mktDataConfig = c_Config.find("mktData");
-      if (mktDataConfig != c_Config.not_found())
-      {
-        // auto exchIdNode = mktDataConfig->second.find("exchId");
-        // if(!(exchIdNode== mktDataConfig->second.not_found())) exchId = exchIdNode->second.data();
-        exchId = c_Config.get<uint8>("mktData.exchId");
-        
-        auto securityTypeNode = mktDataConfig->second.find("securityType");
-        if(!(securityTypeNode== mktDataConfig->second.not_found())) securityType = securityTypeNode->second.data();
-        auto tradeDateNode = mktDataConfig->second.find("tradeDate");
-        if(!(tradeDateNode== mktDataConfig->second.not_found())) tradeDate = tradeDateNode->second.data();
-        auto TransactTimeNode = mktDataConfig->second.find("TransactTime");
-        if(!(TransactTimeNode== mktDataConfig->second.not_found())) TransactTime = TransactTimeNode->second.data();
-        auto ChannelNoNode = mktDataConfig->second.find("ChannelNo");
-        if(!(ChannelNoNode== mktDataConfig->second.not_found())) ChannelNo = ChannelNoNode->second.data();
-        auto ApplSeqNumNode = mktDataConfig->second.find("ApplSeqNum");
-        if(!(ApplSeqNumNode== mktDataConfig->second.not_found())) ApplSeqNum = ApplSeqNumNode->second.data();
-        auto SecurityIDNode = mktDataConfig->second.find("SecurityID");
-        if(!(SecurityIDNode== mktDataConfig->second.not_found())) SecurityID = SecurityIDNode->second.data();
-        auto ExecTypeNode = mktDataConfig->second.find("ExecType");
-        if(!(ExecTypeNode== mktDataConfig->second.not_found())) ExecType = ExecTypeNode->second.data();
-        auto TradeBSFlagNode = mktDataConfig->second.find("TradeBSFlag");
-        if(!(TradeBSFlagNode== mktDataConfig->second.not_found())) TradeBSFlag = TradeBSFlagNode->second.data();
-        auto TradePriceNode = mktDataConfig->second.find("TradePrice");
-        if(!(TradePriceNode== mktDataConfig->second.not_found())) TradePrice = TradePriceNode->second.data();
-        auto TradeQtyNode = mktDataConfig->second.find("TradeQty");
-        if(!(TradeQtyNode== mktDataConfig->second.not_found())) TradeQty = TradeQtyNode->second.data();
-
-        auto TradeMoneyNode = mktDataConfig->second.find("TradeMoney");
-        if(!(TradeMoneyNode== mktDataConfig->second.not_found())) TradeMoney = TradeMoneyNode->second.data();
-        auto BidApplSeqNumNode = mktDataConfig->second.find("BidApplSeqNum");
-        if(!(BidApplSeqNumNode== mktDataConfig->second.not_found())) BidApplSeqNum = BidApplSeqNumNode->second.data();
-        auto OfferApplSeqNumNode = mktDataConfig->second.find("OfferApplSeqNum");
-        if(!(OfferApplSeqNumNode== mktDataConfig->second.not_found())) OfferApplSeqNum = OfferApplSeqNumNode->second.data();
-      }
+        // auto TradeMoneyNode = mktDataConfig->second.find("TradeMoney");
+        // if(!(TradeMoneyNode== mktDataConfig->second.not_found())) TradeMoney = TradeMoneyNode->second.data();
+        // auto BidApplSeqNumNode = mktDataConfig->second.find("BidApplSeqNum");
+        // if(!(BidApplSeqNumNode== mktDataConfig->second.not_found())) BidApplSeqNum = BidApplSeqNumNode->second.data();
+        // auto OfferApplSeqNumNode = mktDataConfig->second.find("OfferApplSeqNum");
+        // if(!(OfferApplSeqNumNode== mktDataConfig->second.not_found())) OfferApplSeqNum = OfferApplSeqNumNode->second.data();
 
       MdsMktRspMsgBodyT msgBody;
       msgBody.trade.exchId = exchId;
@@ -179,47 +171,21 @@ CZpquantMdApi::Start() {
             return false;
         }
 
-      uint8 exchId;
-      uint8 securityType;
-      int32 tradeDate;
-      int32 TransactTime;
-      int32 ChannelNo;
-      int32 ApplSeqNum;
-      string SecurityID;
-
-      string Side;
-      string OrderType;
-      int32 Price;
-      int32 OrderQty;
-
       auto mktDataConfig = c_Config.find("mktData");
-      if (mktDataConfig != c_Config.not_found())
-      {
-        auto exchIdNode = mktDataConfig->second.find("exchId");
-        if(!(exchIdNode== mktDataConfig->second.not_found())) exchId = exchIdNode->second.data();
+      if (mktDataConfig == c_Config.not_found()) return false;
+  
+      uint8 exchId = c_Config.get<uint8>("mktData.exchId");
+      uint8 securityType = c_Config.get<uint8>("mktData.securityType");
+      int32 tradeDate = c_Config.get<int32>("mktData.tradeDate");
+      int32 TransactTime = c_Config.get<int32>("mktData.TransactTime");
+      int32 ChannelNo = c_Config.get<int32>("mktData.ChannelNo");
+      int32 ApplSeqNum = c_Config.get<int32>("mktData.ApplSeqNum");
+      string SecurityID = c_Config.get<string>("mktData.SecurityID");
 
-        auto securityTypeNode = mktDataConfig->second.find("securityType");
-        if(!(securityTypeNode== mktDataConfig->second.not_found())) securityType = securityTypeNode->second.data();
-        auto tradeDateNode = mktDataConfig->second.find("tradeDate");
-        if(!(tradeDateNode== mktDataConfig->second.not_found())) tradeDate = tradeDateNode->second.data();
-        auto TransactTimeNode = mktDataConfig->second.find("TransactTime");
-        if(!(TransactTimeNode== mktDataConfig->second.not_found())) TransactTime = TransactTimeNode->second.data();
-        auto ChannelNoNode = mktDataConfig->second.find("ChannelNo");
-        if(!(ChannelNoNode== mktDataConfig->second.not_found())) ChannelNo = ChannelNoNode->second.data();
-        auto ApplSeqNumNode = mktDataConfig->second.find("ApplSeqNum");
-        if(!(ApplSeqNumNode== mktDataConfig->second.not_found())) ApplSeqNum = ApplSeqNumNode->second.data();
-        auto SecurityIDNode = mktDataConfig->second.find("SecurityID");
-        if(!(SecurityIDNode== mktDataConfig->second.not_found())) SecurityID = SecurityIDNode->second.data();
-
-        auto SideNode = mktDataConfig->second.find("Side");
-        if(!(SideNode== mktDataConfig->second.not_found())) Side = SideNode->second.data();
-        auto OrderTypeNode = mktDataConfig->second.find("OrderType");
-        if(!(OrderTypeNode== mktDataConfig->second.not_found())) OrderType = OrderTypeNode->second.data();
-        auto PriceNode = mktDataConfig->second.find("Price");
-        if(!(PriceNode== mktDataConfig->second.not_found())) Price = PriceNode->second.data();
-        auto OrderQtyNode = mktDataConfig->second.find("OrderQty");
-        if(!(OrderQtyNode== mktDataConfig->second.not_found())) OrderQty = OrderQtyNode->second.data();
-      }
+      string Side = c_Config.get<string>("mktData.Side");
+      string OrderType = c_Config.get<string>("mktData.OrderType");
+      int32 Price = c_Config.get<int32>("mktData.Price");
+      int32 OrderQty = c_Config.get<int32>("mktData.OrderQty");
 
       MdsMktRspMsgBodyT msgBody;
       msgBody.order.exchId = exchId;
@@ -252,32 +218,6 @@ CZpquantMdApi::Start() {
             return false;
         }
 
-      uint8 exchId;
-      uint8 securityType;
-      int32 tradeDate;
-      int32 updateTime;
-      int32 mdStreamType;
-
-      string SecurityID;
-      string TradingPhaseCode;
-      uint64 NumTrades;
-      uint64 TotalVolumeTraded;
-      int64 TotalValueTraded;
-      int32 PrevClosePx;
-      int32 OpenPx;
-      int32 HighPx;
-      int32 LowPx;
-      int32 TradePx;
-      int32 ClosePx;
-      int32 IOPV;
-      int32 NAV;
-      uint64 TotalLongPosition;
-      int64 TotalBidQty;            /**< 委托买入总量 */
-      int64 TotalOfferQty;          /**< 委托卖出总量 */
-      int32 WeightedAvgBidPx;       /**< 加权平均委买价格 */
-      int32 WeightedAvgOfferPx;     /**< 加权平均委卖价格 */
-      int32 BidPriceLevel;          
-      int32 OfferPriceLevel;
       /** 十档买盘价位信息 */
       MdsPriceLevelEntryT BidLevels[10];
       /** 十档卖盘价位信息 */
@@ -285,141 +225,103 @@ CZpquantMdApi::Start() {
 
 
       auto mktDataConfig = c_Config.find("mktData");
-      if (mktDataConfig != c_Config.not_found())
-      {
+      if (mktDataConfig == c_Config.not_found()) return false;
 
-        auto head = mktDataConfig->second.find("head");
-        auto exchIdTypeNode = head->second.find("exchId");
-        if(exchIdTypeNode != head->second.not_found()) exchId = exchIdTypeNode->second.data();
-        // if (head->second.find("exchId") != head->second.not_found())
-        //     exchId = head->second.find("exchId")->second.data();
-        auto securityTypeNode = head->second.find("securityType");
-        if(securityTypeNode != head->second.not_found()) securityType = securityTypeNode->second.data();
-        auto tradeDateNode = head->second.find("tradeDate");
-        if(tradeDateNode != head->second.not_found()) tradeDate = tradeDateNode->second.data();
-        auto updateTimeNode = head->second.find("updateTime");
-        if(updateTimeNode != head->second.not_found()) updateTime = updateTimeNode->second.data();
-        auto mdStreamTypeNode = head->second.find("mdStreamType");
-        if(mdStreamTypeNode != head->second.not_found()) mdStreamType = mdStreamTypeNode->second.data();
+      uint8 exchId = c_Config.get<uint8>("mktData.head.exchId");
+      uint8 securityType = c_Config.get<uint8>("mktData.head.securityType");
+      int32 tradeDate = c_Config.get<int32>("mktData.head.tradeDate");
+      int32 updateTime = c_Config.get<int32>("mktData.head.updateTime");
+      int32 mdStreamType = c_Config.get<int32>("mktData.head.mdStreamType");
 
-        auto body = mktDataConfig->second.find("body");
-
-        auto SecurityIDNode = body->second.find("SecurityID");
-        if(SecurityIDNode != body->second.not_found()) SecurityID = SecurityIDNode->second.data();
-        auto TradingPhaseCodeNode = body->second.find("TradingPhaseCode");
-        if(TradingPhaseCodeNode != body->second.not_found()) TradingPhaseCode = TradingPhaseCodeNode->second.data();
-        auto NumTradesNode = body->second.find("NumTrades");
-        if(NumTradesNode != body->second.not_found()) NumTrades = NumTradesNode->second.data();
-        auto TotalVolumeTradedNode = body->second.find("TotalVolumeTraded");
-        if(TotalVolumeTradedNode != body->second.not_found()) TotalVolumeTraded = TotalVolumeTradedNode->second.data();
-        auto TotalValueTradedNode = body->second.find("TotalValueTraded");
-        if(TotalValueTradedNode != body->second.not_found()) TotalValueTraded = TotalValueTradedNode->second.data();
-        auto PrevClosePxNode = body->second.find("PrevClosePx");
-        if(PrevClosePxNode != body->second.not_found()) PrevClosePx = PrevClosePxNode->second.data();
-        auto TradePxNode = body->second.find("TradePx");
-        if(TradePxNode != body->second.not_found()) TradePx = TradePxNode->second.data();
-
-        auto OpenPxNode = body->second.find("OpenPx");
-        if(OpenPxNode != body->second.not_found()) OpenPx = OpenPxNode->second.data();
-        auto ClosePxNode = body->second.find("ClosePx");
-        if(ClosePxNode != body->second.not_found()) ClosePx = ClosePxNode->second.data();
-        auto HighPxIDNode = body->second.find("HighPx");
-        if(HighPxIDNode != body->second.not_found()) HighPx = HighPxIDNode->second.data();
-
-        auto LowPxNode = body->second.find("LowPx");
-        if(LowPxNode != body->second.not_found()) LowPx = LowPxNode->second.data();
-        auto IOPVNode = body->second.find("IOPV");
-        if(IOPVNode != body->second.not_found()) IOPV = IOPVNode->second.data();
-        auto NAVNode = body->second.find("NAV");
-        if(NAVNode != body->second.not_found()) NAV = NAVNode->second.data();
-
-        auto TotalLongPositionNode = body->second.find("TotalLongPosition");
-        if(TotalLongPositionNode != body->second.not_found()) TotalLongPosition = TotalLongPositionNode->second.data();
-        auto TotalBidQtyNode = body->second.find("TotalBidQty");
-        if(TotalBidQtyNode != body->second.not_found()) TotalBidQty = TotalBidQtyNode->second.data();
-        auto TotalOfferQtyNode = body->second.find("TotalOfferQty");
-        if(TotalOfferQtyNode != body->second.not_found()) TotalOfferQty = TotalOfferQtyNode->second.data();
-        auto WeightedAvgBidPxNode = body->second.find("WeightedAvgBidPx");
-        if(WeightedAvgBidPxNode != body->second.not_found()) WeightedAvgBidPx = WeightedAvgBidPxNode->second.data();
-        auto WeightedAvgOfferPxNode = body->second.find("WeightedAvgOfferPx");
-        if(WeightedAvgOfferPxNode != body->second.not_found()) WeightedAvgOfferPx = WeightedAvgOfferPxNode->second.data();
-        auto BidPriceLevelNode = body->second.find("BidPriceLevel");
-        if(BidPriceLevelNode != body->second.not_found()) BidPriceLevel = BidPriceLevelNode->second.data();
-        auto OfferPriceLevelNode = body->second.find("OfferPriceLevel");
-        if(OfferPriceLevelNode != body->second.not_found()) OfferPriceLevel = OfferPriceLevelNode->second.data();
-
-      }
+      string SecurityID = c_Config.get<string>("mktData.body.SecurityID");
+      string TradingPhaseCode = c_Config.get<string>("mktData.body.TradingPhaseCode");
+      uint64 NumTrades = c_Config.get<uint64>("mktData.body.NumTrades");
+      uint64 TotalVolumeTraded = c_Config.get<uint64>("mktData.body.TotalVolumeTraded");
+      int64 TotalValueTraded = c_Config.get<int64>("mktData.body.TotalValueTraded");
+      int32 PrevClosePx = c_Config.get<int32>("mktData.body.PrevClosePx");
+      int32 OpenPx = c_Config.get<int32>("mktData.body.OpenPx");
+      int32 HighPx = c_Config.get<int32>("mktData.body.HighPx");
+      int32 LowPx = c_Config.get<int32>("mktData.body.LowPx");
+      int32 TradePx = c_Config.get<int32>("mktData.body.TradePx");
+      int32 ClosePx = c_Config.get<int32>("mktData.body.ClosePx");
+      int32 IOPV = c_Config.get<int32>("mktData.body.IOPV");
+      int32 NAV = c_Config.get<int32>("mktData.body.NAV");
+      uint64 TotalLongPosition = c_Config.get<uint64>("mktData.body.TotalLongPosition");
+      int64 TotalBidQty = c_Config.get<int64>("mktData.body.TotalBidQty");
+      int64 TotalOfferQty = c_Config.get<int64>("mktData.body.TotalOfferQty");
+      int32 WeightedAvgBidPx = c_Config.get<int32>("mktData.body.WeightedAvgBidPx");
+      int32 WeightedAvgOfferPx = c_Config.get<int32>("mktData.body.WeightedAvgOfferPx");
+      int32 BidPriceLevel = c_Config.get<int32>("mktData.body.BidPriceLevel");       
+      int32 OfferPriceLevel = c_Config.get<int32>("mktData.body.OfferPriceLevel");
 
       MdsMktRspMsgBodyT msgBody;
-      msgBody.mktDataSnapshot.exchId = exchId;
-      msgBody.mktDataSnapshot.securityType = securityType;
-      msgBody.mktDataSnapshot.tradeDate = tradeDate;
-      msgBody.mktDataSnapshot.updateTime = updateTime;
-      msgBody.mktDataSnapshot.ChannelNo = ChannelNo;
-      msgBody.mktDataSnapshot.ApplSeqNum = ApplSeqNum;
-      msgBody.mktDataSnapshot.mdStreamType = mdStreamType;
+      msgBody.mktDataSnapshot.head.exchId = exchId;
+      msgBody.mktDataSnapshot.head.securityType = securityType;
+      msgBody.mktDataSnapshot.head.tradeDate = tradeDate;
+      msgBody.mktDataSnapshot.head.updateTime = updateTime;
+      msgBody.mktDataSnapshot.head.mdStreamType = mdStreamType;
 
-      if (SecurityID) strncpy(msgBody.mktDataSnapshot.SecurityID, SecurityID, sizeof(SecurityID) - 1);
-      if (TradingPhaseCode) strncpy(msgBody.mktDataSnapshot.TradingPhaseCode, TradingPhaseCode, sizeof(TradingPhaseCode) - 1);
+      if (SecurityID) strncpy(msgBody.mktDataSnapshot.body.SecurityID, SecurityID, sizeof(SecurityID) - 1);
+      if (TradingPhaseCode) strncpy(msgBody.mktDataSnapshot.body.TradingPhaseCode, TradingPhaseCode, sizeof(TradingPhaseCode) - 1);
 
-      msgBody.mktDataSnapshot.NumTrades = NumTrades;
-      msgBody.mktDataSnapshot.TotalVolumeTraded = TotalVolumeTraded;
-      msgBody.mktDataSnapshot.TotalValueTraded = TotalValueTraded;
-      msgBody.mktDataSnapshot.PrevClosePx = PrevClosePx;
-      msgBody.mktDataSnapshot.TradePx = TradePx;
-      msgBody.mktDataSnapshot.OpenPx = OpenPx;
-      msgBody.mktDataSnapshot.ClosePx = ClosePx;
-      msgBody.mktDataSnapshot.HighPx = HighPx;
-      msgBody.mktDataSnapshot.LowPx = LowPx;
-      msgBody.mktDataSnapshot.IOPV = IOPV;
-      msgBody.mktDataSnapshot.NAV = NAV;
-      msgBody.mktDataSnapshot.TotalLongPosition = TotalLongPosition;
-      msgBody.mktDataSnapshot.TotalBidQty = TotalBidQty;
-      msgBody.mktDataSnapshot.TotalOfferQty = TotalOfferQty;
-      msgBody.mktDataSnapshot.WeightedAvgBidPx = WeightedAvgBidPx;
-      msgBody.mktDataSnapshot.WeightedAvgOfferPx = WeightedAvgOfferPx;
-      msgBody.mktDataSnapshot.BidPriceLevel = BidPriceLevel;
-      msgBody.mktDataSnapshot.OfferPriceLevel = OfferPriceLevel;
+      msgBody.mktDataSnapshot.l2Stock.NumTrades = NumTrades;
+      msgBody.mktDataSnapshot.l2Stock.TotalVolumeTraded = TotalVolumeTraded;
+      msgBody.mktDataSnapshot.l2Stock.TotalValueTraded = TotalValueTraded;
+      msgBody.mktDataSnapshot.l2Stock.PrevClosePx = PrevClosePx;
+      msgBody.mktDataSnapshot.l2Stock.TradePx = TradePx;
+      msgBody.mktDataSnapshot.l2Stock.OpenPx = OpenPx;
+      msgBody.mktDataSnapshot.l2Stock.ClosePx = ClosePx;
+      msgBody.mktDataSnapshot.l2Stock.HighPx = HighPx;
+      msgBody.mktDataSnapshot.l2Stock.LowPx = LowPx;
+      msgBody.mktDataSnapshot.l2Stock.IOPV = IOPV;
+      msgBody.mktDataSnapshot.l2Stock.NAV = NAV;
+      msgBody.mktDataSnapshot.l2Stock.TotalLongPosition = TotalLongPosition;
+      msgBody.mktDataSnapshot.l2Stock.TotalBidQty = TotalBidQty;
+      msgBody.mktDataSnapshot.l2Stock.TotalOfferQty = TotalOfferQty;
+      msgBody.mktDataSnapshot.l2Stock.WeightedAvgBidPx = WeightedAvgBidPx;
+      msgBody.mktDataSnapshot.l2Stock.WeightedAvgOfferPx = WeightedAvgOfferPx;
+      msgBody.mktDataSnapshot.l2Stock.BidPriceLevel = BidPriceLevel;
+      msgBody.mktDataSnapshot.l2Stock.OfferPriceLevel = OfferPriceLevel;
 
       ptree child_Bid = pt.get_child("mktData.body.bidPrice");
       int i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.BidLevels[i].Price = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.BidLevels[i].Price = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.bidNumberOfOrders");
       i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.BidLevels[i].NumberOfOrders = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.BidLevels[i].NumberOfOrders = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.bidOrderQty");
       i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.BidLevels[i].OrderQty = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.BidLevels[i].OrderQty = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerPrice");
       i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.OfferLevels[i].Price = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].Price = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerNumberOfOrders");
       i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.OfferLevels[i].NumberOfOrders = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].NumberOfOrders = vt.second.get_value<int32>();
         i++;
       }
 
       child_Bid = pt.get_child("mktData.body.offerOrderQty");
       i = 0;
       BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
-        msgBody.mktDataSnapshot.OfferLevels[i].OrderQty = vt.second.get_value<int32>();
+        msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].OrderQty = vt.second.get_value<int32>();
         i++;
       }
 

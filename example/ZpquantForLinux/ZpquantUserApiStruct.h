@@ -595,32 +595,6 @@ typedef struct _MdsL2MarketOverview {
 } MdsL2MarketOverviewT;
 
 /**
- * 完整的 Level1/Level2 证券行情全幅消息定义
- */
-typedef struct _MdsMktDataSnapshot {
-    /** 行情数据的消息头 */
-    MdsMktDataSnapshotHeadT                 head;
-
-    union {
-        /** Level2 快照行情(股票、债券、基金) */
-        MdsL2StockSnapshotBodyT             l2Stock;
-        /** Level2 委托队列(买一／卖一前五十笔委托明细) */
-        //MdsL2BestOrdersSnapshotBodyT        l2BestOrders;
-        /** Level2 市场总览 (仅上证) */
-        //MdsL2MarketOverviewT                l2MarketOverview;
-    };
-} MdsMktDataSnapshotT;
-
-/**
- * 价位信息定义
- */
-typedef struct _MdsPriceLevelEntry {
-    int32               Price;                  /**< 委托价格 */
-    int32               NumberOfOrders;         /**< 价位总委托笔数 (Level1不揭示该值, 固定为0) */
-    int64               OrderQty;               /**< 委托数量 */
-} MdsPriceLevelEntryT;
-
-/**
  * Level2 快照行情定义
  * 股票(A、B股)、债券、基金
  *
@@ -708,6 +682,32 @@ typedef struct _MdsL2StockSnapshotBody {
     MdsPriceLevelEntryT OfferLevels[10];
 
 } MdsL2StockSnapshotBodyT;
+
+/**
+ * 完整的 Level1/Level2 证券行情全幅消息定义
+ */
+typedef struct _MdsMktDataSnapshot {
+    /** 行情数据的消息头 */
+    MdsMktDataSnapshotHeadT                 head;
+
+    union {
+        /** Level2 快照行情(股票、债券、基金) */
+        MdsL2StockSnapshotBodyT             l2Stock;
+        /** Level2 委托队列(买一／卖一前五十笔委托明细) */
+        //MdsL2BestOrdersSnapshotBodyT        l2BestOrders;
+        /** Level2 市场总览 (仅上证) */
+        //MdsL2MarketOverviewT                l2MarketOverview;
+    };
+} MdsMktDataSnapshotT;
+
+/**
+ * 价位信息定义
+ */
+typedef struct _MdsPriceLevelEntry {
+    int32               Price;                  /**< 委托价格 */
+    int32               NumberOfOrders;         /**< 价位总委托笔数 (Level1不揭示该值, 固定为0) */
+    int64               OrderQty;               /**< 委托数量 */
+} MdsPriceLevelEntryT;
 
 /**
  * 汇总的应答消息的消息体定义
