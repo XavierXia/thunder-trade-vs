@@ -39,9 +39,9 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         io_service service;
         boost::asio::ip::tcp::socket sock_(service);
         sock_.connect(ep);
-        size_t PacketLength = in.str().size() + sizeof(int32_t);
-        if(sendbuf != NULL)
-            std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        size_t PacketLength = in.str().size() + sizeof(int32_t);           
+        // std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        char sendbuf[PacketLength];
         *((size_t*)sendbuf.get()) = PacketLength;
         strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
         sock_.write_some(buffer(sendbuf.get(), PacketLength));
