@@ -50,7 +50,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         // strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
         // sock_.write_some(buffer(sendbuf, PacketLength));
 
-        sock_.write_some(buffer(in.str().c_str(), PacketLength));
+        sock_.write_some(buffer(in.str().c_str()));
         auto rcvlen = read(
             sock_,
             buffer(recvbuf),
