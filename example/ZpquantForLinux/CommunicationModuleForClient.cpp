@@ -9,6 +9,8 @@
 using namespace std;
 
 #define MAX_ASIO_READ_BUFFER_LENGTH 102400
+std::unique_ptr<char[]> sendbuf(new char[300]);
+
 size_t ReadComplete(char * buf, size_t maxlen,const boost::system::error_code & err, size_t bytes)
 {
     if (err)
@@ -41,7 +43,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         sock_.connect(ep);
 
         size_t PacketLength = in.str().size() + sizeof(int32_t);           
-        std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        //std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
         *((size_t*)sendbuf.get()) = PacketLength;
         strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
         sock_.write_some(buffer(sendbuf.get(), PacketLength));
