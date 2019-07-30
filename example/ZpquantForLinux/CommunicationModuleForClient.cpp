@@ -58,7 +58,6 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
             );
         recvbuf[rcvlen] = 0;
         out << recvbuf + sizeof(int32_t);
-        sendbuf.reset();
     }
     catch (std::exception & err)
     {
