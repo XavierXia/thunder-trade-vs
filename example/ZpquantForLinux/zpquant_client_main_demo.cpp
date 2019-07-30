@@ -48,7 +48,16 @@ main(void) {
     /* 注册spi回调接口 */
     pZpquantTradeApi->RegisterSpi(pZpquantTradeSpi);
 
+    ZpquantUserLoginField userLoginTradeT;
+    strncpy(userLoginTradeT.UserID, "jytest",sizeof(userLoginTradeT.UserID) - 1);
+    strncpy(userLoginTradeT.UserPassword, "123456",sizeof(userLoginTradeT.UserPassword) - 1);
+    strncpy(userLoginTradeT.strIP, "47.105.111.100",sizeof(userLoginTradeT.strIP) - 1);
+    userLoginTradeT.uPort = 8800;
 
+    if(!pZpquantTradeApi->InitTraderSource(&userLoginTradeT)){
+        fprintf(stderr, "InitMdSource失败!\n");
+        return EINVAL;
+    }
 
 
     /*

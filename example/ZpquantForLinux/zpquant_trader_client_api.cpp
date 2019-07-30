@@ -30,7 +30,30 @@ CZpquantTradeApi::RegisterSpi(CZpquantTradeSpi *pSpi) {
 //初始化交易源
 bool
 CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
-    
+    stringstream in, out;
+    boost::property_tree::ptree root, result;
+    root.put("type", "reqaddtradesource");
+    root.put("sourcetype", "kr_td_quant");
+    root.put("username", userLogin->UserID);
+    root.put("password", userLogin->UserPassword);
+    try {
+        boost::property_tree::write_json(in, root);
+        Communicate(userLogin->strIP, userLogin->uPort, in, out);
+        boost::property_tree::read_json(out, result);
+    }
+    catch (std::exception & err)
+    {
+        return false;
+    }
+
+    for(auto & node : result)
+    {
+        // auto MD = CString(CA2W(node.first.c_str()));
+        // m_vecMDSource.push_back(MD);
+        std::cout << "...InitMdSource,result:" << node.first << endl;
+    }
+
+    return true;
 }
 
 //采集报单回调数据

@@ -40,7 +40,7 @@ CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
     root.put("type", "reqaddmarketdatasource");
     root.put("sourcetype", "kr_md_quant");
     root.put("username", userLogin->UserID);
-    root.put("UserPassword", userLogin->UserPassword);
+    root.put("password", userLogin->UserPassword);
     try {
         boost::property_tree::write_json(in, root);
         Communicate(userLogin->strIP, userLogin->uPort, in, out);
