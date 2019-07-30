@@ -32,6 +32,7 @@ size_t ReadComplete(char * buf, size_t maxlen,const boost::system::error_code & 
 void Communicate(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
 {
     try {
+        int i = 0;
         using namespace boost::asio;
         if (in.str().size() >= MAX_ASIO_READ_BUFFER_LENGTH - sizeof(int32_t))
             throw std::runtime_error("The input string is too long.Is must shorter than MAX_ASIO_READ_BUFFER_LENGTH-sizeof(int32_t)");
@@ -41,7 +42,8 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         boost::asio::ip::tcp::socket sock_(service);
         sock_.connect(ep);
 
-        size_t PacketLength = in.str().size() + sizeof(int32_t);           
+        size_t PacketLength = in.str().size() + sizeof(int32_t);
+        if(i != 0) return;           
         std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
         *((size_t*)sendbuf.get()) = PacketLength;
         strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
@@ -58,6 +60,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
             );
         recvbuf[rcvlen] = 0;
         out << recvbuf + sizeof(int32_t);
+        i++;
     }
     catch (std::exception & err)
     {
