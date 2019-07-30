@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
 
+void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 using namespace std;
 
 namespace Zpquant {
@@ -32,9 +33,32 @@ CZpquantMdApi::RegisterSpi(CZpquantMdSpi *pSpi) {
 }
 
 //初始化交易源
-void
+bool
 CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
-    
+    stringstream in, out;
+    boost::property_tree::ptree root, result;
+    root.put("type", "reqaddmarketdatasource");
+    root.put("sourcetype", "kr_md_quant");
+    root.put("username", userLogin->UserID);
+    root.put("UserPassword", userLogin->UserPassword);
+    try {
+        boost::property_tree::write_json(in, root);
+        Communicate(userLogin->strIP, userLogin->uPort, in, out);
+        boost::property_tree::read_json(out, result);
+    }
+    catch (std::exception & err)
+    {
+        return FALSE;
+    }
+
+    for(auto & node : result)
+    {
+        // auto MD = CString(CA2W(node.first.c_str()));
+        // m_vecMDSource.push_back(MD);
+        std::cout << "...InitMdSource,result:" << node.first << endl;
+    }
+
+    return true;
 }
 
 //采集报单回调数据

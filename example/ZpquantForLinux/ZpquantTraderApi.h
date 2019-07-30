@@ -81,7 +81,7 @@ public:
     /* 注册spi回调接口 */
     void                RegisterSpi(CZpquantTradeSpi *pSpi);
     //初始化交易源
-    void                InitTraderSource(ZpquantUserLoginField* userLogin);
+    bool                InitTraderSource(ZpquantUserLoginField* userLogin);
     /* 启动连通数据通道 */
     bool                Start();
     /* 停止连通数据通道 */

@@ -798,13 +798,16 @@ enum ZpquantMsgType {
 struct ZpquantUserLoginField
 {
 	///初始化类别
-	CZpquantType type;
+	//CZpquantType type;
 	///初始化资源类别
-	CZpquantSourceType sourceType;
+	//CZpquantSourceType sourceType;
 	///用户代码
 	CZpquantUserIDType UserID;
 	///登录模式
 	CZpquantUserPassword UserPassword;
+
+    char strIP[18]; //IP地址
+    unsigned int uPort; //端口号
 };
 
 typedef enum _zpquantInvestorClass {

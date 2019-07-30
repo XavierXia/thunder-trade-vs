@@ -48,6 +48,9 @@ main(void) {
     /* 注册spi回调接口 */
     pZpquantTradeApi->RegisterSpi(pZpquantTradeSpi);
 
+
+
+
     /*
      * 设置登录OES时使用的用户名和密码
      * @note 如通过API接口设置，则可以不在配置文件中配置;
@@ -76,6 +79,18 @@ main(void) {
             Zpquant::CZpquantMdApi::GetVersion());
     /* 注册spi回调接口 */
     pZpquantMdApi->RegisterSpi(pZpquantMdSpi);
+
+    ZpquantUserLoginField userLoginT;
+    strncpy(userLoginT.UserID, "hqtest",sizeof(userLoginT.UserID) - 1);
+    strncpy(userLoginT.UserPassword, "123456",sizeof(userLoginT.UserPassword) - 1);
+    strncpy(userLoginT.strIP, "47.105.111.100",sizeof(userLoginT.strIP) - 1);
+    userLoginT.uPort = 8800;
+
+    if(!pZpquantMdApi->InitMdSource(&userLoginT)){
+        fprintf(stderr, "InitMdSource失败!\n");
+        return EINVAL;
+    }
+
 
     if (! pZpquantMdApi->Start()) {
         fprintf(stderr, "启动API失败!\n");

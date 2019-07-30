@@ -73,7 +73,7 @@ public:
 	void RegisterFront(char *pszFrontAddress, char* pszFrontPort);
 
 	//初始化行情源
-    void InitMdSource(ZpquantUserLoginField* userLogin);
+    bool InitMdSource(ZpquantUserLoginField* userLogin);
 	
 	///注册回调接口
 	///@param pSpi 派生自回调接口类的实例
