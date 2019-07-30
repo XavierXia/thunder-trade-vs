@@ -3,6 +3,7 @@
 #include <sstream>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
 #include <memory>
 #include <iostream>
 using namespace std;
