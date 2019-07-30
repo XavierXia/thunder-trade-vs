@@ -56,6 +56,7 @@ main(void) {
         return EINVAL;
     }
 
+    sleep(100);
 
     if (! pZpquantMdApi->Start()) {
         fprintf(stderr, "启动API失败!\n");
