@@ -64,15 +64,6 @@ main(void) {
 
     pZpquantMdApi->SubscribeMarketData("601881,600519,000001,002415",MDS_SUB_MODE_SET);
 
-    /*
-    *************************************
-    交易下单接口实例
-    */
-    //查询持仓
-    ZpquantQryTrd zQryTrd;
-    strncpy(zQryTrd.code, "601881",sizeof(zQryTrd.code) - 1);
-    zQryTrd.sclb = 1;
-    pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
 
 
     /*
@@ -116,6 +107,16 @@ main(void) {
 
     /* 打印当前交易日 */
     fprintf(stdout, "服务端交易日: %08d\n", pZpquantTradeApi->GetTradingDay());
+
+            /*
+    *************************************
+    交易下单接口实例
+    */
+    //查询持仓
+    ZpquantQryTrd zQryTrd;
+    strncpy(zQryTrd.code, "601881",sizeof(zQryTrd.code) - 1);
+    zQryTrd.sclb = 1;
+    pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
 
 
     /* 等待回报消息接收完成 */

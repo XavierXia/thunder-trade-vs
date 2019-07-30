@@ -44,7 +44,7 @@ demoMdClientSpi::OnOrderRtnDepthMarketData(MdsMktRspMsgBodyT *pDepthMarketData)
 
 demoMdClientSpi::demoMdClientSpi(int32 something) {
     this->something = something;
-    fprintf(stdout, "demoMdClientSpi::demoMdClientSpi");
+    fprintf(stdout, "demoMdClientSpi::demoMdClientSpi\n");
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 

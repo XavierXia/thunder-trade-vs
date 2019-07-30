@@ -96,7 +96,7 @@ CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
     root.put("password", userLogin->UserPassword);
     try {
         boost::property_tree::write_json(in, root);
-        Communicate2(userLogin->strIP, userLogin->uPort, in, out);
+        Communicate(userLogin->strIP, userLogin->uPort, in, out);
         boost::property_tree::read_json(out, result);
     }
     catch (std::exception & err)
