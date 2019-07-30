@@ -73,17 +73,16 @@ void Communicate3(const char * address, unsigned int port,const std::stringstrea
         io_service service;
         boost::asio::ip::tcp::socket sock_(service);
         sock_.connect(ep);
+        size_t PacketLength = in.str().size() + sizeof(int32_t);         
+        // std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        // *((size_t*)sendbuf.get()) = PacketLength;
+        // strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
+        // sock_.write_some(buffer(sendbuf.get(), PacketLength));
 
-        size_t PacketLength = in.str().size() + sizeof(int32_t);
-        if(i != 0) return;           
-        std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
-        *((size_t*)sendbuf.get()) = PacketLength;
-        strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
-        sock_.write_some(buffer(sendbuf.get(), PacketLength));
-
-        // char sendbuf[PacketLength];
-        // strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
-        // sock_.write_some(buffer(sendbuf, PacketLength));
+        char sendbuf[PacketLength];
+        *((size_t*)sendbuf) = PacketLength;
+        strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
+        sock_.write_some(buffer(sendbuf, PacketLength));
 
         auto rcvlen = read(
             sock_,
@@ -92,7 +91,7 @@ void Communicate3(const char * address, unsigned int port,const std::stringstrea
             );
         recvbuf[rcvlen] = 0;
         out << recvbuf + sizeof(int32_t);
-        i++;
+        
     }
     catch (std::exception & err)
     {
