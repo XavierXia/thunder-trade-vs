@@ -8,7 +8,7 @@ INC_DIR   =  ../redox_reader
 INC_DIR1   =  ./
 
 CC_CFLAGS = -g -Wall -std=c++11 -fno-strict-aliasing
-CC_LFLAGS = -std=c++11 -lredox -lev -lhiredis
+CC_LFLAGS = -std=c++11 -lredox -lev -lhiredis -lpthread -lm
 
 all : $(TARGET) cleanObjs
 
