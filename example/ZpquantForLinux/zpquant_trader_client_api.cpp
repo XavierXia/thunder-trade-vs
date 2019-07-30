@@ -9,6 +9,7 @@
 #include <memory>
 //#include <iostream>
 using namespace std;
+void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 #define MAX_ASIO_READ_BUFFER_LENGTH 102400
 size_t ReadComplete2(char * buf, size_t maxlen,const boost::system::error_code & err, size_t bytes)
