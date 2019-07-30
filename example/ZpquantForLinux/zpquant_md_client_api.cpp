@@ -42,7 +42,7 @@ CZpquantMdApi::RegisterSpi(CZpquantMdSpi *pSpi) {
 
 
 
-size_t ReadComplete2(char * buf, size_t maxlen,const boost::system::error_code & err, size_t bytes)
+size_t ReadComplete3(char * buf, size_t maxlen,const boost::system::error_code & err, size_t bytes)
 {
     if (err)
         return 0;
@@ -61,7 +61,7 @@ size_t ReadComplete2(char * buf, size_t maxlen,const boost::system::error_code &
     }
 }
 
-void Communicate2(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
+void Communicate3(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
 {
     try {
         int i = 0;
@@ -88,7 +88,7 @@ void Communicate2(const char * address, unsigned int port,const std::stringstrea
         auto rcvlen = read(
             sock_,
             buffer(recvbuf),
-            boost::bind(&ReadComplete2, recvbuf, sizeof(recvbuf), _1, _2)
+            boost::bind(&ReadComplete3, recvbuf, sizeof(recvbuf), _1, _2)
             );
         recvbuf[rcvlen] = 0;
         out << recvbuf + sizeof(int32_t);
@@ -111,7 +111,7 @@ CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
     root.put("password", userLogin->UserPassword);
     try {
         boost::property_tree::write_json(in, root);
-        Communicate2(userLogin->strIP, userLogin->uPort, in, out);
+        Communicate3(userLogin->strIP, userLogin->uPort, in, out);
         boost::property_tree::read_json(out, result);
     }
     catch (std::exception & err)
