@@ -91,7 +91,7 @@ void Communicate3(const char * address, unsigned int port,const std::stringstrea
             );
         recvbuf[rcvlen] = 0;
         out << recvbuf + sizeof(int32_t);
-        
+        return;
     }
     catch (std::exception & err)
     {
