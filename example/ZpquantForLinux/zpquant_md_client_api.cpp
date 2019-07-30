@@ -48,7 +48,7 @@ CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
     }
     catch (std::exception & err)
     {
-        return FALSE;
+        return false;
     }
 
     for(auto & node : result)

@@ -28,7 +28,7 @@ CZpquantTradeApi::RegisterSpi(CZpquantTradeSpi *pSpi) {
 }
 
 //初始化交易源
-void
+bool
 CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
     
 }
