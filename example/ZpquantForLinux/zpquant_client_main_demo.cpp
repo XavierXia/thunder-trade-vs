@@ -16,7 +16,7 @@ main(void) {
 
     //连接后端server TOD
     //connectServer("127.0.0.1","8800");
-    fprintf(stdout, "...zpquant_client_main_demo start");
+    fprintf(stdout, "...zpquant_client_main_demo start\n");
 
     //交易
     Zpquant::CZpquantTradeApi  *pZpquantTradeApi = new Zpquant::CZpquantTradeApi();
@@ -51,10 +51,10 @@ main(void) {
     strncpy(userLoginT.strIP, "47.105.111.100",sizeof(userLoginT.strIP) - 1);
     userLoginT.uPort = 8800;
 
-    if(!pZpquantMdApi->InitMdSource(&userLoginT)){
-        fprintf(stderr, "InitMdSource失败!\n");
-        return EINVAL;
-    }
+    // if(!pZpquantMdApi->InitMdSource(&userLoginT)){
+    //     fprintf(stderr, "InitMdSource失败!\n");
+    //     return EINVAL;
+    // }
 
 
     if (! pZpquantMdApi->Start()) {
