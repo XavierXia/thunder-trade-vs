@@ -95,10 +95,10 @@ main(void) {
     strncpy(userLoginT.strIP, "47.105.111.100",sizeof(userLoginT.strIP) - 1);
     userLoginT.uPort = 8800;
 
-    if(!pZpquantMdApi->InitMdSource(&userLoginT)){
-        fprintf(stderr, "InitMdSource失败!\n");
-        return EINVAL;
-    }
+    // if(!pZpquantMdApi->InitMdSource(&userLoginT)){
+    //     fprintf(stderr, "InitMdSource失败!\n");
+    //     return EINVAL;
+    // }
 
 
     if (! pZpquantMdApi->Start()) {

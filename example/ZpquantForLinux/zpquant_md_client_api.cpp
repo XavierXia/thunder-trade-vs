@@ -4,7 +4,6 @@
 #include "ZpquantMdApi.h"
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
-using namespace std;
 
 namespace Zpquant {
 
