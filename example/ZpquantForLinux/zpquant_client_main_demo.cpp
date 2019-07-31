@@ -6,11 +6,6 @@
 #include    "ZpquantMdApi.h"
 #include    "demo_md_client_spi.h"
 
-void connectServer(char *netaddress,char* port)
-{
-    
-}
-
 int
 main(void) {
 
@@ -51,12 +46,12 @@ main(void) {
     strncpy(userLoginT.strIP, "47.105.111.100",sizeof(userLoginT.strIP) - 1);
     userLoginT.uPort = 8800;
 
-    if(!pZpquantMdApi->InitMdSource(&userLoginT)){
-        fprintf(stderr, "InitMdSource失败!\n");
-        return EINVAL;
-    }
+    // if(!pZpquantMdApi->InitMdSource(&userLoginT)){
+    //     fprintf(stderr, "InitMdSource失败!\n");
+    //     return EINVAL;
+    // }
 
-    sleep(100);
+    //sleep(100);
 
     if (! pZpquantMdApi->Start()) {
         fprintf(stderr, "启动API失败!\n");
@@ -65,7 +60,8 @@ main(void) {
 
     pZpquantMdApi->SubscribeMarketData("601881,600519,000001,002415",MDS_SUB_MODE_SET);
 
-
+    //追加
+    pZpquantMdApi->SubscribeMarketData("600519",MDS_SUB_MODE_APPEND);
 
     /*
     *************************************

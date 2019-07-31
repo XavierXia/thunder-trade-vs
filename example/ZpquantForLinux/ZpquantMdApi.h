@@ -67,12 +67,6 @@ public:
     bool                Start();
     /* 停止连通数据通道 */
     void                Stop();
-	///连接server端
-	///@param pszFrontAddress：前置机网络地址。
-	///@remark 网络地址的格式为：ipaddress,port，如：”tcp://127.0.0.1:17001”。 
-	///@remark “tcp”代表传输协议，“127.0.0.1”代表服务器地址。”17001”代表服务器端口号。
-	void RegisterFront(char *pszFrontAddress, char* pszFrontPort);
-
 	//初始化行情源
     bool InitMdSource(ZpquantUserLoginField* userLogin);
 	
