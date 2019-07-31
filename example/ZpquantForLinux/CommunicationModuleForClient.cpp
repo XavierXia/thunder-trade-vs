@@ -87,6 +87,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         boost::system::error_code ec;
         socket.connect(ep, ec);
 
+        size_t PacketLength = in.str().size() + sizeof(int32_t);  
         char sendbuf[PacketLength];
         strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
         socket.write_some(buffer(sendbuf, PacketLength));
