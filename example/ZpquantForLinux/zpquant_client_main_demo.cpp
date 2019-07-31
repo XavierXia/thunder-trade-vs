@@ -58,10 +58,10 @@ main(void) {
         return EINVAL;
     }
 
-    pZpquantMdApi->SubscribeMarketData("601881,600519,000001,002415",MDS_SUB_MODE_SET);
-
+    //pZpquantMdApi->SubscribeMarketData("601881,600519,000001,002415",MDS_SUB_MODE_SET);
+    pZpquantMdApi->SubscribeMarketData("601899",MDS_SUB_MODE_SET);
     //追加
-    pZpquantMdApi->SubscribeMarketData("600519",MDS_SUB_MODE_APPEND);
+    //pZpquantMdApi->SubscribeMarketData("600519",MDS_SUB_MODE_APPEND);
 
     /*
     *************************************
