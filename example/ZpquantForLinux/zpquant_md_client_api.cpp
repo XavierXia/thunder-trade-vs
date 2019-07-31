@@ -3,16 +3,7 @@
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
 
-#include <sstream>
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <memory>
-//#include <iostream>
-using namespace std;
-
-#define MAX_ASIO_READ_BUFFER_LENGTH 102400
-
-//void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
+void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 namespace Zpquant {
 
@@ -40,65 +31,6 @@ CZpquantMdApi::RegisterSpi(CZpquantMdSpi *pSpi) {
     this->pSpi = pSpi;
 }
 
-
-
-size_t ReadComplete3(char * buf, size_t maxlen,const boost::system::error_code & err, size_t bytes)
-{
-    if (err)
-        return 0;
-
-    if (bytes < sizeof(int32_t))
-        return 1;
-    if (bytes >= maxlen)
-        return 0;
-    else
-    {
-        size_t  length = *(size_t*)buf;
-        if (length < bytes)
-            return 0;
-        else
-            return 1;
-    }
-}
-
-void Communicate3(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
-{
-    try {
-        int i = 0;
-        using namespace boost::asio;
-        if (in.str().size() >= MAX_ASIO_READ_BUFFER_LENGTH - sizeof(int32_t))
-            throw std::runtime_error("The input string is too long.Is must shorter than MAX_ASIO_READ_BUFFER_LENGTH-sizeof(int32_t)");
-        char recvbuf[MAX_ASIO_READ_BUFFER_LENGTH];
-        ip::tcp::endpoint ep(ip::address::from_string(address), port);
-        io_service service;
-        boost::asio::ip::tcp::socket sock_(service);
-        sock_.connect(ep);
-        size_t PacketLength = in.str().size() + sizeof(int32_t);         
-        // std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
-        // *((size_t*)sendbuf.get()) = PacketLength;
-        // strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
-        // sock_.write_some(buffer(sendbuf.get(), PacketLength));
-
-        char sendbuf[PacketLength];
-        *((size_t*)sendbuf) = PacketLength;
-        strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
-        sock_.write_some(buffer(sendbuf, PacketLength));
-
-        auto rcvlen = read(
-            sock_,
-            buffer(recvbuf),
-            boost::bind(&ReadComplete3, recvbuf, sizeof(recvbuf), _1, _2)
-            );
-        recvbuf[rcvlen] = 0;
-        out << recvbuf + sizeof(int32_t);
-        return;
-    }
-    catch (std::exception & err)
-    {
-        cout << err.what() << endl;
-    }
-}
-
 //初始化交易源
 bool
 CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
@@ -110,7 +42,7 @@ CZpquantMdApi::InitMdSource(ZpquantUserLoginField* userLogin) {
     root.put("password", userLogin->UserPassword);
     try {
         boost::property_tree::write_json(in, root);
-        Communicate3(userLogin->strIP, userLogin->uPort, in, out);
+        Communicate(userLogin->strIP, userLogin->uPort, in, out);
         boost::property_tree::read_json(out, result);
     }
     catch (std::exception & err)
