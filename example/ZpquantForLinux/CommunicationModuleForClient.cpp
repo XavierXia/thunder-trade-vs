@@ -84,7 +84,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         boost::asio::ip::tcp::socket sock_(service);
         sock_.connect(ep);
 
-        size_t PacketLength = in.str().size();  
+        size_t PacketLength = in.str().size() + sizeof(int32_t);  
         // std::vector<char> sendbuf(PacketLength);
         // strncpy(&sendbuf.front(), in.str().c_str(), in.str().size());
         // write(sock_, buffer(sendbuf, PacketLength));
