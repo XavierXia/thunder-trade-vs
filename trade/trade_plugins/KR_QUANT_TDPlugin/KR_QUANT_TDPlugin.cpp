@@ -246,7 +246,7 @@ bool CKR_QUANT_TDPlugin::Start()
                     if (scode != c_Config.not_found()) code = scode->second.data();
                     if (ssclb != c_Config.not_found()) sclb = ssclb->second.data();
 
-                    if(code == ""){
+                    if(code == "allStock"){
                         /* 查询 沪深两市 所有股票持仓 */
                         OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
                     }else{
