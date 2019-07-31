@@ -85,9 +85,12 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         sock_.connect(ep);
 
         size_t PacketLength = in.str().size();  
-        std::vector<char> sendbuf(PacketLength);
-        strncpy(&sendbuf.front(), in.str().c_str(), in.str().size());
-        write(sock_, buffer(sendbuf, PacketLength));
+        // std::vector<char> sendbuf(PacketLength);
+        // strncpy(&sendbuf.front(), in.str().c_str(), in.str().size());
+        // write(sock_, buffer(sendbuf, PacketLength));
+        char sendbuf[PacketLength];
+        strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
+        sock_.write_some(buffer(sendbuf, PacketLength));
 
         size_t length = sock_.read_some(buffer(recvbuf), ec);
         if (ec == boost::asio::error::eof) {
@@ -97,7 +100,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         }
 
         recvbuf[length] = 0;
-        out << recvbuf;
+        out << recvbuf + sizeof(int32_t);
 
     }
     catch (std::exception & err)
