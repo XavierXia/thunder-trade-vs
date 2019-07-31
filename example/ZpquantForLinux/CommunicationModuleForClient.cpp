@@ -42,7 +42,8 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         sock_.connect(ep);
 
         size_t PacketLength = in.str().size() + sizeof(int32_t);         
-        std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        std::unique_ptr<char[]> sendbuf;
+        sendbuf.reset(new char[PacketLength]);
         *((size_t*)sendbuf.get()) = PacketLength;
         strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
         sock_.write_some(buffer(sendbuf.get(), PacketLength));
