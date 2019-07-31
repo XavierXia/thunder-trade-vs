@@ -48,7 +48,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         // sock_.write_some(buffer(sendbuf.get(), PacketLength));
 
         std::vector<char> sendbuf(PacketLength);
-        strncpy(sendbuf, in.str().c_str(), in.str().size());
+        strncpy(&sendbuf.front(), in.str().c_str(), in.str().size());
         sock_.write_some(buffer(sendbuf, PacketLength));
 
         // char sendbuf[PacketLength];
