@@ -28,7 +28,7 @@ size_t ReadComplete(char * buf, size_t maxlen,const boost::system::error_code & 
     }
 }
 
-void Communicate1(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
+void Communicate(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
 {
     try {
 
@@ -70,7 +70,7 @@ void Communicate1(const char * address, unsigned int port,const std::stringstrea
     }
 }
 
-void Communicate(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
+void Communicate1(const char * address, unsigned int port,const std::stringstream & in, std::stringstream & out)
 {
     try {
         using namespace boost::asio;
