@@ -117,7 +117,7 @@ main(void) {
 
     //查询账号中两市场的持仓信息
     ZpquantQryTrd zQryTrdB;
-    strncpy(zQryTrdB.code, "allStock",sizeof(zQryTrdB.code) - 1);
+    strncpy(zQryTrdB.code, "allStk",sizeof(zQryTrdB.code) - 1);
     zQryTrdB.sclb = 1;
     pZpquantTradeApi->QueryStkHolding(&zQryTrdB,0);
 
