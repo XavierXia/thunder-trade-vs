@@ -88,10 +88,14 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         // std::vector<char> sendbuf(PacketLength);
         // strncpy(&sendbuf.front(), in.str().c_str(), in.str().size());
         // write(sock_, buffer(sendbuf, PacketLength));
-        char sendbuf[PacketLength];
-        strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
-        //write(sock_,buffer(sendbuf, PacketLength));
-        sock_.write_some(buffer(sendbuf, PacketLength));
+        // char sendbuf[PacketLength];
+        // strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
+        // //write(sock_,buffer(sendbuf, PacketLength));
+        // sock_.write_some(buffer(sendbuf, PacketLength));
+        std::unique_ptr<char[]> sendbuf(new char[PacketLength]);
+        *((size_t*)sendbuf.get()) = PacketLength;
+        strncpy(sendbuf.get() + sizeof(int32_t), in.str().c_str(), in.str().size());
+        sock_.write_some(buffer(sendbuf.get(), PacketLength));
 
         auto length = read(sock_,buffer(recvbuf), ec);
         if (ec == boost::asio::error::eof) {
