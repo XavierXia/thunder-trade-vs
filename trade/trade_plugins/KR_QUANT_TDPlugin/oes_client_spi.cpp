@@ -625,6 +625,7 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
       //       pStkHolding->lockAvlHld);
 
       // fprintf(stdout, sendJsonDataStr);
+      fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
@@ -648,7 +649,6 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
                   pStkHolding->lockAvlHld);
 
       publisher.publish("oes_resp",sendRespData2client);
-      fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
       fprintf(stdout, sendRespData2client);
 }
 
