@@ -87,9 +87,9 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
         boost::system::error_code ec;
         socket.connect(ep, ec);
 
-        size_t PacketLength = in.str().size() + sizeof(int32_t);  
+        size_t PacketLength = in.str().size();  
         char sendbuf[PacketLength];
-        strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
+        strncpy(sendbuf, in.str().c_str(), in.str().size());
         socket.write_some(buffer(sendbuf, PacketLength));
 
         char recvbuf[MAX_ASIO_READ_BUFFER_LENGTH];
@@ -99,7 +99,7 @@ void Communicate(const char * address, unsigned int port,const std::stringstream
             boost::bind(&ReadComplete, recvbuf, sizeof(recvbuf), _1, _2)
             );
         recvbuf[rcvlen] = 0;
-        out << recvbuf + sizeof(int32_t);
+        out << recvbuf;
 
     }
     catch (std::exception & err)
