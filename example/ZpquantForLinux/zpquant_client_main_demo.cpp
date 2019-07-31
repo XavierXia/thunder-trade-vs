@@ -113,7 +113,7 @@ main(void) {
     ZpquantQryTrd zQryTrdA;
     strncpy(zQryTrdA.code, "601881",sizeof(zQryTrdA.code) - 1);
     zQryTrdA.sclb = 1;
-    pZpquantTradeApi->QueryStkHolding(&zQryTrdA,0);
+    // pZpquantTradeApi->QueryStkHolding(&zQryTrdA,0);
 
     //查询账号中两市场的持仓信息
     ZpquantQryTrd zQryTrdB;
