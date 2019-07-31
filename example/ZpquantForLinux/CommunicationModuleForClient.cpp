@@ -90,7 +90,8 @@ void Communicate1(const char * address, unsigned int port,const std::stringstrea
         // write(sock_, buffer(sendbuf, PacketLength));
         char sendbuf[PacketLength];
         strncpy(sendbuf + sizeof(int32_t), in.str().c_str(), in.str().size());
-        write(sock_,buffer(sendbuf, PacketLength));
+        //write(sock_,buffer(sendbuf, PacketLength));
+        sock_.write_some(buffer(sendbuf, PacketLength));
 
         size_t length = sock_.read_some(buffer(recvbuf), ec);
         if (ec == boost::asio::error::eof) {
