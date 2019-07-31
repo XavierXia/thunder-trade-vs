@@ -182,14 +182,16 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
 		if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
 		{
-			ShowMessage(
-				severity_levels::error,
-				"send unsubscribemarketdata(%s) failed.", 
-				codelistStr.c_str());
+			// this->ShowMessage(
+			// 	severity_levels::error,
+			// 	"send unsubscribemarketdata(%s) failed.", 
+			// 	codelistStr.c_str());
+			cout << "send unsubscribemarketdata failed: " << codelistStr.c_str() << endl;
 		}
 		else
 		{
-			ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
+			//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
+			cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
 		}
 
     });
