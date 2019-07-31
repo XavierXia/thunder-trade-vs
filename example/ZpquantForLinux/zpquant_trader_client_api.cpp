@@ -2,7 +2,7 @@
 #include <string.h>
 #include "ZpquantTraderApi.h"
 
-//void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
+void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 namespace Zpquant {
 
