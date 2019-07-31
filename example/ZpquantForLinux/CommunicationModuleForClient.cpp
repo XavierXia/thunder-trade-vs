@@ -93,7 +93,7 @@ void Communicate1(const char * address, unsigned int port,const std::stringstrea
         //write(sock_,buffer(sendbuf, PacketLength));
         sock_.write_some(buffer(sendbuf, PacketLength));
 
-        size_t length = sock_.read_some(buffer(recvbuf), ec);
+        auto length = read(sock_,buffer(recvbuf), ec);
         if (ec == boost::asio::error::eof) {
 
         }else if(ec){
