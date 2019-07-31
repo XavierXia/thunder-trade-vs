@@ -135,8 +135,8 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 
     
     //**************************************************
-	subscriber.subscribe("order2server", [this](const string& topic, const string& msg) {
-      cout << "...server,order2server...subscribe,topic:" << topic << ",msg: " << msg << endl;
+	subscriber.subscribe("order2server_md", [this](const string& topic, const string& msg) {
+      cout << "...server,order2server_md...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
       	ptree c_Config;
       	std::stringstream jmsg(msg.c_str());  
@@ -186,6 +186,10 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 				severity_levels::error,
 				"send unsubscribemarketdata(%s) failed.", 
 				codelistStr.c_str());
+		}
+		else
+		{
+			ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
 		}
 
     });

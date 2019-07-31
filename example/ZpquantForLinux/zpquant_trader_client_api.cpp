@@ -173,7 +173,7 @@ CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq)
           "{\"type\":\"%s\",\"code\":\"%s\",\"sclb\":\"%d\",\"wtfs\":\"%d\",\"amount\":\"%d\",\"price\":\"%d\"}",
           buyorsell.c_str(),pOrderReq->pSecurityId,pOrderReq->mktId,pOrderReq->ordType,pOrderReq->ordQty,pOrderReq->ordPrice);
     cout << "...SendOrder...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
+    publisher.publish("order2server_td", sendJsonDataStr);
 
     return 0;
 }
@@ -230,7 +230,7 @@ CZpquantTradeApi::QueryCashAsset(int32 requestId)
 {
     string str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
     cout << "...QueryCashAsset...str: " << str << endl;
-    publisher.publish("order2server", str);
+    publisher.publish("order2server_td", str);
     return 0;
 }
 
@@ -241,7 +241,7 @@ CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 reques
     sprintf(sendJsonDataStr, 
           "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkHolding...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
+    publisher.publish("order2server_td", sendJsonDataStr);
     return 0;
 }
 
@@ -263,7 +263,7 @@ CZpquantTradeApi::QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId)
     sprintf(sendJsonDataStr, 
           "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkInfo...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server", sendJsonDataStr);
+    publisher.publish("order2server_td", sendJsonDataStr);
     return 0;
 }
 
