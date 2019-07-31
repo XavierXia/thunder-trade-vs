@@ -126,13 +126,13 @@ main(void) {
         sleep(100);
     }
 
-    /* 停止 */
-    pZpquantTradeApi->Stop();
+    // /* 停止 */
+    // pZpquantTradeApi->Stop();
 
-    delete pZpquantTradeApi;
-    delete pZpquantTradeSpi;
-    delete pZpquantMdApi;
-    delete pZpquantMdSpi;
+    // delete pZpquantTradeApi;
+    // delete pZpquantTradeSpi;
+    // delete pZpquantMdApi;
+    // delete pZpquantMdSpi;
 
     return 0;
 }
