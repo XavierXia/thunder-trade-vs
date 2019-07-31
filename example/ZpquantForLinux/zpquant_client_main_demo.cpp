@@ -109,11 +109,16 @@ main(void) {
     *************************************
     交易下单接口实例
     */
-    //查询持仓
-    ZpquantQryTrd zQryTrd;
-    strncpy(zQryTrd.code, "601881",sizeof(zQryTrd.code) - 1);
-    zQryTrd.sclb = 1;
-    pZpquantTradeApi->QueryStkHolding(&zQryTrd,0);
+    //查询特定某只股票持仓
+    ZpquantQryTrd zQryTrdA;
+    strncpy(zQryTrdA.code, "601881",sizeof(zQryTrdA.code) - 1);
+    zQryTrdA.sclb = 1;
+    pZpquantTradeApi->QueryStkHolding(&zQryTrdA,0);
+
+    //查询账号中两市场的持仓信息
+    ZpquantQryTrd zQryTrdB;
+    strncpy(zQryTrdB.code, "",sizeof(zQryTrdB.code) - 1);
+    pZpquantTradeApi->QueryStkHolding(&zQryTrdB,0);
 
 
     /* 等待回报消息接收完成 */
