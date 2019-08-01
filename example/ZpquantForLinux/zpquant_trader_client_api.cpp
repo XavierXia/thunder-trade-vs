@@ -195,19 +195,18 @@ CZpquantTradeApi::Start() {
             msgBody.ordPrice = c_Config.get<int32>("ordPrice");
             msgBody.origClOrdId = c_Config.get<int64>("origClOrdId");
             msgBody.clOrdId = c_Config.get<int64>("clOrdId");
-            msgBody.clientId = c_Config.get<int16>("clientId");
 
             msgBody.clEnvId = c_Config.get<int8>("clEnvId");
-            msgBody.origClEnvId = c_Config.get<int8>("origClEnvId");
-            msgBody.origClSeqNo = c_Config.get<int32>("origClSeqNo");
+            //msgBody.origClEnvId = c_Config.get<int8>("origClEnvId");
+            //msgBody.origClSeqNo = c_Config.get<int32>("origClSeqNo");
             msgBody.ordDate = c_Config.get<int32>("ordDate");
             msgBody.ordTime = c_Config.get<int32>("ordTime");
             msgBody.ordCnfmTime = c_Config.get<int32>("ordCnfmTime");
 
             msgBody.ordStatus = c_Config.get<uint8>("ordStatus");
-            msgBody.ordCnfmSts = c_Config.get<uint8>("ordCnfmSts");
-            msgBody.securityType = c_Config.get<uint8>("securityType");
-            string exchOrdId = c_Config.get<string>("exchOrdId");
+            //msgBody.ordCnfmSts = c_Config.get<uint8>("ordCnfmSts");
+            //msgBody.securityType = c_Config.get<uint8>("securityType");
+            //string exchOrdId = c_Config.get<string>("exchOrdId");
             msgBody.frzAmt = c_Config.get<int64>("frzAmt");
             msgBody.frzInterest = c_Config.get<int64>("frzInterest");
             msgBody.frzFee = c_Config.get<int64>("frzFee");
