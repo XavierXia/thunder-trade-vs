@@ -134,34 +134,6 @@ CZpquantMdApi::Start() {
       int64 BidApplSeqNum = c_Config.get<int64>("mktData.BidApplSeqNum");
       int64 OfferApplSeqNum = c_Config.get<int64>("mktData.OfferApplSeqNum");
 
-        // auto securityTypeNode = mktDataConfig->second.find("securityType");
-        // if(!(securityTypeNode== mktDataConfig->second.not_found())) securityType = securityTypeNode->second.data();
-        // auto tradeDateNode = mktDataConfig->second.find("tradeDate");
-        // if(!(tradeDateNode== mktDataConfig->second.not_found())) tradeDate = tradeDateNode->second.data();
-        // auto TransactTimeNode = mktDataConfig->second.find("TransactTime");
-        // if(!(TransactTimeNode== mktDataConfig->second.not_found())) TransactTime = TransactTimeNode->second.data();
-        // auto ChannelNoNode = mktDataConfig->second.find("ChannelNo");
-        // if(!(ChannelNoNode== mktDataConfig->second.not_found())) ChannelNo = ChannelNoNode->second.data();
-        // auto ApplSeqNumNode = mktDataConfig->second.find("ApplSeqNum");
-        // if(!(ApplSeqNumNode== mktDataConfig->second.not_found())) ApplSeqNum = ApplSeqNumNode->second.data();
-        // auto SecurityIDNode = mktDataConfig->second.find("SecurityID");
-        // if(!(SecurityIDNode== mktDataConfig->second.not_found())) SecurityID = SecurityIDNode->second.data();
-        // auto ExecTypeNode = mktDataConfig->second.find("ExecType");
-        // if(!(ExecTypeNode== mktDataConfig->second.not_found())) ExecType = ExecTypeNode->second.data();
-        // auto TradeBSFlagNode = mktDataConfig->second.find("TradeBSFlag");
-        // if(!(TradeBSFlagNode== mktDataConfig->second.not_found())) TradeBSFlag = TradeBSFlagNode->second.data();
-        // auto TradePriceNode = mktDataConfig->second.find("TradePrice");
-        // if(!(TradePriceNode== mktDataConfig->second.not_found())) TradePrice = TradePriceNode->second.data();
-        // auto TradeQtyNode = mktDataConfig->second.find("TradeQty");
-        // if(!(TradeQtyNode== mktDataConfig->second.not_found())) TradeQty = TradeQtyNode->second.data();
-
-        // auto TradeMoneyNode = mktDataConfig->second.find("TradeMoney");
-        // if(!(TradeMoneyNode== mktDataConfig->second.not_found())) TradeMoney = TradeMoneyNode->second.data();
-        // auto BidApplSeqNumNode = mktDataConfig->second.find("BidApplSeqNum");
-        // if(!(BidApplSeqNumNode== mktDataConfig->second.not_found())) BidApplSeqNum = BidApplSeqNumNode->second.data();
-        // auto OfferApplSeqNumNode = mktDataConfig->second.find("OfferApplSeqNum");
-        // if(!(OfferApplSeqNumNode== mktDataConfig->second.not_found())) OfferApplSeqNum = OfferApplSeqNumNode->second.data();
-
       MdsMktRspMsgBodyT msgBody;
       msgBody.trade.exchId = exchId;
       msgBody.trade.securityType = securityType;
@@ -169,9 +141,9 @@ CZpquantMdApi::Start() {
       msgBody.trade.TransactTime = TransactTime;
       msgBody.trade.ChannelNo = ChannelNo;
       msgBody.trade.ApplSeqNum = ApplSeqNum;
-      // if (SecurityID == NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
-      // if (ExecType == NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
-      // if (TradeBSFlag == NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
+      if (SecurityID != NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
+      if (ExecType != NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
+      if (TradeBSFlag != NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
       msgBody.trade.TradePrice = TradePrice;
       msgBody.trade.TradeQty = TradeQty;
       msgBody.trade.TradeMoney = TradeMoney;
@@ -219,9 +191,9 @@ CZpquantMdApi::Start() {
       msgBody.order.ChannelNo = ChannelNo;
       msgBody.order.ApplSeqNum = ApplSeqNum;
 
-      // if (SecurityID == NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
-      // if (Side == NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
-      // if (OrderType == NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
+      if (SecurityID != NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
+      if (Side != NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
+      if (OrderType != NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
       msgBody.order.Price = Price;
       msgBody.order.OrderQty = OrderQty;
 
@@ -285,8 +257,8 @@ CZpquantMdApi::Start() {
       msgBody.mktDataSnapshot.head.updateTime = updateTime;
       msgBody.mktDataSnapshot.head.mdStreamType = mdStreamType;
 
-      // if (SecurityID == NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.SecurityID, SecurityID.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.SecurityID) - 1);
-      // if (TradingPhaseCode == NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode, TradingPhaseCode.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode) - 1);
+      if (SecurityID != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.SecurityID, SecurityID.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.SecurityID) - 1);
+      if (TradingPhaseCode != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode, TradingPhaseCode.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode) - 1);
 
       msgBody.mktDataSnapshot.l2Stock.NumTrades = NumTrades;
       msgBody.mktDataSnapshot.l2Stock.TotalVolumeTraded = TotalVolumeTraded;

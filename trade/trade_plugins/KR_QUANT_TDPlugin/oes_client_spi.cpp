@@ -635,14 +635,14 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d, \"seqNo\":%d,\"isEnd\":\"%c\", " \
-                  "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%u,\"originalHld\":%d, " \
-                  "totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d, " \
-                  "totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
-                  "lockFrzHld\":%d,\"unlockFrzHld\":%d,\"coveredFrzHld\":%d,\"coveredHld\":%d, " \
-                  "coveredAvlHld\":%d,\"sumHld\":%d,\"sellAvlHld\":%d,\"trsfOutAvlHld\":%d,"  \
-                  "lockAvlHld\":%d" \
+                  "\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%u,\"originalHld\":%d, " \
+                  "\"totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d, " \
+                  "\"totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
+                  "\"lockFrzHld\":%d,\"unlockFrzHld\":%d,\"coveredFrzHld\":%d,\"coveredHld\":%d, " \
+                  "\"coveredAvlHld\":%d,\"sumHld\":%d,\"sellAvlHld\":%d,\"trsfOutAvlHld\":%d,"  \
+                  "\"lockAvlHld\":%d" \
                   "}",
-                  13,pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+                  100,pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
                   pStkHolding->originalHld, pStkHolding->totalBuyHld,
                   pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
@@ -680,9 +680,9 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
-                  "invAcctId\":\"%s\",\"securityId\":\"%s\",\"securityName\":\"%s\", " \
-                  "mktId\":%d,\"lotType\":\"%s\",\"rejReason\":%d,\"lotDate\":%d, " \
-                  "assignNum\":%d,\"lotQty\":\"%s\",\"lotPrice\":%d,\"lotAmt\":%d, " \
+                  "\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"securityName\":\"%s\", " \
+                  "\"mktId\":%d,\"lotType\":\"%s\",\"rejReason\":%d,\"lotDate\":%d, " \
+                  "\"assignNum\":%d,\"lotQty\":\"%s\",\"lotPrice\":%d,\"lotAmt\":%d, " \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pLotWinning->invAcctId, pLotWinning->securityId,

@@ -68,6 +68,79 @@ CZpquantTradeApi::Start() {
     subscriber.subscribe("oes_resp", [this](const string& topic, const string& msg) {
       cout << "...client,oes_resp...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
+        ptree c_Config;
+        std::stringstream jmsg(msg.c_str());  
+        try {
+            boost::property_tree::read_json(jmsg, c_Config);
+        }
+        catch(std::exception & e){
+            fprintf(stdout, "cannot parse from string 'msg(mds_data_onOrder)' \n");
+            return false;
+        }
+
+
+      uint8 msgId = c_Config.get<uint8>("msgId");
+      switch(msgId)
+      {
+           //查询持仓
+          /*
+          {"msgId":100, "seqNo":18,"isEnd":"Y", invAcctId":"0188800368","securityId":"000008","mktId":2,"originalHld":1000000,
+           totalBuyHld":0,"totalSellHld":0,"sellFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,
+           "trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, 
+           coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,lockAvlHld":1000000}
+          */
+        case TD_MSGTYPE_STKHOLDING_RESPON:
+        {
+            ZpquantStkHoldingItem msgBody;
+            ZpquantQryCursor pCursor;
+
+            pCursor.seqNo = c_Config.get<int32>("seqNo");
+            pCursor.isEnd = c_Config.get<int8>("isEnd");
+            string invAcctId = c_Config.get<string>("invAcctId");
+            string securityId = c_Config.get<string>("securityId");
+            if (invAcctId != NULL) strcpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
+            if (securityId != NULL) strncpy(msgBody.securityId, securityId.c_str(),sizeof(msgBody.securityId) - 1);
+
+            msgBody.mktId = c_Config.get<uint8>("mktId");
+            msgBody.originalHld = c_Config.get<int64>("originalHld");
+            msgBody.totalBuyHld = c_Config.get<int64>("totalBuyHld");
+            msgBody.totalSellHld = c_Config.get<int64>("totalSellHld");
+            msgBody.sellFrzHld = c_Config.get<int64>("sellFrzHld");
+            msgBody.totalTrsfInHld = c_Config.get<int64>("totalTrsfInHld");
+            msgBody.totalTrsfOutHld = c_Config.get<int64>("totalTrsfOutHld");
+            msgBody.trsfOutFrzHld = c_Config.get<int64>("trsfOutFrzHld");
+            msgBody.lockHld = c_Config.get<int64>("lockHld");
+            msgBody.lockFrzHld = c_Config.get<int64>("lockFrzHld");
+            msgBody.unlockFrzHld = c_Config.get<int64>("unlockFrzHld");
+            msgBody.coveredFrzHld = c_Config.get<int64>("coveredFrzHld");
+            msgBody.coveredHld = c_Config.get<int64>("coveredHld");
+            msgBody.coveredAvlHld = c_Config.get<int64>("coveredAvlHld");
+            msgBody.sumHld = c_Config.get<int64>("sumHld");
+            msgBody.sellAvlHld = c_Config.get<int64>("sellAvlHld");
+            msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
+            msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
+
+
+            this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
+            break; 
+        }
+        
+        default:
+        break;
+      }
+
+
+
+
+      // if (SecurityID == NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
+      // if (Side == NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
+      // if (OrderType == NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
+      msgBody.order.Price = Price;
+      msgBody.order.OrderQty = OrderQty;
+
+      this->pSpi->OnOrderRtnDepthMarketData(&msgBody);
+
+
     });
     return true;
 }

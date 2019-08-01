@@ -178,6 +178,14 @@ typedef enum _ZpquantMdsMsgType {
 
 } ZpquantMdsMsgTypeT;
 
+typedef enum _ZpquantTdResponMsgType {
+ 
+    /* 查询到持仓信息回调 */
+    TD_MSGTYPE_STKHOLDING_RESPON                    = 100,
+
+
+} ZpquantTdResponMsgTypeT;
+
 /**
  * 行情订阅请求的应答报文
  */
