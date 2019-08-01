@@ -471,7 +471,7 @@ OesClientMySpi::OnQueryOrder(const OesOrdItemT *pOrder,
             "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
             "ordStatus\":\"%d\",\"ordDate\":\"%d\",\"ordTime\":\"%d\",\"ordCnfmTime\":\"%d\", " \
             "ordQty\":\"%d\",\"ordPrice\":\"%d\",\"canceledQty\":\"%d\",\"cumQty\":\"%d\", " \
-            "cumAmt\":\"%d\",\"cumInterest\":\"%d\",\"cumFee\":\"%d\", " \
+            "cumAmt\":\"%d\",\"cumInterest\":\"%d\", " \
             "cumFee\":\"%d\",\"frzAmt\":\"%d\",\"frzInterest\":\"%d\",\"frzFee\":\"%d\", " \
             "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
             "}",
@@ -625,31 +625,31 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
             pStkHolding->lockAvlHld);
 
       fprintf(stdout, sendJsonDataStr);
-      fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
+      //fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
 
-      // sprintf(sendRespData2client, 
-      //             "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-      //             "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\",\"originalHld\":\"%d\", " \
-      //             "totalBuyHld\":\"%d\",\"totalSellHld\":\"%d\",\"sellFrzHld\":\"%d\", " \
-      //             "totalTrsfInHld\":\"%d\",\"totalTrsfOutHld\":\"%d\",\"trsfOutFrzHld\":\"%d\",\"lockHld\":\"%d\", " \
-      //             "lockFrzHld\":\"%d\",\"unlockFrzHld\":\"%d\",\"coveredFrzHld\":\"%d\",\"coveredHld\":\"%d\", " \
-      //             "coveredAvlHld\":\"%d\",\"sumHld\":\"%d\",\"sellAvlHld\":\"%d\",\"trsfOutAvlHld\":\"%d\", " \
-      //             "lockAvlHld\":\"%d\", " \
-      //             "}",
-      //             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
-      //             pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
-      //             pStkHolding->originalHld, pStkHolding->totalBuyHld,
-      //             pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
-      //             pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
-      //             pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
-      //             pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
-      //             pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
-      //             pStkHolding->coveredAvlHld, pStkHolding->sumHld,
-      //             pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
-      //             pStkHolding->lockAvlHld);
+      sprintf(sendRespData2client, 
+                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%c\", " \
+                  "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%u\",\"originalHld\":\"%d\", " \
+                  "totalBuyHld\":\"%d\",\"totalSellHld\":\"%d\",\"sellFrzHld\":\"%d\", " \
+                  "totalTrsfInHld\":\"%d\",\"totalTrsfOutHld\":\"%d\",\"trsfOutFrzHld\":\"%d\",\"lockHld\":\"%d\", " \
+                  "lockFrzHld\":\"%d\",\"unlockFrzHld\":\"%d\",\"coveredFrzHld\":\"%d\",\"coveredHld\":\"%d\", " \
+                  "coveredAvlHld\":\"%d\",\"sumHld\":\"%d\",\"sellAvlHld\":\"%d\",\"trsfOutAvlHld\":\"%d\", " \
+                  "lockAvlHld\":\"%d\"," \
+                  "}",
+                  pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+                  pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
+                  pStkHolding->originalHld, pStkHolding->totalBuyHld,
+                  pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
+                  pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
+                  pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
+                  pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
+                  pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
+                  pStkHolding->coveredAvlHld, pStkHolding->sumHld,
+                  pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
+                  pStkHolding->lockAvlHld);
 
       // publisher.publish("oes_resp",sendRespData2client);
-      // fprintf(stdout, sendRespData2client);
+       fprintf(stdout, sendRespData2client);
 }
 
 
