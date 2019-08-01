@@ -129,7 +129,79 @@ CZpquantTradeApi::Start() {
             this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
             break; 
         }
-        
+        /*
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"7","clEnvId":0,"clSeqNo":2,"clOrdId":1375,"invAcctId":"A188800368",
+         securityId":"601899","mktId":1,"ordType":0,"bsType":1, ordStatus":1,"ordDate":20190430,"ordTime":145428627,"ordCnfmTime":0, 
+         ordQty":200,"ordPrice":33000,"canceledQty":0,"cumQty":0, cumAmt":0,"cumInterest":0,"cumFee":0,"cumInterest":6600000, cumFee":0,
+         "frzAmt":50132,"frzInterest":0,"frzFee":0, origClOrdId":0,"ordRejReason":0,"exchErrCode":0, }
+        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"12","cashAcctId":"1888000368","custId":"1888000368","currType":0,
+        "cashType":0, cashAcctStatus":0,"beginningBal":1316134912,"beginningAvailableBal":1316134912,"beginningDrawableBal":1316134912, 
+        disableBal":0,"totalDepositAmt":0,"totalWithdrawAmt":0,"withdrawFrzAmt":0, totalSellAmt":0,"totalBuyAmt":3300000,
+        "buyFrzAmt":9900000,"totalFeeAmt":50066, feeFrzAmt":50198,"marginAmt":0,"marginFrzAmt":0,"currentTotalBal":1312784846, 
+        currentAvailableBal":1302834648,"currentDrawableBal":1302834648 ,}
+        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"8","clEnvId":0,"clSeqNo":2,"clOrdId":1375,"invAcctId":"A188800368",
+         securityId":"601899","mktId":1,"ordType":0,"bsType":1, ordStatus":3,"ordDate":20190430,"ordTime":145428627,"ordCnfmTime":145428627, 
+         ordQty":200,"ordPrice":33000,"canceledQty":0,"cumQty":100, cumAmt":3300000,"cumInterest":0,"cumFee":50066, cumFee":3300000,"frzAmt":0,
+         "frzInterest":66,"frzFee":0, origClOrdId":0,"ordRejReason":0,"exchErrCode":1302834648, }
+        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"9","exchTrdNum":1981,"clOrdId":1375,"clEnvId":0,"clSeqNo":2,
+        "invAcctId":"A188800368", securityId":"601899","mktId":1,"trdSide":1, ordBuySellType":1,"trdDate":20190430,"trdTime":145428627, 
+        trdQty":100,"trdPrice":33000,"trdAmt":3300000,"cumQty":100, cumAmt":3300000,"cumInterest":0,cumFee":50066,"pbuId":88822, }
+        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"12","cashAcctId":"1888000368","custId":"1888000368","currType":0,
+        "cashType":0, cashAcctStatus":0,"beginningBal":1316134912,"beginningAvailableBal":1316134912,"beginningDrawableBal":1316134912,
+         disableBal":0,"totalDepositAmt":0,"totalWithdrawAmt":0,"withdrawFrzAmt":0, totalSellAmt":0,"totalBuyAmt":6600000,"buyFrzAmt":6600000,
+         "totalFeeAmt":100132, feeFrzAmt":132,"marginAmt":0,"marginFrzAmt":0,"currentTotalBal":1309434780, currentAvailableBal":1302834648,
+         "currentDrawableBal":1302834648 ,}
+        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"13","invAcctId":"A188800368","securityId":"601899","mktId":1,
+        "originalHld":0, totalBuyHld":200,"totalSellHld":0,"sellFrzHld":0,"manualFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,
+        "trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, originalCostAmt":0,
+        "totalBuyAmt":6600000,"totalSellAmt":0,"totalBuyFee":100132, totalSellFee":0,"costPrice":33501,"sumHld":200,"sellAvlHld":0, 
+        trsfOutAvlHld":200,"lockAvlHld":200,"coveredAvlHld":0, }
+        cannot parse from string 'msg(client,oes_resp)'
+        */
+        case TD_MSGTYPE_STKHOLDING_RESPON:
+        {
+            ZpquantStkHoldingItem msgBody;
+            ZpquantQryCursor pCursor;
+
+            pCursor.seqNo = c_Config.get<int32>("seqNo");
+            cout << "...seqNo:" << pCursor.seqNo << endl;
+
+            char isEnd = c_Config.get<char>("isEnd");
+            cout << "...isEnd:" << isEnd << endl;
+            pCursor.isEnd = isEnd;
+            string invAcctId = c_Config.get<string>("invAcctId");
+            string securityId = c_Config.get<string>("securityId");
+            //if (invAcctId != NULL) strncpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
+            //if (securityId != NULL) strncpy(msgBody.securityId, securityId.c_str(),sizeof(msgBody.securityId) - 1);
+
+            msgBody.mktId = c_Config.get<uint8>("mktId");
+            msgBody.originalHld = c_Config.get<int64>("originalHld");
+            msgBody.totalBuyHld = c_Config.get<int64>("totalBuyHld");
+            msgBody.totalSellHld = c_Config.get<int64>("totalSellHld");
+            msgBody.sellFrzHld = c_Config.get<int64>("sellFrzHld");
+            msgBody.totalTrsfInHld = c_Config.get<int64>("totalTrsfInHld");
+            msgBody.totalTrsfOutHld = c_Config.get<int64>("totalTrsfOutHld");
+            msgBody.trsfOutFrzHld = c_Config.get<int64>("trsfOutFrzHld");
+            msgBody.lockHld = c_Config.get<int64>("lockHld");
+            msgBody.lockFrzHld = c_Config.get<int64>("lockFrzHld");
+            msgBody.unlockFrzHld = c_Config.get<int64>("unlockFrzHld");
+            msgBody.coveredFrzHld = c_Config.get<int64>("coveredFrzHld");
+            msgBody.coveredHld = c_Config.get<int64>("coveredHld");
+            msgBody.coveredAvlHld = c_Config.get<int64>("coveredAvlHld");
+            msgBody.sumHld = c_Config.get<int64>("sumHld");
+            msgBody.sellAvlHld = c_Config.get<int64>("sellAvlHld");
+            msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
+            msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
+
+
+            this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
+            break; 
+        }
         default:
         break;
       }

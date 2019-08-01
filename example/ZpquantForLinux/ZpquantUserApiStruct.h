@@ -178,11 +178,75 @@ typedef enum _ZpquantMdsMsgType {
 
 } ZpquantMdsMsgTypeT;
 
+/**
+ * 交易通信消息的消息类型定义
+ */
 typedef enum _ZpquantTdResponMsgType {
- 
-    /* 查询到持仓信息回调 */
-    TD_MSGTYPE_STKHOLDING_RESPON                    = 100,
+    /*
+     * 交易类消息
+     */
+    OESMSG_ORD_NEW_ORDER                        = 100,     /**< 0x01/01  委托申报消息 */
+    OESMSG_ORD_CANCEL_REQUEST                   = 101,     /**< 0x02/02  撤单请求消息 */
+    OESMSG_ORD_BATCH_ORDERS                     = 102,     /**< 0x03/03  批量委托消息 */
+                                                            /**< 最大的委托消息类型 */
+    /*
+     * 执行报告类消息
+     */
+    __OESMSG_RPT_MIN                            = 110,     /**< 0x0F/15  最小的执行报告消息类型 */
+    OESMSG_RPT_MARKET_STATE                     = 111,     /**< 0x10/16  市场状态信息 */
+    OESMSG_RPT_REPORT_SYNCHRONIZATION           = 112,     /**< 0x11/17  回报同步的应答消息 */
 
+    OESMSG_RPT_BUSINESS_REJECT                  = 113,     /**< 0x12/18  OES业务拒绝 (因未通过风控检查等原因而被OES拒绝) */
+    OESMSG_RPT_ORDER_INSERT                     = 114,     /**< 0x13/19  OES委托已生成 (已通过风控检查) */
+    OESMSG_RPT_ORDER_REPORT                     = 115,     /**< 0x14/20  交易所委托回报 (包括交易所委托拒绝、委托确认和撤单完成通知) */
+    OESMSG_RPT_TRADE_REPORT                     = 116,     /**< 0x15/21  交易所成交回报 */
+
+    OESMSG_RPT_FUND_TRSF_REJECT                 = 117,     /**< 0x16/22  出入金委托拒绝 */
+    OESMSG_RPT_FUND_TRSF_REPORT                 = 118,     /**< 0x17/23  出入金委托执行报告 */
+
+    OESMSG_RPT_CASH_ASSET_VARIATION             = 119,     /**< 0x18/24  资金变动信息 */
+    OESMSG_RPT_STOCK_HOLDING_VARIATION          = 120,     /**< 0x19/25  持仓变动信息 (股票) */
+    OESMSG_RPT_OPTION_HOLDING_VARIATION         = 121,     /**< 0x1A/26  持仓变动信息 (期权) */                                                         /**< 最大的回报消息类型 */
+
+    /*
+     * 非交易类消息
+     */
+    OESMSG_NONTRD_FUND_TRSF_REQ                 = 130,     /**< 0x21/33  出入金委托 */
+    OESMSG_NONTRD_CHANGE_PASSWORD               = 131,     /**< 0x22/34  修改客户端登录密码 */
+
+    /*
+     * 查询类消息
+     */
+    OESMSG_QRYMSG_CLIENT_OVERVIEW               = 136,     /**< 0x30/48  查询客户端总览信息 */
+    OESMSG_QRYMSG_ORD                           = 137,     /**< 0x31/49  查询委托信息 */
+    OESMSG_QRYMSG_TRD                           = 138,     /**< 0x32/50  查询成交信息 */
+    OESMSG_QRYMSG_CASH_ASSET                    = 139,     /**< 0x33/51  查询客户资金信息 */
+    OESMSG_QRYMSG_STK_HLD                       = 140,     /**< 0x34/52  查询股票持仓信息 */
+    OESMSG_QRYMSG_OPT_HLD                       = 141,     /**< 0x35/53  查询期权持仓信息 */
+    OESMSG_QRYMSG_CUST                          = 142,     /**< 0x36/54  查询客户信息 */
+    OESMSG_QRYMSG_INV_ACCT                      = 143,     /**< 0x37/55  查询证券账户信息 */
+    OESMSG_QRYMSG_COMMISSION_RATE               = 144,     /**< 0x38/56  查询客户佣金信息 */
+    OESMSG_QRYMSG_FUND_TRSF                     = 145,     /**< 0x39/57  查询出入金信息 */
+    OESMSG_QRYMSG_STOCK                         = 146,     /**< 0x3A/58  查询现货产品信息 */
+    OESMSG_QRYMSG_ETF                           = 147,     /**< 0x3B/59  查询ETF申赎产品信息 */
+    OESMSG_QRYMSG_ETF_COMPONENT                 = 148,     /**< 0x3C/60  查询ETF成分股信息 */
+    OESMSG_QRYMSG_OPTION                        = 149,     /**< 0x3D/61  查询期权产品信息 */
+    OESMSG_QRYMSG_ISSUE                         = 150,     /**< 0x3E/62  查询证券发行信息 */
+    OESMSG_QRYMSG_LOT_WINNING                   = 151,     /**< 0x3F/63  查询新股配号、中签信息 */
+    OESMSG_QRYMSG_TRADING_DAY                   = 152,     /**< 0x40/64  查询当前交易日 */
+    OESMSG_QRYMSG_MARKET_STATE                  = 153,     /**< 0x41/65  查询市场状态 */
+    OESMSG_QRYMSG_COUNTER_CASH                  = 154,     /**< 0x41/66  查询客户主柜资金信息 */
+    __OESMSG_QRYMSG_MAX,                                    /**< 最大的查询消息类型 */
+
+    /*
+     * 公共的会话类消息
+     */
+    OESMSG_SESS_TRD_LOGIN                       = 160,     /**< 0xF1/241 交易客户端登录消息 */
+    OESMSG_SESS_RPT_LOGIN                       = 161,     /**< 0xF3/243 执行报告登录消息 */
+    OESMSG_SESS_QRY_LOGIN                       = 162,     /**< 0xF4/244 普通查询登录消息 */
+    OESMSG_SESS_HEARTBEAT                       = 163,     /**< 0xFA/250 心跳消息 */
+    OESMSG_SESS_TEST_REQUEST                    = 164,     /**< 0xFB/251 测试请求消息 */
+    OESMSG_SESS_LOGOUT                          = 165,     /**< 0xFE/254 登出消息 */
 
 } ZpquantTdResponMsgTypeT;
 
