@@ -141,9 +141,9 @@ CZpquantMdApi::Start() {
       msgBody.trade.TransactTime = TransactTime;
       msgBody.trade.ChannelNo = ChannelNo;
       msgBody.trade.ApplSeqNum = ApplSeqNum;
-      if (SecurityID != NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
-      if (ExecType != NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
-      if (TradeBSFlag != NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
+      //if (SecurityID != NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
+      //if (ExecType != NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
+      //if (TradeBSFlag != NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
       msgBody.trade.TradePrice = TradePrice;
       msgBody.trade.TradeQty = TradeQty;
       msgBody.trade.TradeMoney = TradeMoney;
@@ -191,9 +191,9 @@ CZpquantMdApi::Start() {
       msgBody.order.ChannelNo = ChannelNo;
       msgBody.order.ApplSeqNum = ApplSeqNum;
 
-      if (SecurityID != NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
-      if (Side != NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
-      if (OrderType != NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
+      //if (SecurityID != NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
+      //if (Side != NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
+      //if (OrderType != NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
       msgBody.order.Price = Price;
       msgBody.order.OrderQty = OrderQty;
 
@@ -257,8 +257,8 @@ CZpquantMdApi::Start() {
       msgBody.mktDataSnapshot.head.updateTime = updateTime;
       msgBody.mktDataSnapshot.head.mdStreamType = mdStreamType;
 
-      if (SecurityID != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.SecurityID, SecurityID.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.SecurityID) - 1);
-      if (TradingPhaseCode != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode, TradingPhaseCode.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode) - 1);
+      //if (SecurityID != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.SecurityID, SecurityID.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.SecurityID) - 1);
+      //if (TradingPhaseCode != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode, TradingPhaseCode.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode) - 1);
 
       msgBody.mktDataSnapshot.l2Stock.NumTrades = NumTrades;
       msgBody.mktDataSnapshot.l2Stock.TotalVolumeTraded = TotalVolumeTraded;

@@ -98,7 +98,7 @@ CZpquantTradeApi::Start() {
             pCursor.isEnd = c_Config.get<int8>("isEnd");
             string invAcctId = c_Config.get<string>("invAcctId");
             string securityId = c_Config.get<string>("securityId");
-            if (invAcctId != NULL) strcpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
+            if (invAcctId != NULL) strncpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
             if (securityId != NULL) strncpy(msgBody.securityId, securityId.c_str(),sizeof(msgBody.securityId) - 1);
 
             msgBody.mktId = c_Config.get<uint8>("mktId");
