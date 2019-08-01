@@ -381,6 +381,8 @@ demoTraderClientSpi::OnQueryCashAsset(const ZpquantCashAssetItem *pCashAsset,
 void
 demoTraderClientSpi::OnQueryStkHolding(const ZpquantStkHoldingItem *pStkHolding,
         const ZpquantQryCursor *pCursor, int32 requestId) {
+      fprintf(stdout, "...demoTraderClientSpi::OnQueryStkHolding\n");
+      
       sprintf(sendJsonDataStr, ">>> 查询到股票持仓信息: index[%d], isEnd[%c], " \
             "证券账户[%s], 市场代码[%" __SPK_FMT_HH__ "u], 产品代码[%s], " \
             "日初持仓[%" __SPK_FMT_LL__ "d], " \

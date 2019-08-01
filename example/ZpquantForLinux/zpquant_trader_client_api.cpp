@@ -74,7 +74,7 @@ CZpquantTradeApi::Start() {
             boost::property_tree::read_json(jmsg, c_Config);
         }
         catch(std::exception & e){
-            fprintf(stdout, "cannot parse from string 'msg(mds_data_onOrder)' \n");
+            fprintf(stdout, "cannot parse from string 'msg(client,oes_resp)' \n");
             return false;
         }
 
@@ -128,18 +128,6 @@ CZpquantTradeApi::Start() {
         default:
         break;
       }
-
-
-
-
-      // if (SecurityID == NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
-      // if (Side == NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
-      // if (OrderType == NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
-      msgBody.order.Price = Price;
-      msgBody.order.OrderQty = OrderQty;
-
-      this->pSpi->OnOrderRtnDepthMarketData(&msgBody);
-
 
     });
     return true;
