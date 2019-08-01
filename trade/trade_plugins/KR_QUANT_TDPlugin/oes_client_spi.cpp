@@ -20,10 +20,10 @@ OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderRej
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"6\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"invAcctId\":\"%s\", " \
-                  "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
-                  "ordQty\":\"%d\",\"ordPrice\":\"%d\", " \
-                  "origClOrdId\":\"%d\",\"errorCode\":\"%d\", " \
+                  "{\"msgId\":\"6\",\"clEnvId\":%d,\"clSeqNo\":%d,\"invAcctId\":\"%s\", " \
+                  "securityId\":\"%s\",\"mktId\":%d,\"ordType\":%d,\"bsType\":%d, " \
+                  "ordQty\":%d,\"ordPrice\":%d, " \
+                  "origClOrdId\":%d,\"errorCode\":%d, " \
                   "}",
                   pOrderReject->clEnvId, pOrderReject->clSeqNo,
                   pOrderReject->invAcctId, pOrderReject->securityId,
@@ -67,13 +67,13 @@ OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"7\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"clOrdId\":\"%d\",\"invAcctId\":\"%s\", " \
-                  "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
-                  "ordStatus\":\"%d\",\"ordDate\":\"%d\",\"ordTime\":\"%d\",\"ordCnfmTime\":\"%d\", " \
-                  "ordQty\":\"%d\",\"ordPrice\":\"%d\",\"canceledQty\":\"%d\",\"cumQty\":\"%d\", " \
-                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\",\"cumFee\":\"%d\",\"cumInterest\":\"%d\", " \
-                  "cumFee\":\"%d\",\"frzAmt\":\"%d\",\"frzInterest\":\"%d\",\"frzFee\":\"%d\", " \
-                  "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
+                  "{\"msgId\":\"7\",\"clEnvId\":%d,\"clSeqNo\":%d,\"clOrdId\":%d,\"invAcctId\":\"%s\", " \
+                  "securityId\":\"%s\",\"mktId\":%d,\"ordType\":%d,\"bsType\":%d, " \
+                  "ordStatus\":%d,\"ordDate\":%d,\"ordTime\":%d,\"ordCnfmTime\":%d, " \
+                  "ordQty\":%d,\"ordPrice\":%d,\"canceledQty\":%d,\"cumQty\":%d, " \
+                  "cumAmt\":%d,\"cumInterest\":%d,\"cumFee\":%d,\"cumInterest\":%d, " \
+                  "cumFee\":%d,\"frzAmt\":%d,\"frzInterest\":%d,\"frzFee\":%d, " \
+                  "origClOrdId\":%d,\"ordRejReason\":%d,\"exchErrCode\":%d, " \
                   "}",
                   pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
                   pOrderInsert->clOrdId, pOrderInsert->invAcctId,
@@ -124,13 +124,13 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"8\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"clOrdId\":\"%d\",\"invAcctId\":\"%s\", " \
-                  "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
-                  "ordStatus\":\"%d\",\"ordDate\":\"%d\",\"ordTime\":\"%d\",\"ordCnfmTime\":\"%d\", " \
-                  "ordQty\":\"%d\",\"ordPrice\":\"%d\",\"canceledQty\":\"%d\",\"cumQty\":\"%d\", " \
-                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\",\"cumFee\":\"%d\", " \
-                  "cumFee\":\"%d\",\"frzAmt\":\"%d\",\"frzInterest\":\"%d\",\"frzFee\":\"%d\", " \
-                  "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
+                  "{\"msgId\":\"8\",\"clEnvId\":%d,\"clSeqNo\":%d,\"clOrdId\":%d,\"invAcctId\":\"%s\", " \
+                  "securityId\":\"%s\",\"mktId\":%d,\"ordType\":%d,\"bsType\":%d, " \
+                  "ordStatus\":%d,\"ordDate\":%d,\"ordTime\":%d,\"ordCnfmTime\":%d, " \
+                  "ordQty\":%d,\"ordPrice\":%d,\"canceledQty\":%d,\"cumQty\":%d, " \
+                  "cumAmt\":%d,\"cumInterest\":%d,\"cumFee\":%d, " \
+                  "cumFee\":%d,\"frzAmt\":%d,\"frzInterest\":%d,\"frzFee\":%d, " \
+                  "origClOrdId\":%d,\"ordRejReason\":%d,\"exchErrCode\":%d, " \
                   "}",
                   pOrderReport->clEnvId, pOrderReport->clSeqNo,
                   pOrderReport->clOrdId, pOrderReport->invAcctId,
@@ -175,12 +175,12 @@ OesClientMySpi::OnTradeReport(const OesTrdCnfmT *pTradeReport) {
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"9\",\"exchTrdNum\":\"%d\",\"clOrdId\":\"%d\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"invAcctId\":\"%s\", " \
-                  "securityId\":\"%s\",\"mktId\":\"%d\",\"trdSide\":\"%d\", " \
-                  "ordBuySellType\":\"%d\",\"trdDate\":\"%d\",\"trdTime\":\"%d\", " \
-                  "trdQty\":\"%d\",\"trdPrice\":\"%d\",\"trdAmt\":\"%d\",\"cumQty\":\"%d\", " \
-                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\"," \
-                  "cumFee\":\"%d\",\"pbuId\":\"%d\", " \
+                  "{\"msgId\":\"9\",\"exchTrdNum\":%d,\"clOrdId\":%d,\"clEnvId\":%d,\"clSeqNo\":%d,\"invAcctId\":\"%s\", " \
+                  "securityId\":\"%s\",\"mktId\":%d,\"trdSide\":%d, " \
+                  "ordBuySellType\":%d,\"trdDate\":%d,\"trdTime\":%d, " \
+                  "trdQty\":%d,\"trdPrice\":%d,\"trdAmt\":%d,\"cumQty\":%d, " \
+                  "cumAmt\":%d,\"cumInterest\":%d," \
+                  "cumFee\":%d,\"pbuId\":%d, " \
                   "}",
                   pTradeReport->exchTrdNum, pTradeReport->clOrdId,
                   pTradeReport->clEnvId, pTradeReport->clSeqNo,
@@ -238,12 +238,12 @@ OesClientMySpi::OnCashAssetVariation(const OesCashAssetItemT *pCashAssetItem) {
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"12\",\"cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":\"%d\",\"cashType\":\"%d\", " \
-                  "cashAcctStatus\":\"%d\",\"beginningBal\":\"%d\",\"beginningAvailableBal\":\"%d\",\"beginningDrawableBal\":\"%d\", " \
-                  "disableBal\":\"%d\",\"totalDepositAmt\":\"%d\",\"totalWithdrawAmt\":\"%d\",\"withdrawFrzAmt\":\"%d\", " \
-                  "totalSellAmt\":\"%d\",\"totalBuyAmt\":\"%d\",\"buyFrzAmt\":\"%d\",\"totalFeeAmt\":\"%d\", " \
-                  "feeFrzAmt\":\"%d\",\"marginAmt\":\"%d\",\"marginFrzAmt\":\"%d\",\"currentTotalBal\":\"%d\", " \
-                  "currentAvailableBal\":\"%d\",\"currentDrawableBal\":\"%d\" ," \
+                  "{\"msgId\":\"12\",\"cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":%d,\"cashType\":%d, " \
+                  "cashAcctStatus\":%d,\"beginningBal\":%d,\"beginningAvailableBal\":%d,\"beginningDrawableBal\":%d, " \
+                  "disableBal\":%d,\"totalDepositAmt\":%d,\"totalWithdrawAmt\":%d,\"withdrawFrzAmt\":%d, " \
+                  "totalSellAmt\":%d,\"totalBuyAmt\":%d,\"buyFrzAmt\":%d,\"totalFeeAmt\":%d, " \
+                  "feeFrzAmt\":%d,\"marginAmt\":%d,\"marginFrzAmt\":%d,\"currentTotalBal\":%d, " \
+                  "currentAvailableBal\":%d,\"currentDrawableBal\":%d ," \
                   "}",
                   pCashAssetItem->cashAcctId, pCashAssetItem->custId,
                   pCashAssetItem->currType, pCashAssetItem->cashType,
@@ -311,13 +311,13 @@ OesClientMySpi::OnStockHoldingVariation(const OesStkHoldingItemT *pStkHoldingIte
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\",\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\",\"originalHld\":\"%d\", " \
-                  "totalBuyHld\":\"%d\",\"totalSellHld\":\"%d\",\"sellFrzHld\":\"%d\",\"manualFrzHld\":\"%d\", " \
-                  "totalTrsfInHld\":\"%d\",\"totalTrsfOutHld\":\"%d\",\"trsfOutFrzHld\":\"%d\",\"lockHld\":\"%d\", " \
-                  "lockFrzHld\":\"%d\",\"unlockFrzHld\":\"%d\",\"coveredFrzHld\":\"%d\",\"coveredHld\":\"%d\", " \
-                  "originalCostAmt\":\"%d\",\"totalBuyAmt\":\"%d\",\"totalSellAmt\":\"%d\",\"totalBuyFee\":\"%d\", " \
-                  "totalSellFee\":\"%d\",\"costPrice\":\"%d\",\"sumHld\":\"%d\",\"sellAvlHld\":\"%d\", " \
-                  "trsfOutAvlHld\":\"%d\",\"lockAvlHld\":\"%d\",\"coveredAvlHld\":\"%d\", " \
+                  "{\"msgId\":\"13\",\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%d,\"originalHld\":%d, " \
+                  "totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d,\"manualFrzHld\":%d, " \
+                  "totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
+                  "lockFrzHld\":%d,\"unlockFrzHld\":%d,\"coveredFrzHld\":%d,\"coveredHld\":%d, " \
+                  "originalCostAmt\":%d,\"totalBuyAmt\":%d,\"totalSellAmt\":%d,\"totalBuyFee\":%d, " \
+                  "totalSellFee\":%d,\"costPrice\":%d,\"sumHld\":%d,\"sellAvlHld\":%d, " \
+                  "trsfOutAvlHld\":%d,\"lockAvlHld\":%d,\"coveredAvlHld\":%d, " \
                   "}",
                   pStkHoldingItem->invAcctId, pStkHoldingItem->securityId,
                   pStkHoldingItem->mktId, pStkHoldingItem->originalHld,
@@ -357,9 +357,9 @@ OesClientMySpi::OnFundTrsfReject(int32 errorCode,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"10\",\"rejReason\":\"%d\",\"errorInfo\":\"%s\",\"clEnvId\":\"%d\", " \
-                  "clSeqNo\":\"%d\",\"cashAcctId\":\"%s\",\"isAllotOnly\":\"%d\",\"direct\":\"%d\", " \
-                  "occurAmt\":\"%d\", " \
+                  "{\"msgId\":\"10\",\"rejReason\":%d,\"errorInfo\":\"%s\",\"clEnvId\":%d, " \
+                  "clSeqNo\":%d,\"cashAcctId\":\"%s\",\"isAllotOnly\":%d,\"direct\":%d, " \
+                  "occurAmt\":%d, " \
                   "}",
                   pFundTrsfReject->rejReason,pFundTrsfReject->errorInfo,
                   pFundTrsfReject->clEnvId, pFundTrsfReject->clSeqNo,
@@ -395,10 +395,10 @@ OesClientMySpi::OnFundTrsfReport(int32 errorCode,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"11\",\"rejReason\":\"%d\",\"counterErrCode\":\"%d\",\"errorInfo\":\"%s\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\", " \
-                  "fundTrsfId\":\"%d\",\"mktId\":\"%d\",\"trdSide\":\"%d\", " \
-                  "ordBuySellType\":\"%d\",\"cashAcctId\":\"%s\",\"isAllotOnly\":\"%d\", " \
-                  "direct\":\"%d\",\"occurAmt\":\"%d\",\"trsfStatus\":\"%d\",\"operDate\":\"%08d\", " \
+                  "{\"msgId\":\"11\",\"rejReason\":%d,\"counterErrCode\":%d,\"errorInfo\":\"%s\",\"clEnvId\":%d,\"clSeqNo\":%d, " \
+                  "fundTrsfId\":%d,\"mktId\":%d,\"trdSide\":%d, " \
+                  "ordBuySellType\":%d,\"cashAcctId\":\"%s\",\"isAllotOnly\":%d, " \
+                  "direct\":%d,\"occurAmt\":%d,\"trsfStatus\":%d,\"operDate\":\"%08d\", " \
                   "operTime\":\"%09d\",\"dclrTime\":\"%09d\",\"doneTime\":\"%09d\"," \
                   "}",
                   pFundTrsfReport->rejReason, pFundTrsfReport->counterErrCode,
@@ -426,8 +426,8 @@ OesClientMySpi::OnMarketState(const OesMarketStateItemT *pMarketStateItem) {
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"4\",\"exchId\":\"%d\",\"platformId\":\"%d\", " \
-                  "mktId\":\"%d\",\"mktState\":\"%d\", " \
+                  "{\"msgId\":\"4\",\"exchId\":%d,\"platformId\":%d, " \
+                  "mktId\":%d,\"mktState\":%d, " \
                   "}",
                   pMarketStateItem->exchId, pMarketStateItem->platformId,
                   pMarketStateItem->mktId, pMarketStateItem->mktState);
@@ -467,13 +467,13 @@ OesClientMySpi::OnQueryOrder(const OesOrdItemT *pOrder,
 
       //mgsID需要确定，暂定为8
       sprintf(sendRespData2client, 
-            "{\"msgId\":\"8\",\"seqNo\":\"%d\",\"isEnd\":\"%s\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"clOrdId\":\"%d\",\"invAcctId\":\"%s\", " \
-            "securityId\":\"%s\",\"mktId\":\"%d\",\"ordType\":\"%d\",\"bsType\":\"%d\", " \
-            "ordStatus\":\"%d\",\"ordDate\":\"%d\",\"ordTime\":\"%d\",\"ordCnfmTime\":\"%d\", " \
-            "ordQty\":\"%d\",\"ordPrice\":\"%d\",\"canceledQty\":\"%d\",\"cumQty\":\"%d\", " \
-            "cumAmt\":\"%d\",\"cumInterest\":\"%d\", " \
-            "cumFee\":\"%d\",\"frzAmt\":\"%d\",\"frzInterest\":\"%d\",\"frzFee\":\"%d\", " \
-            "origClOrdId\":\"%d\",\"ordRejReason\":\"%d\",\"exchErrCode\":\"%d\", " \
+            "{\"msgId\":\"8\",\"seqNo\":%d,\"isEnd\":\"%s\",\"clEnvId\":%d,\"clSeqNo\":%d,\"clOrdId\":%d,\"invAcctId\":\"%s\", " \
+            "securityId\":\"%s\",\"mktId\":%d,\"ordType\":%d,\"bsType\":%d, " \
+            "ordStatus\":%d,\"ordDate\":%d,\"ordTime\":%d,\"ordCnfmTime\":%d, " \
+            "ordQty\":%d,\"ordPrice\":%d,\"canceledQty\":%d,\"cumQty\":%d, " \
+            "cumAmt\":%d,\"cumInterest\":%d, " \
+            "cumFee\":%d,\"frzAmt\":%d,\"frzInterest\":%d,\"frzFee\":%d, " \
+            "origClOrdId\":%d,\"ordRejReason\":%d,\"exchErrCode\":%d, " \
             "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pOrder->clEnvId, pOrder->clSeqNo, pOrder->clOrdId,
@@ -515,13 +515,13 @@ OesClientMySpi::OnQueryTrade(const OesTrdItemT *pTrade,
 
       //mgsID需要确定，暂定为8
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"9\",\"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "exchTrdNum\":\"%d\",\"clOrdId\":\"%d\",\"clEnvId\":\"%d\",\"clSeqNo\":\"%d\",\"invAcctId\":\"%s\", " \
-                  "securityId\":\"%s\",\"mktId\":\"%d\",\"trdSide\":\"%d\", " \
-                  "ordBuySellType\":\"%d\",\"trdDate\":\"%d\",\"trdTime\":\"%d\", " \
-                  "trdQty\":\"%d\",\"trdPrice\":\"%d\",\"trdAmt\":\"%d\",\"cumQty\":\"%d\", " \
-                  "cumAmt\":\"%d\",\"cumInterest\":\"%d\"," \
-                  "cumFee\":\"%d\",\"pbuId\":\"%d\", " \
+                  "{\"msgId\":\"9\",\"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "exchTrdNum\":%d,\"clOrdId\":%d,\"clEnvId\":%d,\"clSeqNo\":%d,\"invAcctId\":\"%s\", " \
+                  "securityId\":\"%s\",\"mktId\":%d,\"trdSide\":%d, " \
+                  "ordBuySellType\":%d,\"trdDate\":%d,\"trdTime\":%d, " \
+                  "trdQty\":%d,\"trdPrice\":%d,\"trdAmt\":%d,\"cumQty\":%d, " \
+                  "cumAmt\":%d,\"cumInterest\":%d," \
+                  "cumFee\":%d,\"pbuId\":%d, " \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pTrade->exchTrdNum, pTrade->clOrdId, pTrade->clEnvId,
@@ -565,13 +565,13 @@ OesClientMySpi::OnQueryCashAsset(const OesCashAssetItemT *pCashAsset,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"12\",\"seqNo\":\"%d\",\"isEnd\":\"%s\" , " \ 
-                  "cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":\"%d\",\"cashType\":\"%d\", " \
-                  "beginningBal\":\"%d\",\"beginningAvailableBal\":\"%d\",\"beginningDrawableBal\":\"%d\", " \
-                  "disableBal\":\"%d\",\"totalDepositAmt\":\"%d\",\"totalWithdrawAmt\":\"%d\",\"withdrawFrzAmt\":\"%d\", " \
-                  "totalSellAmt\":\"%d\",\"totalBuyAmt\":\"%d\",\"buyFrzAmt\":\"%d\",\"totalFeeAmt\":\"%d\", " \
-                  "feeFrzAmt\":\"%d\",\"marginAmt\":\"%d\",\"marginFrzAmt\":\"%d\",\"currentTotalBal\":\"%d\", " \
-                  "currentAvailableBal\":\"%d\",\"currentDrawableBal\":\"%d\" ," \
+                  "{\"msgId\":\"12\",\"seqNo\":%d,\"isEnd\":\"%s\" , " \ 
+                  "cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":%d,\"cashType\":%d, " \
+                  "beginningBal\":%d,\"beginningAvailableBal\":%d,\"beginningDrawableBal\":%d, " \
+                  "disableBal\":%d,\"totalDepositAmt\":%d,\"totalWithdrawAmt\":%d,\"withdrawFrzAmt\":%d, " \
+                  "totalSellAmt\":%d,\"totalBuyAmt\":%d,\"buyFrzAmt\":%d,\"totalFeeAmt\":%d, " \
+                  "feeFrzAmt\":%d,\"marginAmt\":%d,\"marginFrzAmt\":%d,\"currentTotalBal\":%d, " \
+                  "currentAvailableBal\":%d,\"currentDrawableBal\":%d ," \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pCashAsset->cashAcctId, pCashAsset->custId, pCashAsset->currType,
@@ -634,7 +634,7 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
       //fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%c\", " \
+                  "{\"msgId\":%d, \"seqNo\":%d,\"isEnd\":\"%c\", " \
                   "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%u,\"originalHld\":%d, " \
                   "totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d, " \
                   "totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
@@ -642,7 +642,7 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
                   "coveredAvlHld\":%d,\"sumHld\":%d,\"sellAvlHld\":%d,\"trsfOutAvlHld\":%d,"  \
                   "lockAvlHld\":%d" \
                   "}",
-                  pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+                  13,pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
                   pStkHolding->originalHld, pStkHolding->totalBuyHld,
                   pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
@@ -652,10 +652,10 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
                   pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
                   pStkHolding->coveredAvlHld, pStkHolding->sumHld,
                   pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
-                  pStkHolding->lockAvlHld);
+                  pStkHolding->lockAvlHld)
 
-      // publisher.publish("oes_resp",sendRespData2client);
        fprintf(stdout, sendRespData2client);
+       publisher.publish("oes_resp",sendRespData2client);
 }
 
 
@@ -679,10 +679,10 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
                   "invAcctId\":\"%s\",\"securityId\":\"%s\",\"securityName\":\"%s\", " \
-                  "mktId\":\"%d\",\"lotType\":\"%s\",\"rejReason\":\"%d\",\"lotDate\":\"%d\", " \
-                  "assignNum\":\"%d\",\"lotQty\":\"%s\",\"lotPrice\":\"%d\",\"lotAmt\":\"%d\", " \
+                  "mktId\":%d,\"lotType\":\"%s\",\"rejReason\":%d,\"lotDate\":%d, " \
+                  "assignNum\":%d,\"lotQty\":\"%s\",\"lotPrice\":%d,\"lotAmt\":%d, " \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pLotWinning->invAcctId, pLotWinning->securityId,
@@ -711,9 +711,9 @@ OesClientMySpi::OnQueryCustInfo(const OesCustItemT *pCust,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "custId\":\"%s\",\"custType\":\"%d\",\"status\":\"%d\", " \
-                  "riskLevel\":\"%d\",\"institutionFlag\":\"%d\",\"investorClass\":\"%s\"," \
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "custId\":\"%s\",\"custType\":%d,\"status\":%d, " \
+                  "riskLevel\":%d,\"institutionFlag\":%d,\"investorClass\":\"%s\"," \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
                   pCust->custId, pCust->custType, pCust->status,
@@ -741,9 +741,9 @@ OesClientMySpi::OnQueryInvAcct(const OesInvAcctItemT *pInvAcct,
     // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "invAcctId\":\"%s\",\"custType\":\"%d\",\"status\":\"%d\", " \
-                  "riskLevel\":\"%d\",\"institutionFlag\":\"%d\",\"investorClass\":\"%s\"," \
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "invAcctId\":\"%s\",\"custType\":%d,\"status\":%d, " \
+                  "riskLevel\":%d,\"institutionFlag\":%d,\"investorClass\":\"%s\"," \
                   "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pInvAcct->invAcctId, pInvAcct->mktId,
@@ -776,11 +776,11 @@ OesClientMySpi::OnQueryCommissionRate(
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "custId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\", " \
-                  "securityType\":\"%d\",\"subSecurityType\":\"%d\",\"bsType\":\"%d\",\"currType\":\"%d\", " \
-                  "feeType\":\"%d\",\"calcFeeMode\":\"%s\",\"feeRate\":\"%d\",\"minFee\":\"%d\", " \
-                  "maxFee\":\"%d\", "
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "custId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%d, " \
+                  "securityType\":%d,\"subSecurityType\":%d,\"bsType\":%d,\"currType\":%d, " \
+                  "feeType\":%d,\"calcFeeMode\":\"%s\",\"feeRate\":%d,\"minFee\":%d, " \
+                  "maxFee\":%d, "
                   "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pCommissionRate->custId, pCommissionRate->securityId,
@@ -818,11 +818,11 @@ OesClientMySpi::OnQueryFundTransferSerial(
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "clEnvId\":\"%d\",\"clSeqNo\":\"%d\", " \
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "clEnvId\":%d,\"clSeqNo\":%d, " \
                   "cashAcctId\":\"%s\", " \
-                  "direct\":\"%s\",\"occurAmt\":\"%d\",\"trsfStatus\":\"%d\", " \
-                  "rejReason\":\"%d\",\"counterErrCode\":\"%d\",\"errorInfo\":\"%s\", \"counterEntrustNo\":\"%d\"," \
+                  "direct\":\"%s\",\"occurAmt\":%d,\"trsfStatus\":%d, " \
+                  "rejReason\":%d,\"counterErrCode\":%d,\"errorInfo\":\"%s\", \"counterEntrustNo\":%d," \
                   "operDate\":\"%08d\", \"operTime\":\"%09d\",\"dclrTime\":\"%09d\",\"doneTime\":\"%09d\"," \
                   "}",
                   pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
@@ -866,13 +866,13 @@ OesClientMySpi::OnQueryIssue(const OesIssueItemT *pIssue,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-            "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
+            "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
             "securityId\":\"%s\",\"securityName\":\"%s\", " \
             "underlyingSecurityId\":\"%s\", " \
-            "mktId\":\"%d\",\"securityType\":\"%d\",\"subSecurityType\":\"%d\", " \
-            "isCancelAble\":\"%d\",\"isReApplyAble\":\"%d\",\"startDate\":\"%d\", \"endDate\":\"%d\"," \
-            "issueQty\":\"%d\", \"qtyUnit\":\"%d\",\"ordMaxQty\":\"%d\",\"ordMinQty\":\"%d\"," \
-            "issuePrice\":\"%d\", \"ceilPrice\":\"%d\",\"floorPrice\":\"%d\"," \
+            "mktId\":%d,\"securityType\":%d,\"subSecurityType\":%d, " \
+            "isCancelAble\":%d,\"isReApplyAble\":%d,\"startDate\":%d, \"endDate\":%d," \
+            "issueQty\":%d, \"qtyUnit\":%d,\"ordMaxQty\":%d,\"ordMinQty\":%d," \
+            "issuePrice\":%d, \"ceilPrice\":%d,\"floorPrice\":%d," \
             "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pIssue->securityId, pIssue->securityName,
@@ -913,13 +913,13 @@ OesClientMySpi::OnQueryStock(const OesStockItemT *pStock,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-            "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
+            "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
             "securityId\":\"%s\",\"securityName\":\"%s\", " \
             "fundId\":\"%s\", " \
-            "mktId\":\"%d\",\"securityType\":\"%d\",\"subSecurityType\":\"%d\", " \
-            "securityLevel\":\"%d\",\"securityRiskLevel\":\"%d\",\"suspFlag\":\"%d\", \"qualificationClass\":\"%d\"," \
-            "isDayTrading\":\"%d\", \"priceUnit\":\"%d\",\"buyQtyUnit\":\"%d\",\"sellQtyUnit\":\"%d\"," \
-            "prevClose\":\"%d\", \"bondInterest\":\"%d\",\"ceilPrice\":\"%d\",\"floorPrice\":\"%d\"," \
+            "mktId\":%d,\"securityType\":%d,\"subSecurityType\":%d, " \
+            "securityLevel\":%d,\"securityRiskLevel\":%d,\"suspFlag\":%d, \"qualificationClass\":%d," \
+            "isDayTrading\":%d, \"priceUnit\":%d,\"buyQtyUnit\":%d,\"sellQtyUnit\":%d," \
+            "prevClose\":%d, \"bondInterest\":%d,\"ceilPrice\":%d,\"floorPrice\":%d," \
             "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pStock->securityId, pStock->securityName, pStock->fundId,
@@ -954,10 +954,10 @@ OesClientMySpi::OnQueryEtf(const OesEtfItemT *pEtf,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-            "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-            "custId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\", " \
-            "creRdmUnit\":\"%d\",\"maxCashRatio\":\"%d\",\"navPerCU\":\"%d\",\"cashCmpoent\":\"%d\", " \
-            "componentCnt\":\"%d\", " \
+            "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+            "custId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%d, " \
+            "creRdmUnit\":%d,\"maxCashRatio\":%d,\"navPerCU\":%d,\"cashCmpoent\":%d, " \
+            "componentCnt\":%d, " \
             "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pEtf->fundId, pEtf->securityId, pEtf->mktId, pEtf->creRdmUnit,
@@ -986,10 +986,10 @@ OesClientMySpi::OnQueryEtfComponent(const OesEtfComponentItemT *pEtfComponent,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-            "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-            "securityId\":\"%s\",\"mktId\":\"%d\", " \
-            "subFlag\":\"%d\",\"prevClose\":\"%d\",\"qty\":\"%d\",\"premiumRate\":\"%d\", " \
-            "creationSubCash\":\"%d\", \"redemptionCashSub\":\"%d\", " \
+            "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+            "securityId\":\"%s\",\"mktId\":%d, " \
+            "subFlag\":%d,\"prevClose\":%d,\"qty\":%d,\"premiumRate\":%d, " \
+            "creationSubCash\":%d, \"redemptionCashSub\":%d, " \
             "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pEtfComponent->securityId, pEtfComponent->mktId,
@@ -1015,9 +1015,9 @@ OesClientMySpi::OnQueryMarketState(const OesMarketStateItemT *pMarketState,
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "exchId\":\"%d\",\"platformId\":\"%d\", " \
-                  "mktId\":\"%d\",\"mktState\":\"%d\", " \
+                  "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
+                  "exchId\":%d,\"platformId\":%d, " \
+                  "mktId\":%d,\"mktState\":%d, " \
                   "}",
             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
             pMarketState->exchId, pMarketState->platformId,
@@ -1027,8 +1027,7 @@ OesClientMySpi::OnQueryMarketState(const OesMarketStateItemT *pMarketState,
 }
 
 
-OesClientMySpi::OesClientMySpi(int32 something) {
-    this->something = something;
+OesClientMySpi::OesClientMySpi() {
     if(!publisher.connect())
         throw std::runtime_error("OesClientMySpi,Can not connect redis,publisher!!!");
 }

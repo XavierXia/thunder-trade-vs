@@ -109,6 +109,12 @@ main(void) {
     *************************************
     交易下单接口实例
     */
+    /*
+    {"msgId":"13", "seqNo":1,"isEnd":"Y", invAcctId":"A188800368","securityId":"600000","mktId":1,
+    "originalHld":1000000, totalBuyHld":0,"totalSellHld":0,"sellFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,
+    "trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, 
+    coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,lockAvlHld":1000000}
+    */
     //查询特定某只股票持仓
     ZpquantQryTrd zQryTrdA;
     strncpy(zQryTrdA.code, "600000",sizeof(zQryTrdA.code) - 1);
