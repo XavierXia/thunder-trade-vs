@@ -57,14 +57,12 @@ public:
     virtual void        OnQueryMarketState(const OesMarketStateItemT *pMarketState, const OesQryCursorT *pCursor, int32 requestId);
 
 public:
-    OesClientMySpi(int32 something = 0);
+    OesClientMySpi();
     virtual ~OesClientMySpi();
     redox::Redox publisher;
-
-private:
-    int32               something;
     char sendJsonDataStr[4096];
     char sendRespData2client[4096];
+
 };
 
 
