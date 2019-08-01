@@ -181,8 +181,6 @@ CZpquantTradeApi::Start() {
         {
             ZpquantOrdCnfm msgBody;
 
-            string invAcctId = c_Config.get<string>("invAcctId");
-            string securityId = c_Config.get<string>("securityId");
             //if (invAcctId != NULL) strncpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
             //if (securityId != NULL) strncpy(msgBody.securityId, securityId.c_str(),sizeof(msgBody.securityId) - 1);
 
@@ -228,7 +226,7 @@ CZpquantTradeApi::Start() {
             }
             else /* 委托确认回报 */
             {
-                this->pSpi->OnOrderReport(&msgBody);
+                this->pSpi->OnOrderReport(0,&msgBody);
             }           
             break; 
         }
