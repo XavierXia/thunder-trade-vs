@@ -652,7 +652,7 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
                   pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
                   pStkHolding->coveredAvlHld, pStkHolding->sumHld,
                   pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
-                  pStkHolding->lockAvlHld)
+                  pStkHolding->lockAvlHld);
 
        fprintf(stdout, sendRespData2client);
        publisher.publish("oes_resp",sendRespData2client);
