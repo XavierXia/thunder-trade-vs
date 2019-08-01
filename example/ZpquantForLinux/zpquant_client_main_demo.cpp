@@ -59,7 +59,7 @@ main(void) {
     }
 
     //pZpquantMdApi->SubscribeMarketData("601881,600519,000001,002415",MDS_SUB_MODE_SET);
-    pZpquantMdApi->SubscribeMarketData("601899",MDS_SUB_MODE_SET);
+    pZpquantMdApi->SubscribeMarketData("601899,600000",MDS_SUB_MODE_SET);
     //追加
     //pZpquantMdApi->SubscribeMarketData("600519",MDS_SUB_MODE_APPEND);
 
@@ -158,15 +158,15 @@ main(void) {
     zOrdReqT.ordPrice = 33000;
     pZpquantTradeApi->SendOrder(&zOrdReqT);
 
-    //下单卖出
-    ZpquantOrdReqT zOrdReqTB;
-    strncpy(zOrdReqTB.pSecurityId, "601899",sizeof(zOrdReqTB.pSecurityId) - 1);
-    zOrdReqTB.mktId = 1;
-    zOrdReqTB.ordType = 0;
-    zOrdReqTB.bsType = 2; //卖出
-    zOrdReqTB.ordQty = 100;
-    zOrdReqTB.ordPrice = 32000;
-    pZpquantTradeApi->SendOrder(&zOrdReqTB);
+    // //下单卖出
+    // ZpquantOrdReqT zOrdReqTB;
+    // strncpy(zOrdReqTB.pSecurityId, "600000",sizeof(zOrdReqTB.pSecurityId) - 1);
+    // zOrdReqTB.mktId = 1;
+    // zOrdReqTB.ordType = 0;
+    // zOrdReqTB.bsType = 2; //卖出
+    // zOrdReqTB.ordQty = 100;
+    // zOrdReqTB.ordPrice = 32000;
+    // pZpquantTradeApi->SendOrder(&zOrdReqTB);
 
     /* 等待回报消息接收完成 */
     while(1)
