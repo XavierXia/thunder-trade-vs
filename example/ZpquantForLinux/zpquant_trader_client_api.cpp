@@ -80,14 +80,15 @@ CZpquantTradeApi::Start() {
 
 
       uint8 msgId = c_Config.get<uint8>("msgId");
+      cout << "...msgId:" << msgId << endl;
       switch(msgId)
       {
            //查询持仓
           /*
-          {"msgId":100, "seqNo":18,"isEnd":"Y", invAcctId":"0188800368","securityId":"000008","mktId":2,"originalHld":1000000,
-           totalBuyHld":0,"totalSellHld":0,"sellFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,
-           "trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, 
-           coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,lockAvlHld":1000000}
+        {"msgId":100, "seqNo":1,"isEnd":"Y", "invAcctId":"A188800368","securityId":"600000","mktId":1,
+        "originalHld":1000000, "totalBuyHld":0,"totalSellHld":0,"sellFrzHld":0, "totalTrsfInHld":0,
+        "totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, "lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,
+        "coveredHld":0, "coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,"lockAvlHld":1000000}
           */
         case TD_MSGTYPE_STKHOLDING_RESPON:
         {
