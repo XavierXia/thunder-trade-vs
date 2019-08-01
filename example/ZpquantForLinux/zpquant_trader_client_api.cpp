@@ -97,7 +97,8 @@ CZpquantTradeApi::Start() {
 
             pCursor.seqNo = c_Config.get<int32>("seqNo");
             cout << "...seqNo:" << pCursor.seqNo << endl;
-            pCursor.isEnd = c_Config.get<int8>("isEnd");
+            string isEnd = c_Config.get<string>("isEnd");
+            if(isEnd != NULL) pCursor.isEnd = isEnd[0];
             cout << "...isEnd:" << pCursor.isEnd << endl;
             string invAcctId = c_Config.get<string>("invAcctId");
             string securityId = c_Config.get<string>("securityId");
