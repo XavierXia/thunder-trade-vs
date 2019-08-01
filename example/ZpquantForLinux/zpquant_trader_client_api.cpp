@@ -79,7 +79,7 @@ CZpquantTradeApi::Start() {
         }
 
 
-      uint8 msgId = c_Config.get<uint8>("msgId");
+      int32 msgId = c_Config.get<int32>("msgId");
       cout << "...msgId:" << msgId << endl;
       switch(msgId)
       {
