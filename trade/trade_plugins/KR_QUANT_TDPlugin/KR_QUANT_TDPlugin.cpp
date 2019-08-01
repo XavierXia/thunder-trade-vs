@@ -248,6 +248,7 @@ bool CKR_QUANT_TDPlugin::Start()
 
                     if(code == "allStk"){
                         /* 查询 沪深两市 所有股票持仓 */
+                        cout << "...allStk\n" << endl;
                         OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
                     }else{
                         if(sclb == "1"){ //上海

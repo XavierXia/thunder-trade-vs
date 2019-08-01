@@ -593,63 +593,63 @@ OesClientMySpi::OnQueryCashAsset(const OesCashAssetItemT *pCashAsset,
 void
 OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
         const OesQryCursorT *pCursor, int32 requestId) {
-      // sprintf(sendJsonDataStr, ">>> 查询到股票持仓信息: index[%d], isEnd[%c], " \
-      //       "证券账户[%s], 市场代码[%" __SPK_FMT_HH__ "u], 产品代码[%s], " \
-      //       "日初持仓[%" __SPK_FMT_LL__ "d], " \
-      //       "日中累计买入[%" __SPK_FMT_LL__ "d], " \
-      //       "日中累计卖出[%" __SPK_FMT_LL__ "d], " \
-      //       "当前卖出冻结[%" __SPK_FMT_LL__ "d], " \
-      //       "日中累计转换获得[%" __SPK_FMT_LL__ "d], " \
-      //       "日中累计转换付出[%" __SPK_FMT_LL__ "d], " \
-      //       "当前转换付出冻结[%" __SPK_FMT_LL__ "d], " \
-      //       "当前已锁定[%" __SPK_FMT_LL__ "d], " \
-      //       "当前锁定冻结[%" __SPK_FMT_LL__ "d], " \
-      //       "当前解锁定冻结[%" __SPK_FMT_LL__ "d], " \
-      //       "当前备兑冻结[%" __SPK_FMT_LL__ "d], " \
-      //       "当前已备兑使用[%" __SPK_FMT_LL__ "d], " \
-      //       "当前可备兑/解锁[%" __SPK_FMT_LL__ "d], " \
-      //       "当前总持仓[%" __SPK_FMT_LL__ "d], " \
-      //       "当前可卖[%" __SPK_FMT_LL__ "d], " \
-      //       "当前可转换付出[%" __SPK_FMT_LL__ "d], " \
-      //       "当前可锁定[%" __SPK_FMT_LL__ "d]\n",
-      //       pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
-      //       pStkHolding->invAcctId, pStkHolding->mktId, pStkHolding->securityId,
-      //       pStkHolding->originalHld, pStkHolding->totalBuyHld,
-      //       pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
-      //       pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
-      //       pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
-      //       pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
-      //       pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
-      //       pStkHolding->coveredAvlHld, pStkHolding->sumHld,
-      //       pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
-      //       pStkHolding->lockAvlHld);
+      sprintf(sendJsonDataStr, ">>> 查询到股票持仓信息: index[%d], isEnd[%c], " \
+            "证券账户[%s], 市场代码[%" __SPK_FMT_HH__ "u], 产品代码[%s], " \
+            "日初持仓[%" __SPK_FMT_LL__ "d], " \
+            "日中累计买入[%" __SPK_FMT_LL__ "d], " \
+            "日中累计卖出[%" __SPK_FMT_LL__ "d], " \
+            "当前卖出冻结[%" __SPK_FMT_LL__ "d], " \
+            "日中累计转换获得[%" __SPK_FMT_LL__ "d], " \
+            "日中累计转换付出[%" __SPK_FMT_LL__ "d], " \
+            "当前转换付出冻结[%" __SPK_FMT_LL__ "d], " \
+            "当前已锁定[%" __SPK_FMT_LL__ "d], " \
+            "当前锁定冻结[%" __SPK_FMT_LL__ "d], " \
+            "当前解锁定冻结[%" __SPK_FMT_LL__ "d], " \
+            "当前备兑冻结[%" __SPK_FMT_LL__ "d], " \
+            "当前已备兑使用[%" __SPK_FMT_LL__ "d], " \
+            "当前可备兑/解锁[%" __SPK_FMT_LL__ "d], " \
+            "当前总持仓[%" __SPK_FMT_LL__ "d], " \
+            "当前可卖[%" __SPK_FMT_LL__ "d], " \
+            "当前可转换付出[%" __SPK_FMT_LL__ "d], " \
+            "当前可锁定[%" __SPK_FMT_LL__ "d]\n",
+            pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+            pStkHolding->invAcctId, pStkHolding->mktId, pStkHolding->securityId,
+            pStkHolding->originalHld, pStkHolding->totalBuyHld,
+            pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
+            pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
+            pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
+            pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
+            pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
+            pStkHolding->coveredAvlHld, pStkHolding->sumHld,
+            pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
+            pStkHolding->lockAvlHld);
 
-      // fprintf(stdout, sendJsonDataStr);
+      fprintf(stdout, sendJsonDataStr);
       fprintf(stdout, "...OesClientMySpi::OnQueryStkHolding");
 
-      sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
-                  "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\",\"originalHld\":\"%d\", " \
-                  "totalBuyHld\":\"%d\",\"totalSellHld\":\"%d\",\"sellFrzHld\":\"%d\", " \
-                  "totalTrsfInHld\":\"%d\",\"totalTrsfOutHld\":\"%d\",\"trsfOutFrzHld\":\"%d\",\"lockHld\":\"%d\", " \
-                  "lockFrzHld\":\"%d\",\"unlockFrzHld\":\"%d\",\"coveredFrzHld\":\"%d\",\"coveredHld\":\"%d\", " \
-                  "coveredAvlHld\":\"%d\",\"sumHld\":\"%d\",\"sellAvlHld\":\"%d\",\"trsfOutAvlHld\":\"%d\", " \
-                  "lockAvlHld\":\"%d\", " \
-                  "}",
-                  pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
-                  pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
-                  pStkHolding->originalHld, pStkHolding->totalBuyHld,
-                  pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
-                  pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
-                  pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
-                  pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
-                  pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
-                  pStkHolding->coveredAvlHld, pStkHolding->sumHld,
-                  pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
-                  pStkHolding->lockAvlHld);
+      // sprintf(sendRespData2client, 
+      //             "{\"msgId\":\"13\", \"seqNo\":\"%d\",\"isEnd\":\"%s\", " \
+      //             "invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":\"%d\",\"originalHld\":\"%d\", " \
+      //             "totalBuyHld\":\"%d\",\"totalSellHld\":\"%d\",\"sellFrzHld\":\"%d\", " \
+      //             "totalTrsfInHld\":\"%d\",\"totalTrsfOutHld\":\"%d\",\"trsfOutFrzHld\":\"%d\",\"lockHld\":\"%d\", " \
+      //             "lockFrzHld\":\"%d\",\"unlockFrzHld\":\"%d\",\"coveredFrzHld\":\"%d\",\"coveredHld\":\"%d\", " \
+      //             "coveredAvlHld\":\"%d\",\"sumHld\":\"%d\",\"sellAvlHld\":\"%d\",\"trsfOutAvlHld\":\"%d\", " \
+      //             "lockAvlHld\":\"%d\", " \
+      //             "}",
+      //             pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+      //             pStkHolding->invAcctId, pStkHolding->securityId, pStkHolding->mktId,
+      //             pStkHolding->originalHld, pStkHolding->totalBuyHld,
+      //             pStkHolding->totalSellHld, pStkHolding->sellFrzHld,
+      //             pStkHolding->totalTrsfInHld, pStkHolding->totalTrsfOutHld,
+      //             pStkHolding->trsfOutFrzHld, pStkHolding->lockHld,
+      //             pStkHolding->lockFrzHld, pStkHolding->unlockFrzHld,
+      //             pStkHolding->coveredFrzHld, pStkHolding->coveredHld,
+      //             pStkHolding->coveredAvlHld, pStkHolding->sumHld,
+      //             pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
+      //             pStkHolding->lockAvlHld);
 
-      publisher.publish("oes_resp",sendRespData2client);
-      fprintf(stdout, sendRespData2client);
+      // publisher.publish("oes_resp",sendRespData2client);
+      // fprintf(stdout, sendRespData2client);
 }
 
 
