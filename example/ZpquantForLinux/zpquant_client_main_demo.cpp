@@ -148,6 +148,26 @@ main(void) {
     pZpquantTradeApi->QueryStkHolding(&zQryTrdB,0);
 
 
+    //下单买入
+    ZpquantOrdReqT zOrdReqT;
+    strncpy(zOrdReqT.pSecurityId, "601899",sizeof(zOrdReqT.pSecurityId) - 1);
+    zOrdReqT.mktId = 1;
+    zOrdReqT.ordType = 0;
+    zOrdReqT.bsType = 1; //买入
+    zOrdReqT.ordQty = 200;
+    zOrdReqT.ordPrice = 33000;
+    pZpquantTradeApi->SendOrder(&zOrdReqT);
+
+    //下单卖出
+    ZpquantOrdReqT zOrdReqT;
+    strncpy(zOrdReqT.pSecurityId, "601899",sizeof(zOrdReqT.pSecurityId) - 1);
+    zOrdReqT.mktId = 1;
+    zOrdReqT.ordType = 0;
+    zOrdReqT.bsType = 2; //卖出
+    zOrdReqT.ordQty = 100;
+    zOrdReqT.ordPrice = 32000;
+    pZpquantTradeApi->SendOrder(&zOrdReqT);
+
     /* 等待回报消息接收完成 */
     while(1)
     {
