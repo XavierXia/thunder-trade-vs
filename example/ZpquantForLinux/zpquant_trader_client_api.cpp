@@ -90,17 +90,6 @@ CZpquantTradeApi::Start() {
         "totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, "lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,
         "coveredHld":0, "coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,"lockAvlHld":1000000}
           */
-        case OESMSG_QRYMSG_STK_HLD:
-        /* 持仓变动回报 */
-        /*
-        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":120,"invAcctId":"A188800368",
-        "securityId":"601899","mktId":1,"originalHld":0, totalBuyHld":1000,"totalSellHld":0,"sellFrzHld":0,
-        "manualFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,
-        unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, originalCostAmt":0,"totalBuyAmt":32710000,
-        "totalSellAmt":0,"totalBuyFee":300653, totalSellFee":0,"costPrice":33011,"sumHld":1000,"sellAvlHld":0, 
-        rsfOutAvlHld":1000,"lockAvlHld":1000,"coveredAvlHld":0, }
-        cannot parse from string 'msg(client,oes_resp)'
-        */
         case OESMSG_RPT_STOCK_HOLDING_VARIATION:
         {
             ZpquantStkHoldingItem msgBody;
@@ -136,16 +125,7 @@ CZpquantTradeApi::Start() {
             msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
             msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
 
-
             this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
-            if(msgId == OESMSG_QRYMSG_STK_HLD)
-            {
-                this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
-            }
-            else /* 持仓变动回报 */
-            {
-                this->pSpi->OnStockHoldingVariation(&msgBody);
-            } 
             break; 
         }
         /*
@@ -331,15 +311,46 @@ CZpquantTradeApi::Start() {
             this->pSpi->OnTradeReport(&msgBody);
             break; 
         }
+        /* 持仓变动回报 */
         /*
-        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":120,"invAcctId":"A188800368",
-        "securityId":"601899","mktId":1,"originalHld":0, totalBuyHld":1000,"totalSellHld":0,"sellFrzHld":0,
-        "manualFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,
-        unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, originalCostAmt":0,"totalBuyAmt":32710000,
-        "totalSellAmt":0,"totalBuyFee":300653, totalSellFee":0,"costPrice":33011,"sumHld":1000,"sellAvlHld":0, 
-        rsfOutAvlHld":1000,"lockAvlHld":1000,"coveredAvlHld":0, }
-        cannot parse from string 'msg(client,oes_resp)'
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":120,"invAcctId":"A188800368","securityId":"601899",
+        "mktId":1,"originalHld":0, "totalBuyHld":1400,"totalSellHld":0,"sellFrzHld":0,"manualFrzHld":0, 
+        "totalTrsfInHld":0,"totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, "lockFrzHld":0,"unlockFrzHld":0,
+        "coveredFrzHld":0,"coveredHld":0, "originalCostAmt":0,"totalBuyAmt":45830000,"totalSellAmt":0,
+        "totalBuyFee":350915, "totalSellFee":0,"costPrice":32986,"sumHld":1400,"sellAvlHld":0, "trsfOutAvlHld":1400,
+        "lockAvlHld":1400,"coveredAvlHld":0}
         */
+        case OESMSG_QRYMSG_STK_HLD:
+        {
+            ZpquantStkHoldingItem msgBody;
+
+            string invAcctId = c_Config.get<string>("invAcctId");
+            string securityId = c_Config.get<string>("securityId");
+            //if (invAcctId != NULL) strncpy(msgBody.invAcctId, invAcctId.c_str(),sizeof(msgBody.invAcctId) - 1);
+            //if (securityId != NULL) strncpy(msgBody.securityId, securityId.c_str(),sizeof(msgBody.securityId) - 1);
+
+            msgBody.mktId = c_Config.get<uint8>("mktId");
+            msgBody.originalHld = c_Config.get<int64>("originalHld");
+            msgBody.totalBuyHld = c_Config.get<int64>("totalBuyHld");
+            msgBody.totalSellHld = c_Config.get<int64>("totalSellHld");
+            msgBody.sellFrzHld = c_Config.get<int64>("sellFrzHld");
+            msgBody.totalTrsfInHld = c_Config.get<int64>("totalTrsfInHld");
+            msgBody.totalTrsfOutHld = c_Config.get<int64>("totalTrsfOutHld");
+            msgBody.trsfOutFrzHld = c_Config.get<int64>("trsfOutFrzHld");
+            msgBody.lockHld = c_Config.get<int64>("lockHld");
+            msgBody.lockFrzHld = c_Config.get<int64>("lockFrzHld");
+            msgBody.unlockFrzHld = c_Config.get<int64>("unlockFrzHld");
+            msgBody.coveredFrzHld = c_Config.get<int64>("coveredFrzHld");
+            msgBody.coveredHld = c_Config.get<int64>("coveredHld");
+            msgBody.coveredAvlHld = c_Config.get<int64>("coveredAvlHld");
+            msgBody.sumHld = c_Config.get<int64>("sumHld");
+            msgBody.sellAvlHld = c_Config.get<int64>("sellAvlHld");
+            msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
+            msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
+
+            this->pSpi->OnStockHoldingVariation(&msgBody);
+            break;
+        }
      
         default:
         break;
