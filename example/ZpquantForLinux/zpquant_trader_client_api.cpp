@@ -90,7 +90,7 @@ CZpquantTradeApi::Start() {
         "totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, "lockFrzHld":0,"unlockFrzHld":0,"coveredFrzHld":0,
         "coveredHld":0, "coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,"lockAvlHld":1000000}
           */
-        case OESMSG_RPT_STOCK_HOLDING_VARIATION:
+        case OESMSG_QRYMSG_STK_HLD:
         {
             ZpquantStkHoldingItem msgBody;
             ZpquantQryCursor pCursor;
@@ -320,7 +320,7 @@ CZpquantTradeApi::Start() {
         "totalBuyFee":350915, "totalSellFee":0,"costPrice":32986,"sumHld":1400,"sellAvlHld":0, "trsfOutAvlHld":1400,
         "lockAvlHld":1400,"coveredAvlHld":0}
         */
-        case OESMSG_QRYMSG_STK_HLD:
+        case OESMSG_RPT_STOCK_HOLDING_VARIATION:
         {
             ZpquantStkHoldingItem msgBody;
 
