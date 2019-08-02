@@ -239,11 +239,11 @@ OesClientMySpi::OnCashAssetVariation(const OesCashAssetItemT *pCashAssetItem) {
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d,\"cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":%d,\"cashType\":%d, " \
-                  "cashAcctStatus\":%d,\"beginningBal\":%d,\"beginningAvailableBal\":%d,\"beginningDrawableBal\":%d, " \
-                  "disableBal\":%d,\"totalDepositAmt\":%d,\"totalWithdrawAmt\":%d,\"withdrawFrzAmt\":%d, " \
-                  "totalSellAmt\":%d,\"totalBuyAmt\":%d,\"buyFrzAmt\":%d,\"totalFeeAmt\":%d, " \
-                  "feeFrzAmt\":%d,\"marginAmt\":%d,\"marginFrzAmt\":%d,\"currentTotalBal\":%d, " \
-                  "currentAvailableBal\":%d,\"currentDrawableBal\":%d ," \
+                  "\"cashAcctStatus\":%d,\"beginningBal\":%d,\"beginningAvailableBal\":%d,\"beginningDrawableBal\":%d, " \
+                  "\"disableBal\":%d,\"totalDepositAmt\":%d,\"totalWithdrawAmt\":%d,\"withdrawFrzAmt\":%d, " \
+                  "\"totalSellAmt\":%d,\"totalBuyAmt\":%d,\"buyFrzAmt\":%d,\"totalFeeAmt\":%d, " \
+                  "\"feeFrzAmt\":%d,\"marginAmt\":%d,\"marginFrzAmt\":%d,\"currentTotalBal\":%d, " \
+                  "\"currentAvailableBal\":%d,\"currentDrawableBal\":%d ," \
                   "}",
                   119,pCashAssetItem->cashAcctId, pCashAssetItem->custId,
                   pCashAssetItem->currType, pCashAssetItem->cashType,
@@ -311,15 +311,15 @@ OesClientMySpi::OnStockHoldingVariation(const OesStkHoldingItemT *pStkHoldingIte
       // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
-                  "{\"msgId\":\"13\",\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%d,\"originalHld\":%d, " \
-                  "totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d,\"manualFrzHld\":%d, " \
-                  "totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
-                  "lockFrzHld\":%d,\"unlockFrzHld\":%d,\"coveredFrzHld\":%d,\"coveredHld\":%d, " \
-                  "originalCostAmt\":%d,\"totalBuyAmt\":%d,\"totalSellAmt\":%d,\"totalBuyFee\":%d, " \
-                  "totalSellFee\":%d,\"costPrice\":%d,\"sumHld\":%d,\"sellAvlHld\":%d, " \
-                  "trsfOutAvlHld\":%d,\"lockAvlHld\":%d,\"coveredAvlHld\":%d, " \
+                  "{\"msgId\":%d,\"invAcctId\":\"%s\",\"securityId\":\"%s\",\"mktId\":%d,\"originalHld\":%d, " \
+                  "\"totalBuyHld\":%d,\"totalSellHld\":%d,\"sellFrzHld\":%d,\"manualFrzHld\":%d, " \
+                  "\"totalTrsfInHld\":%d,\"totalTrsfOutHld\":%d,\"trsfOutFrzHld\":%d,\"lockHld\":%d, " \
+                  "\"lockFrzHld\":%d,\"unlockFrzHld\":%d,\"coveredFrzHld\":%d,\"coveredHld\":%d, " \
+                  "\"originalCostAmt\":%d,\"totalBuyAmt\":%d,\"totalSellAmt\":%d,\"totalBuyFee\":%d, " \
+                  "\"totalSellFee\":%d,\"costPrice\":%d,\"sumHld\":%d,\"sellAvlHld\":%d, " \
+                  "\"trsfOutAvlHld\":%d,\"lockAvlHld\":%d,\"coveredAvlHld\":%d" \
                   "}",
-                  pStkHoldingItem->invAcctId, pStkHoldingItem->securityId,
+                  120,pStkHoldingItem->invAcctId, pStkHoldingItem->securityId,
                   pStkHoldingItem->mktId, pStkHoldingItem->originalHld,
                   pStkHoldingItem->totalBuyHld, pStkHoldingItem->totalSellHld,
                   pStkHoldingItem->sellFrzHld, pStkHoldingItem->manualFrzHld,
@@ -698,17 +698,17 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
 void
 OesClientMySpi::OnQueryCustInfo(const OesCustItemT *pCust,
         const OesQryCursorT *pCursor, int32 requestId) {
-      // sprintf(sendJsonDataStr, ">>> 查询到客户信息: index[%d], isEnd[%c], " \
-      //       "客户ID[%s], 客户类型[%" __SPK_FMT_HH__ "u], " \
-      //       "客户状态[%" __SPK_FMT_HH__ "u], 风险评级[%" __SPK_FMT_HH__ "u], " \
-      //       "机构标志[%" __SPK_FMT_HH__ "u], 投资者分类[%c]\n",
-      //       pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
-      //       pCust->custId, pCust->custType, pCust->status,
-      //       pCust->riskLevel, pCust->institutionFlag,
-      //       pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
-      //               '0' : pCust->investorClass + 'A' - 1);
+      sprintf(sendJsonDataStr, ">>> 查询到客户信息: index[%d], isEnd[%c], " \
+            "客户ID[%s], 客户类型[%" __SPK_FMT_HH__ "u], " \
+            "客户状态[%" __SPK_FMT_HH__ "u], 风险评级[%" __SPK_FMT_HH__ "u], " \
+            "机构标志[%" __SPK_FMT_HH__ "u], 投资者分类[%c]\n",
+            pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+            pCust->custId, pCust->custType, pCust->status,
+            pCust->riskLevel, pCust->institutionFlag,
+            pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
+                    '0' : pCust->investorClass + 'A' - 1);
 
-      // fprintf(stdout, sendJsonDataStr);
+      fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \

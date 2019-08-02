@@ -91,6 +91,17 @@ CZpquantTradeApi::Start() {
         "coveredHld":0, "coveredAvlHld":0,"sumHld":1000000,"sellAvlHld":1000000,"trsfOutAvlHld":1000000,"lockAvlHld":1000000}
           */
         case OESMSG_QRYMSG_STK_HLD:
+        /* 持仓变动回报 */
+        /*
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":120,"invAcctId":"A188800368",
+        "securityId":"601899","mktId":1,"originalHld":0, totalBuyHld":1000,"totalSellHld":0,"sellFrzHld":0,
+        "manualFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,
+        unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, originalCostAmt":0,"totalBuyAmt":32710000,
+        "totalSellAmt":0,"totalBuyFee":300653, totalSellFee":0,"costPrice":33011,"sumHld":1000,"sellAvlHld":0, 
+        rsfOutAvlHld":1000,"lockAvlHld":1000,"coveredAvlHld":0, }
+        cannot parse from string 'msg(client,oes_resp)'
+        */
+        case OESMSG_RPT_STOCK_HOLDING_VARIATION:
         {
             ZpquantStkHoldingItem msgBody;
             ZpquantQryCursor pCursor;
@@ -127,6 +138,14 @@ CZpquantTradeApi::Start() {
 
 
             this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
+            if(msgId == OESMSG_QRYMSG_STK_HLD)
+            {
+                this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
+            }
+            else /* 持仓变动回报 */
+            {
+                this->pSpi->OnStockHoldingVariation(&msgBody);
+            } 
             break; 
         }
         /*
@@ -311,7 +330,17 @@ CZpquantTradeApi::Start() {
                       
             this->pSpi->OnTradeReport(&msgBody);
             break; 
-        }        
+        }
+        /*
+        ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":120,"invAcctId":"A188800368",
+        "securityId":"601899","mktId":1,"originalHld":0, totalBuyHld":1000,"totalSellHld":0,"sellFrzHld":0,
+        "manualFrzHld":0, totalTrsfInHld":0,"totalTrsfOutHld":0,"trsfOutFrzHld":0,"lockHld":0, lockFrzHld":0,
+        unlockFrzHld":0,"coveredFrzHld":0,"coveredHld":0, originalCostAmt":0,"totalBuyAmt":32710000,
+        "totalSellAmt":0,"totalBuyFee":300653, totalSellFee":0,"costPrice":33011,"sumHld":1000,"sellAvlHld":0, 
+        rsfOutAvlHld":1000,"lockAvlHld":1000,"coveredAvlHld":0, }
+        cannot parse from string 'msg(client,oes_resp)'
+        */
+     
         default:
         break;
       }
