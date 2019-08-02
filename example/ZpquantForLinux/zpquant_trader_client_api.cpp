@@ -164,13 +164,13 @@ CZpquantTradeApi::Start() {
         cannot parse from string 'msg(client,oes_resp)'
         */
 
-        /* 委托已收回报 */
+        /* 委托已收回报 114*/
         /*...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"7","clEnvId":0,"clSeqNo":2,"clOrdId":1375,"invAcctId":"A188800368",
          securityId":"601899","mktId":1,"ordType":0,"bsType":1, ordStatus":1,"ordDate":20190430,"ordTime":145428627,"ordCnfmTime":0, 
          ordQty":200,"ordPrice":33000,"canceledQty":0,"cumQty":0, cumAmt":0,"cumInterest":0,"cumFee":0,"cumInterest":6600000, cumFee":0,
          "frzAmt":50132,"frzInterest":0,"frzFee":0, origClOrdId":0,"ordRejReason":0,"exchErrCode":0, }*/
         case OESMSG_RPT_ORDER_INSERT:
-        /* 委托确认回报 */
+        /* 委托确认回报 115*/
         /*
         ...client,oes_resp...subscribe,topic:oes_resp,msg: {"msgId":"8","clEnvId":0,"clSeqNo":2,"clOrdId":1375,"invAcctId":"A188800368",
          securityId":"601899","mktId":1,"ordType":0,"bsType":1, ordStatus":3,"ordDate":20190430,"ordTime":145428627,"ordCnfmTime":145428627, 
@@ -236,7 +236,7 @@ CZpquantTradeApi::Start() {
         "buyFrzAmt":9900000,"totalFeeAmt":50066, feeFrzAmt":50198,"marginAmt":0,"marginFrzAmt":0,"currentTotalBal":1312784846, 
         currentAvailableBal":1302834648,"currentDrawableBal":1302834648 ,}
         */
-        /* 资金变动回报 */
+        /* 资金变动回报 119*/
        case OESMSG_RPT_CASH_ASSET_VARIATION:
         {
             ZpquantCashAssetItem msgBody;
@@ -279,7 +279,7 @@ CZpquantTradeApi::Start() {
         trdQty":100,"trdPrice":33000,"trdAmt":3300000,"cumQty":100, cumAmt":3300000,"cumInterest":0,cumFee":50066,"pbuId":88822, }
         cannot parse from string 'msg(client,oes_resp)'
         */
-        /* 成交回报 */
+        /* 成交回报 116*/
         case OESMSG_RPT_TRADE_REPORT:
         {
             ZpquantTrdCnfm msgBody;
@@ -433,6 +433,12 @@ CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq)
 int32
 CZpquantTradeApi::SendCancelOrder(const ZpquantOrdCancelReqT *pCancelReq) 
 {
+    string cancelOrd("cancelOrder");
+    sprintf(sendJsonDataStr, 
+          "{\"type\":\"%s\",\"mktId\":%d,\"origClSeqNo\":%d,\"origClEnvId\":%d,\"origClOrdId\":%d}",
+          cancelOrd.c_str(),pCancelReq->mktId,pCancelReq->origClSeqNo,pCancelReq->origClEnvId,pCancelReq->origClOrdId);
+    cout << "...SendCancelOrder...sendJsonDataStr: " << sendJsonDataStr << endl;
+    publisher.publish("order2server_td", sendJsonDataStr);
     return 0;
 }
 

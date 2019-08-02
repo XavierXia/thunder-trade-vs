@@ -298,7 +298,25 @@ bool CKR_QUANT_TDPlugin::Start()
                 }
             }
             else if(sType == "cancelOrder"){
+                uint8 mktId = c_Config.get<uint8>("mktId");
+                int32 origClSeqNo = c_Config.get<int32>("origClSeqNo");
+                int8 origClEnvId = c_Config.get<int8>("origClEnvId");
+                int64 origClOrdId = c_Config.get<int64>("origClOrdId");
 
+                if(origClEnvId != 0)
+                {
+                    /* 通过待撤委托的 clOrdId 进行撤单 */
+                    OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,0, 0, origClEnvId);
+                }
+                else
+                {
+                    /*
+                     * 通过待撤委托的 clSeqNo 进行撤单
+                     * - 如果撤单时 origClEnvId 填0，则默认会使用当前客户端实例的 clEnvId 作为
+                     *   待撤委托的 origClEnvId 进行撤单
+                     */
+                    OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,origClSeqNo, origClEnvId, 0);
+                }
             }else{
 
             }

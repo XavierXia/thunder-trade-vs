@@ -944,11 +944,11 @@ struct  ZpquantOrdReqT
 struct ZpquantOrdCancelReqT
 {
 	uint8 mktId;
-	char code[10];
-	char pInvAcctId[10];
 	int32 origClSeqNo;
 	int8 origClEnvId;
 	int64 origClOrdId;
+    char code[10];
+    char pInvAcctId[10];
 };
 
 /**
