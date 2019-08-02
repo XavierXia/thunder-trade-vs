@@ -10,19 +10,37 @@
     {
     	"logtype": "syslog|file|console",
         "syslog": 
-	{
+	    {
             "serveraddress": "127.0.0.1",
             "port": "514"
         },
         "file": 
-	{
+	    {
             "target": "ATMLOG",
             "filenamehead": "atm_log_",
             "rotationsize": "1048576",
             "autoflush": "true"
         },
         "console": 
-	{
+	    {
+        },
+    },
+    "userlist":
+    {
+        "user1":
+        {
+            "username":"c1",
+            "password":"pass123"
+        },
+        "user2":
+        {
+            "username":"c2",
+            "password":"pass123"
+        },
+        "user3":
+        {
+            "username":"c3",
+            "password":"pass123"
         }
     }
 }
