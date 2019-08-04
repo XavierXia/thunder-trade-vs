@@ -3,6 +3,7 @@
 #include <nanomsg/pair.h>
 #include <cassert>
 #include <iostream>
+#include <unistd.h>
 using namespace std;
 #define ADDRESS2 "ipc:///tmp/reqrep.ipc"
 
@@ -15,7 +16,9 @@ int main ()
     while(1)
     {
         int rc = s1.recv (buf, sizeof (buf), 0);
-        cout<<"...buf: " << buf << endl;
+        cout<<"...buf,server recv: " << buf << endl;
+        sleep(1);
+        s1.send ("...ABC,server send", 18, 0);
     };
     return 0;
 }

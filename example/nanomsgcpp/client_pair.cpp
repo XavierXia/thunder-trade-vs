@@ -3,6 +3,7 @@
 #include <nanomsg/pair.h>
 #include <cassert>
 #include <iostream>
+#include <unistd.h>
 using namespace std;
 
 #define ADDRESS1 "inproc://test"
@@ -12,11 +13,13 @@ using namespace std;
 int main ()
 {
     nn::socket s2 (AF_SP, NN_PAIR);
-    s2.connect (ADDRESS3);
+    char buf[25];
     
-    while(1)
+    if(s2.connect(ADDRESS3))
     {
-        s2.send ("...ABC,client", 13, 0);
+        s2.send ("...ABC,client send", 18, 0);
+        int rc = s2.recv (buf, sizeof (buf), 0);
+        cout<<"...buf,client recv: " << buf << endl;
     }
     return 0;
 }
