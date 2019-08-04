@@ -13,13 +13,16 @@ using namespace std;
 int main ()
 {
     nn::socket s2 (AF_SP, NN_PAIR);
+    s2.connect(ADDRESS3)
     char buf[25];
-    
-    if(s2.connect(ADDRESS3))
+
+    s2.send ("...CCC,client send\n", 19, 0);
+    int rc = s2.recv (buf, sizeof (buf), 0);
+    cout<<"...buf,client recv: " << buf << endl;
+
+    while(1)
     {
-        s2.send ("...CCC,client send\n", 19, 0);
-        int rc = s2.recv (buf, sizeof (buf), 0);
-        cout<<"...buf,client recv: " << buf << endl;
-    }
+        sleep(1);
+    };
     return 0;
 }
