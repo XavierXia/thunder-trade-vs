@@ -7,12 +7,12 @@ using namespace std;
 
 #define ADDRESS1 "inproc://test"
 #define ADDRESS2 "tcp://127.0.0.1:8000"
-#define ADDRESS2 "ipc:///tmp/reqrep.ipc"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
 int main ()
 {
     nn::socket s2 (AF_SP, NN_PAIR);
-    s2.connect (ADDRESS2);
+    s2.connect (ADDRESS3);
     
     while(1)
     {
