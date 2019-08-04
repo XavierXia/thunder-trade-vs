@@ -9,14 +9,14 @@ int main ()
 {
     nn::socket s1 (AF_SP, NN_PAIR);
     s1.bind ("inproc://a");
-    nn::socket s2 (AF_SP, NN_PAIR);
-    s2.connect ("inproc://a");
 
-    s2.send ("ABC", 3, 0);
-    char buf [3];
+    char buf [20];
     int rc = s1.recv (buf, sizeof (buf), 0);
     cout<<"...buf: " << buf << endl;
-    assert (rc == 3);
 
+    while(1)
+    {
+
+    };
     return 0;
 }
