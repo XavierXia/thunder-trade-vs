@@ -17,7 +17,7 @@ int main ()
     
     if(s2.connect(ADDRESS3))
     {
-        s2.send ("...ABC,client send", 18, 0);
+        s2.send ("...CCC,client send\n", 19, 0);
         int rc = s2.recv (buf, sizeof (buf), 0);
         cout<<"...buf,client recv: " << buf << endl;
     }
