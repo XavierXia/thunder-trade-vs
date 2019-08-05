@@ -240,7 +240,7 @@ void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
         }
         catch(std::exception & e){
             fprintf(stdout, "cannot parse from string 'msg' \n");
-            return;
+            return NULL;
         }
 
         string stype;
@@ -275,7 +275,7 @@ void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
 		}
 
 		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-		if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
+		if(!mdimp->MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
 		{
 			// this->ShowMessage(
 			// 	severity_levels::error,
