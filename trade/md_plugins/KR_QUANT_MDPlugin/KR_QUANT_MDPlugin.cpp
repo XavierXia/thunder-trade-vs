@@ -3,20 +3,20 @@
 #include <thread>
 #include "AutoPend.h"
 
+
+#define SOCKET_ADDRESS "tcp://47.105.111.100:8000"
+
 const string CKrQuantMDPluginImp::s_strAccountKeyword="username;password;";
 extern char ProcessName[256];
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
 MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
-// redox::Redox publisher; // Initialize Redox (default host/port)
-// redox::Subscriber subscriber;
+
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
-	if(!publisher.connect())
-		throw std::runtime_error("...CKrQuantMDPluginImp,Can not connect redis,publisher!!!");
-	if(!subscriber.connect())
-		throw std::runtime_error("...CKrQuantMDPluginImp,Can not connect redis,subscriber!!!");
+	nnsocket(AF_SP, NN_PAIR);
+	nnsocket.connect(SOCKET_ADDRESS);
 }
 
 CKrQuantMDPluginImp::~CKrQuantMDPluginImp()
@@ -135,66 +135,78 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 
     
     //**************************************************
-	subscriber.subscribe("order2server_md", [this](const string& topic, const string& msg) {
-      cout << "...server,order2server_md...subscribe,topic:" << topic << ",msg: " << msg << endl;
+	// subscriber.subscribe("order2server_md", [this](const string& topic, const string& msg) {
+ //      cout << "...server,order2server_md...subscribe,topic:" << topic << ",msg: " << msg << endl;
 
-      	ptree c_Config;
-      	std::stringstream jmsg(msg.c_str());  
-        try {
-            boost::property_tree::read_json(jmsg, c_Config);
-        }
-        catch(std::exception & e){
-            fprintf(stdout, "cannot parse from string 'msg' \n");
-            return false;
-        }
+ //      	ptree c_Config;
+ //      	std::stringstream jmsg(msg.c_str());  
+ //        try {
+ //            boost::property_tree::read_json(jmsg, c_Config);
+ //        }
+ //        catch(std::exception & e){
+ //            fprintf(stdout, "cannot parse from string 'msg' \n");
+ //            return false;
+ //        }
 
-        string stype;
-        string codelistStr;
-        string mdsSubMode;
-        eMdsSubscribeModeT emodeT;
+ //        string stype;
+ //        string codelistStr;
+ //        string mdsSubMode;
+ //        eMdsSubscribeModeT emodeT;
 
-	    auto temp = c_Config.find("type");
-		if (temp != c_Config.not_found()) stype = temp->second.data();
-	    temp = c_Config.find("codelistStr");
-		if (temp != c_Config.not_found()) codelistStr = temp->second.data();
-		temp = c_Config.find("mdsSubMode");
-		if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
+	//     auto temp = c_Config.find("type");
+	// 	if (temp != c_Config.not_found()) stype = temp->second.data();
+	//     temp = c_Config.find("codelistStr");
+	// 	if (temp != c_Config.not_found()) codelistStr = temp->second.data();
+	// 	temp = c_Config.find("mdsSubMode");
+	// 	if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
 		
-		switch(atoi(mdsSubMode.c_str()))
-		{
-			case 0:
-			{
-				emodeT = MDS_SUB_MODE_SET;
-				break;
-			}
-			case 1:
-			{
-				emodeT = MDS_SUB_MODE_APPEND;
-				break;
-			}
-			case 2:
-			{
-				emodeT = MDS_SUB_MODE_DELETE;
-				break;
-			}
-		}
+	// 	switch(atoi(mdsSubMode.c_str()))
+	// 	{
+	// 		case 0:
+	// 		{
+	// 			emodeT = MDS_SUB_MODE_SET;
+	// 			break;
+	// 		}
+	// 		case 1:
+	// 		{
+	// 			emodeT = MDS_SUB_MODE_APPEND;
+	// 			break;
+	// 		}
+	// 		case 2:
+	// 		{
+	// 			emodeT = MDS_SUB_MODE_DELETE;
+	// 			break;
+	// 		}
+	// 	}
 
-		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-		if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
-		{
-			// this->ShowMessage(
-			// 	severity_levels::error,
-			// 	"send unsubscribemarketdata(%s) failed.", 
-			// 	codelistStr.c_str());
-			cout << "send unsubscribemarketdata failed: " << codelistStr.c_str() << endl;
-		}
-		else
-		{
-			//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
-			cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
-		}
+	// 	/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
+	// 	if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
+	// 	{
+	// 		// this->ShowMessage(
+	// 		// 	severity_levels::error,
+	// 		// 	"send unsubscribemarketdata(%s) failed.", 
+	// 		// 	codelistStr.c_str());
+	// 		cout << "send unsubscribemarketdata failed: " << codelistStr.c_str() << endl;
+	// 	}
+	// 	else
+	// 	{
+	// 		//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
+	// 		cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
+	// 	}
 
-    });
+ //    });
+
+	    pthread_t       rptThreadId;
+        int32           ret = 0;
+
+        /* 创建回报接收线程 */
+        ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this);
+        if (ret != 0) {
+            fprintf(stderr, "创建行情订阅接收线程失败! error[%d - %s]\n",
+                    ret, strerror(ret));
+            return;
+        }
+
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
 	m_StartAndStopCtrlTimer.async_wait(boost::bind(
@@ -207,6 +219,18 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 		return true;
 	});
 }
+
+void CKrQuantMDPluginImp::MdThreadMain(void *pParams)
+{
+	CKrQuantMDPluginImp *mdimp = (CKrQuantMDPluginImp *) pParams;
+	char buf[1024];
+	while(1)
+	{
+        int rc = mdimp->nnsocket.recv(buf, sizeof(buf), 0);
+        cout<<"...CKrQuantMDPluginImp,MdThreadMain recv: " << buf << endl;
+	}
+}
+
 
 void CKrQuantMDPluginImp::MDHotUpdate(const ptree & NewConfig)
 {
@@ -697,13 +721,14 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     switch (pMsgHead->msgId) {
     case MDS_MSGTYPE_L2_TRADE:
         /* 处理Level2逐笔成交消息 */
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTrade", sendJsonDataStr);
-
+    	//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTrade", sendJsonDataStr);
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0)
         break;
 
     case MDS_MSGTYPE_L2_ORDER:
         /* 处理Level2逐笔委托消息 */
-		((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onOrder", sendJsonDataStr);
+		//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onOrder", sendJsonDataStr);
+		((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0)
         break;
 
     case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
@@ -716,7 +741,8 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
         //ShowMessage(severity_levels::normal,"... 接收到Level2快照行情消息 (exchId[%u], instrId[%d])\n",
         //        pRspMsg->mktDataSnapshot.head.exchId,
          //       pRspMsg->mktDataSnapshot.head.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTick", sendJsonDataStr);
+    	//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTick", sendJsonDataStr);
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0)
         break;
 
     case MDS_MSGTYPE_MARKET_DATA_REQUEST:

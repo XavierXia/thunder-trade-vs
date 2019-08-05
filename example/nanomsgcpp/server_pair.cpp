@@ -6,6 +6,9 @@
 #include <unistd.h>
 using namespace std;
 #define ADDRESS2 "ipc:///tmp/reqrep.ipc"
+#define SOCKET_ADDRESS1 "inproc://test"
+#define SOCKET_ADDRESS2 "tcp://192.168.1.36:7766"
+#define SOCKET_ADDRESS3 "tcp://*:7766"
 
 int main ()
 {

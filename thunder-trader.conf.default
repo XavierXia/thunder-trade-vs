@@ -29,17 +29,7 @@
     {
         "user1":
         {
-            "username":"c1",
-            "password":"pass123"
-        },
-        "user2":
-        {
-            "username":"c2",
-            "password":"pass123"
-        },
-        "user3":
-        {
-            "username":"c3",
+            "username":"client1",
             "password":"pass123"
         }
     }

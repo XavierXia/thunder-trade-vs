@@ -27,7 +27,7 @@ extern "C" {
 
 #include "AtmPluginInterface.h"
 #include "AtmMarketDataPluginInterface.h"
-#include "redox.hpp"
+#include "nn.hpp"
 
 using namespace boost::posix_time;
 using namespace boost::gregorian;
@@ -74,8 +74,7 @@ public:
 	atomic_bool m_abIsPending;
 	bool IsPedding();
 
-	redox::Redox publisher; // Initialize Redox (default host/port)
-	redox::Subscriber subscriber;
+	nn::socket nnsocket;
 
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
@@ -111,6 +110,10 @@ private:
 	void Stop();
 	void TimerHandler(boost::asio::deadline_timer* timer, const boost::system::error_code& err);
 	void OnError();
+
+private:
+    /* 内部的回调处理函数，可以考虑不定义在类中 */
+    static void *       MdThreadMain(void *pParams);
 };
 #endif
 
