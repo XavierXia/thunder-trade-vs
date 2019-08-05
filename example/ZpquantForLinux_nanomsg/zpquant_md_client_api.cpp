@@ -117,7 +117,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
-        std::stringstream jmsg(msg.c_str());  
+        std::stringstream jmsg(buf);  
         try {
             boost::property_tree::read_json(jmsg, c_Config);
         }
