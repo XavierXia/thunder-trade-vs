@@ -14,10 +14,10 @@ using namespace std;
 int main ()
 {
     nn::socket s2 (AF_SP, NN_PAIR);
-    s2.connect(SOCKET_ADDRESS2)
+    s2.connect(SOCKET_ADDRESS2);
     char buf[25];
 
-    s2.send ("...CCC,client send\n", 19, 0);
+    //s2.send ("...CCC,client send\n", 19, 0);
     // int rc = s2.recv (buf, sizeof (buf), 0);
     // cout<<"...buf,client recv: " << buf << endl;
 
@@ -25,6 +25,6 @@ int main ()
     {
         s2.send ("...CCC,client send\n", 19, 0);
         sleep(2);
-    };
+    }
     return 0;
 }
