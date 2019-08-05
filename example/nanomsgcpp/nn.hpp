@@ -62,7 +62,7 @@ namespace nn
     class socket
     {
     public:
-        socket();
+        socket(){};
 
         inline void socket_s (int domain, int protocol)
         {
