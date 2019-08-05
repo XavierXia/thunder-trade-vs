@@ -21,6 +21,7 @@ using namespace std;
 
 #include "ZpquantUserApiStruct.h"
 #include "nn.hpp"
+#include <nanomsg/pair.h>
 
 
 #if defined(ISLIB) && defined(WIN32)
@@ -52,7 +53,7 @@ class MD_API_EXPORT CZpquantMdApi
 {
 public:
     static const char * GetVersion(void);
-    nn::socket nnsocket;
+    nn::socket nnsocket(AF_SP, NN_PAIR);
 
 public:
 	CZpquantMdApi();

@@ -2,7 +2,6 @@
 #include <string.h>
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
-#include <nanomsg/pair.h>
 
 #define SOCKET_ADDRESS "tcp://*:8000"
 
@@ -13,7 +12,6 @@ namespace Zpquant {
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
-    nnsocket(AF_SP, NN_PAIR);
     nnsocket.connect(SOCKET_ADDRESS);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }

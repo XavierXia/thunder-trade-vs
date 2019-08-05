@@ -2,7 +2,7 @@
 #include <stdarg.h>
 #include <thread>
 #include "AutoPend.h"
-#include <nanomsg/pair.h>
+
 
 
 #define SOCKET_ADDRESS "tcp://47.105.111.100:8000"
@@ -16,7 +16,6 @@ MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
-	nnsocket(AF_SP, NN_PAIR);
 	nnsocket.connect(SOCKET_ADDRESS);
 }
 
@@ -221,7 +220,7 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	});
 }
 
-void CKrQuantMDPluginImp::MdThreadMain(void *pParams)
+void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
 {
 	CKrQuantMDPluginImp *mdimp = (CKrQuantMDPluginImp *) pParams;
 	char buf[1024];

@@ -28,6 +28,7 @@ extern "C" {
 #include "AtmPluginInterface.h"
 #include "AtmMarketDataPluginInterface.h"
 #include "nn.hpp"
+#include <nanomsg/pair.h>
 
 using namespace boost::posix_time;
 using namespace boost::gregorian;
@@ -74,7 +75,7 @@ public:
 	atomic_bool m_abIsPending;
 	bool IsPedding();
 
-	nn::socket nnsocket;
+	nn::socket nnsocket(AF_SP, NN_PAIR);
 
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
