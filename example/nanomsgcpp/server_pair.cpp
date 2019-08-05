@@ -16,7 +16,7 @@ int main ()
     nn::socket s1 (AF_SP, NN_PAIR);
     s1.bind (SOCKET_ADDRESS3);
 
-    char buf [25];
+    char buf [5000];
     while(1)
     {
         int rc = s1.recv (buf, sizeof (buf), 0);
