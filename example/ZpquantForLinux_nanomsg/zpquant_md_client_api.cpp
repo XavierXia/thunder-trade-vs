@@ -164,7 +164,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                 msgBody.trade.BidApplSeqNum = BidApplSeqNum;
                 msgBody.trade.OfferApplSeqNum = OfferApplSeqNum;
 
-                this->pSpi->OnTradeRtnDepthMarketData(&msgBody);
+                mdapi->pSpi->OnTradeRtnDepthMarketData(&msgBody);
                 break;
             }
             case MDS_MSGTYPE_L2_ORDER:
@@ -196,7 +196,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                 msgBody.order.Price = Price;
                 msgBody.order.OrderQty = OrderQty;
 
-                this->pSpi->OnOrderRtnDepthMarketData(&msgBody);
+                mdapi->pSpi->OnOrderRtnDepthMarketData(&msgBody);
                 break;
             }
             case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
@@ -304,7 +304,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                     i++;
                 }
 
-                this->pSpi->OnTickRtnDepthMarketData(&msgBody);
+                mdapi->pSpi->OnTickRtnDepthMarketData(&msgBody);
                 break;
             }
             default:
