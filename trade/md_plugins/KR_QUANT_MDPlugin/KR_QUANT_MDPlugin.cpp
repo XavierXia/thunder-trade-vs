@@ -20,7 +20,7 @@ nn::socket nnsocket(AF_SP, NN_PAIR);
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
-	nnsocket.connect(ADDRESS3);
+	nnsocket.connect(SOCKET_ADDRESS);
 }
 
 CKrQuantMDPluginImp::~CKrQuantMDPluginImp()

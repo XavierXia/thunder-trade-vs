@@ -5,7 +5,7 @@
 
 #define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
 #define ADDRESS1 "inproc://test"
-#define ADDRESS2 "tcp://127.0.0.1:8000"
+#define ADDRESS2 "tcp://*:8000"
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
 nn::socket nnsocket(AF_SP, NN_PAIR);
@@ -17,7 +17,7 @@ namespace Zpquant {
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
-    nnsocket.connect(ADDRESS3);
+    nnsocket.connect(ADDRESS2);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
