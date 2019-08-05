@@ -109,7 +109,7 @@ MdsMktDataSnapshotT:
 
 void* CZpquantMdApi::MdThreadMain(void *pParams)
 {
-  CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
+  CZpquantMdSpi *mdspi = (CZpquantMdSpi *) pParams;
   char buf[4096];
   while(1)
   {
@@ -164,7 +164,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                 msgBody.trade.BidApplSeqNum = BidApplSeqNum;
                 msgBody.trade.OfferApplSeqNum = OfferApplSeqNum;
 
-                mdapi->pSpi->OnTradeRtnDepthMarketData(&msgBody);
+                mdspi->OnTradeRtnDepthMarketData(&msgBody);
                 break;
             }
             case MDS_MSGTYPE_L2_ORDER:
@@ -196,7 +196,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                 msgBody.order.Price = Price;
                 msgBody.order.OrderQty = OrderQty;
 
-                mdapi->pSpi->OnOrderRtnDepthMarketData(&msgBody);
+                mdspi->OnOrderRtnDepthMarketData(&msgBody);
                 break;
             }
             case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
@@ -304,7 +304,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
                     i++;
                 }
 
-                mdapi->pSpi->OnTickRtnDepthMarketData(&msgBody);
+                mdspi->OnTickRtnDepthMarketData(&msgBody);
                 break;
             }
             default:
@@ -326,7 +326,7 @@ CZpquantMdApi::Start() {
         int32           ret = 0;
 
         /* 创建回报接收线程 */
-        ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this);
+        ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this->pSpi);
         if (ret != 0) {
             fprintf(stderr, "创建行情盘口接收线程失败! error[%d - %s]\n",
                     ret, strerror(ret));
