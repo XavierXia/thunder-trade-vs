@@ -111,7 +111,8 @@ private:
 	bool Stop();
 	void ShowMessage(severity_levels, const char * fmt, ...);
 	void TimerHandler(boost::asio::deadline_timer* timer, const boost::system::error_code& err);
-
+private:
+    static void *       tdThreadMain(void *pParams);
 
 };
 #endif

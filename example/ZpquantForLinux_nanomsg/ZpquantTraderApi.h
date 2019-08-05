@@ -119,8 +119,6 @@ private:
     CZpquantTradeApi(const CZpquantTradeApi&);
     /* 禁止赋值函数 */
     CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
-    char sendJsonDataStr[4096];
-
 
 private:
     bool                isCfg;
@@ -128,6 +126,9 @@ private:
     volatile int32      terminatedFlag;
 
     CZpquantTradeSpi        *pSpi;
+private:
+    /* 内部的回调处理函数，可以考虑不定义在类中 */
+    static void *tradeThreadMain(void *pParams);
 };
 
 

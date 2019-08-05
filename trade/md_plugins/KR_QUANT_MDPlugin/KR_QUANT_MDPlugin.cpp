@@ -3,8 +3,6 @@
 #include <thread>
 #include "AutoPend.h"
 
-
-
 #define SOCKET_ADDRESS "tcp://47.105.111.100:8000"
 #define ADDRESS1 "inproc://test"
 #define ADDRESS2 "tcp://127.0.0.1:8000"
@@ -286,7 +284,7 @@ void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
 		else
 		{
 			//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
-			cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
+			cout << "subscribe stock mdata success!!! " << codelistStr.c_str() << endl;
 		}
 	}
 }

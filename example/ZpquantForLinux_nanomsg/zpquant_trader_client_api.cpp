@@ -2,13 +2,20 @@
 #include <string.h>
 #include "ZpquantTraderApi.h"
 
+#define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
+#define ADDRESS1 "inproc://test"
+#define ADDRESS2 "tcp://*:8001"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
+
+nn::socket tdnnsocket(AF_SP, NN_PAIR);
+
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 namespace Zpquant {
 
 CZpquantTradeApi::CZpquantTradeApi() {
     pSpi = NULL;
-    //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
+    tdnnsocket.bind(ADDRESS2);
 }
 
 
@@ -58,18 +65,17 @@ CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
     return true;
 }
 
-//采集报单回调数据
-bool
-CZpquantTradeApi::Start() {
-    if(!subscriber.connect()) return false;
-    if(!publisher.connect()) return false;
-
-    //执行报告消息进行接收和处理
-    subscriber.subscribe("oes_resp", [this](const string& topic, const string& msg) {
-      cout << "...client,oes_resp...subscribe,topic:" << topic << ",msg: " << msg << endl;
+void* CZpquantMdApi::tradeThreadMain(void *pParams)
+{
+  CZpquantTradeSpi *tdspi = (CZpquantTradeSpi *) pParams;
+  char buf[4096];
+  while(1)
+  {
+        int rc = tdnnsocket.recv(buf, sizeof(buf), 0);
+        cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
-        std::stringstream jmsg(msg.c_str());  
+        std::stringstream jmsg(buf);  
         try {
             boost::property_tree::read_json(jmsg, c_Config);
         }
@@ -125,7 +131,7 @@ CZpquantTradeApi::Start() {
             msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
             msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
 
-            this->pSpi->OnQueryStkHolding(&msgBody,&pCursor,0);
+            tdspi->OnQueryStkHolding(&msgBody,&pCursor,0);
             break; 
         }
         /*
@@ -220,11 +226,11 @@ CZpquantTradeApi::Start() {
             
             if(msgId == OESMSG_RPT_ORDER_INSERT)
             {
-                this->pSpi->OnOrderInsert(&msgBody);
+                tdspi->OnOrderInsert(&msgBody);
             }
             else /* 委托确认回报 */
             {
-                this->pSpi->OnOrderReport(0,&msgBody);
+                tdspi->OnOrderReport(0,&msgBody);
             }           
             break; 
         }
@@ -269,7 +275,7 @@ CZpquantTradeApi::Start() {
             msgBody.currentAvailableBal = c_Config.get<int64>("currentAvailableBal");
             msgBody.currentDrawableBal = c_Config.get<int64>("currentDrawableBal");
                       
-            this->pSpi->OnCashAssetVariation(&msgBody);
+            tdspi->OnCashAssetVariation(&msgBody);
             break; 
         }
         /*
@@ -308,7 +314,7 @@ CZpquantTradeApi::Start() {
             msgBody.cumFee = c_Config.get<int64>("cumFee");
             msgBody.pbuId = c_Config.get<int64>("pbuId");
                       
-            this->pSpi->OnTradeReport(&msgBody);
+            tdspi->OnTradeReport(&msgBody);
             break; 
         }
         /* 持仓变动回报 */
@@ -348,98 +354,38 @@ CZpquantTradeApi::Start() {
             msgBody.trsfOutAvlHld = c_Config.get<int64>("trsfOutAvlHld");
             msgBody.lockAvlHld = c_Config.get<int64>("lockAvlHld");
 
-            this->pSpi->OnStockHoldingVariation(&msgBody);
+            tdspi->OnStockHoldingVariation(&msgBody);
             break;
         }
      
         default:
         break;
       }
+  }
+}
 
-    });
+//采集报单回调数据
+bool
+CZpquantTradeApi::Start() 
+{
+    pthread_t       rptThreadId;
+    int32           ret = 0;
+
+    /* 创建回报接收线程 */
+    ret = pthread_create(&rptThreadId, NULL, tradeThreadMain, (void *) this->pSpi);
+    if (ret != 0) {
+        fprintf(stderr, "创建交易回调接收线程失败! error[%d - %s]\n",
+                ret, strerror(ret));
+        return false;
+    }
+
     return true;
 }
 
 void
 CZpquantTradeApi::Stop() {
-    subscriber.disconnect();
-    publisher.disconnect();
+
 }
-
-/**
- * 对执行报告消息进行处理的回调函数
- *
- * @param   pRptChannel     回报通道的会话信息
- * @param   pMsgHead        消息头
- * @param   pMsgBody        消息体数据
- * @param   pCallbackParams 外部传入的参数
- *
- * @return  大于等于0，成功；小于0，失败（错误号）
- */
-// int32
-// CZpquantTradeApi::HandleReportMsg(OesApiSessionInfoT *pRptChannel,
-//         SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
-//     OesClientSpi        *pSpi = (OesClientSpi *) pCallbackParams;
-//     OesRspMsgBodyT      *pRspMsg = (OesRspMsgBodyT *) pMsgBody;
-//     OesRptMsgT          *pRptMsg = &pRspMsg->rptMsg;
-
-//     assert(pRptChannel && pMsgHead && pRspMsg);
-
-//     switch (pMsgHead->msgId) {
-//     case OESMSG_RPT_ORDER_INSERT:               /* OES委托已生成 (已通过风控检查) */
-//         pSpi->OnOrderInsert(&pRptMsg->rptBody.ordInsertRsp);
-//         break;
-
-//     case OESMSG_RPT_BUSINESS_REJECT:            /* OES业务拒绝 (未通过风控检查等) */
-//         pSpi->OnBusinessReject(pRptMsg->rptHead.ordRejReason,
-//                 &pRptMsg->rptBody.ordRejectRsp);
-//         break;
-
-//     case OESMSG_RPT_ORDER_REPORT:               /* 交易所委托回报 (包括交易所委托拒绝、委托确认和撤单完成通知) */
-//         pSpi->OnOrderReport(pRptMsg->rptHead.ordRejReason,
-//                 &pRptMsg->rptBody.ordCnfm);
-//         break;
-
-//     case OESMSG_RPT_TRADE_REPORT:               /* 交易所成交回报 */
-//         pSpi->OnTradeReport(&pRptMsg->rptBody.trdCnfm);
-//         break;
-
-//     case OESMSG_RPT_CASH_ASSET_VARIATION:       /* 资金变动信息 */
-//         pSpi->OnCashAssetVariation(&pRptMsg->rptBody.cashAssetRpt);
-//         break;
-
-//     case OESMSG_RPT_STOCK_HOLDING_VARIATION:    /* 持仓变动信息 (股票) */
-//         pSpi->OnStockHoldingVariation(&pRptMsg->rptBody.stkHoldingRpt);
-//         break;
-
-//     case OESMSG_RPT_FUND_TRSF_REJECT:           /* 出入金委托响应-业务拒绝 */
-//         pSpi->OnFundTrsfReject(pRptMsg->rptHead.ordRejReason,
-//                 &pRptMsg->rptBody.fundTrsfRejectRsp);
-//         break;
-
-//     case OESMSG_RPT_FUND_TRSF_REPORT:           /* 出入金委托执行报告 */
-//         pSpi->OnFundTrsfReport(pRptMsg->rptHead.ordRejReason,
-//                 &pRptMsg->rptBody.fundTrsfCnfm);
-//         break;
-
-//     case OESMSG_RPT_MARKET_STATE:               /* 市场状态信息 */
-//         pSpi->OnMarketState(&pRspMsg->mktStateRpt);
-//         break;
-
-//     case OESMSG_RPT_REPORT_SYNCHRONIZATION: /* 回报同步响应 */
-//         break;
-
-//     case OESMSG_SESS_HEARTBEAT:
-//         break;
-
-//     default:
-//         fprintf(stderr, "收到未定义处理方式的回报消息! msgId[0x%02X]\n",
-//                 pMsgHead->msgId);
-//         break;
-//     }
-
-//     return 0;
-// }
 
 /**
  * 发送委托申报请求
@@ -457,11 +403,12 @@ CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq)
         buyorsell = "other";
     }
 
+    char sendJsonDataStr[512];
     sprintf(sendJsonDataStr, 
           "{\"type\":\"%s\",\"code\":\"%s\",\"sclb\":\"%d\",\"wtfs\":\"%d\",\"amount\":\"%d\",\"price\":\"%d\"}",
           buyorsell.c_str(),pOrderReq->pSecurityId,pOrderReq->mktId,pOrderReq->ordType,pOrderReq->ordQty,pOrderReq->ordPrice);
     cout << "...SendOrder...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server_td", sendJsonDataStr);
+    tdnnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
 
     return 0;
 }
@@ -473,12 +420,13 @@ CZpquantTradeApi::SendOrder(const ZpquantOrdReqT *pOrderReq)
 int32
 CZpquantTradeApi::SendCancelOrder(const ZpquantOrdCancelReqT *pCancelReq) 
 {
+    char sendJsonDataStr[256];
     string cancelOrd("cancelOrder");
     sprintf(sendJsonDataStr, 
           "{\"type\":\"%s\",\"mktId\":%d,\"origClSeqNo\":%d,\"origClEnvId\":%d,\"origClOrdId\":%d}",
           cancelOrd.c_str(),pCancelReq->mktId,pCancelReq->origClSeqNo,pCancelReq->origClEnvId,pCancelReq->origClOrdId);
     cout << "...SendCancelOrder...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server_td", sendJsonDataStr);
+    tdnnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }
 
@@ -522,9 +470,10 @@ CZpquantTradeApi::GetTradingDay(void) {
 int32
 CZpquantTradeApi::QueryCashAsset(int32 requestId)
 {
+    char sendJsonDataStr[256];
     string str = "{\"type\":\"query\",\"category\":\"cashAsset\",\"code\":\"\",\"sclb\":\"\"}";
     cout << "...QueryCashAsset...str: " << str << endl;
-    publisher.publish("order2server_td", str);
+    tdnnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }
 
@@ -532,10 +481,11 @@ CZpquantTradeApi::QueryCashAsset(int32 requestId)
 int32
 CZpquantTradeApi:: QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId) 
 {
+    char sendJsonDataStr[256];
     sprintf(sendJsonDataStr, 
           "{\"type\":\"query\",\"category\":\"stkHolding\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkHolding...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server_td", sendJsonDataStr);
+    tdnnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }
 
@@ -554,10 +504,11 @@ CZpquantTradeApi::QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId)
 int32
 CZpquantTradeApi::QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId) 
 {
+    char sendJsonDataStr[256];
     sprintf(sendJsonDataStr, 
           "{\"type\":\"query\",\"category\":\"stkInfo\",\"code\":\"%s\",\"sclb\":\"%d\"}",pQryFilter->code,pQryFilter->sclb);
     cout << "...stkInfo...sendJsonDataStr: " << sendJsonDataStr << endl;
-    publisher.publish("order2server_td", sendJsonDataStr);
+    tdnnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }
 

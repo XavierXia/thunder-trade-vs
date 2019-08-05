@@ -5,11 +5,17 @@
 #include "AutoPend.h"
 #include <iostream>
 
+#define SOCKET_ADDRESS "tcp://47.105.111.100:8001"
+#define ADDRESS1 "inproc://test"
+#define ADDRESS2 "tcp://127.0.0.1:8000"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
+
 const string CKR_QUANT_TDPlugin::s_strAccountKeyword = "username;password;";
 extern char ProcessName[256];
 #define NOTIFY_LOGIN_SUCCEED {m_boolIsOnline = true; std::unique_lock<std::mutex> lk(m_mtxLoginSignal);m_cvLoginSignalCV.notify_all();}
 #define NOTIFY_LOGIN_FAILED  {m_boolIsOnline = false;std::unique_lock<std::mutex> lk(m_mtxLoginSignal);m_cvLoginSignalCV.notify_all();}
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/oes_client.conf";
+nn::socket tdnnsocket(AF_SP, NN_PAIR);
 
 
 #define NAME ("kr_quant_td")
@@ -28,10 +34,7 @@ date CKR_QUANT_TDPlugin::GetTradeday(ptime _Current)
 }
 CKR_QUANT_TDPlugin::CKR_QUANT_TDPlugin():m_abIsPending(false)
 {
-    if(!publisher.connect())
-        throw std::runtime_error("CKR_QUANT_TDPlugin,Can not connect redis,publisher!!!");
-    if(!subscriber.connect())
-        throw std::runtime_error("CKR_QUANT_TDPlugin,Can not connect redis,subscriber!!!");
+    tdnnsocket.connect(SOCKET_ADDRESS);
 }
 
 CKR_QUANT_TDPlugin::~CKR_QUANT_TDPlugin()
@@ -164,54 +167,24 @@ void CKR_QUANT_TDPlugin::TimerHandler(boost::asio::deadline_timer* timer, const 
 	
 }
 
-// void *CKR_QUANT_TDPlugin::subThreadMain(void *pParams) 
-// {
-// 	CKR_QUANT_TDPlugin  *tdPlugin = (CKR_QUANT_TDPlugin *) pParams;
-// 	if(!tdPlugin->subscriber.connect()) return;
-	
-// 	subscriber.subscribe("allHQData", [tdPlugin](const string& topic, const string& msg) {
-//       cout << "...subscribe,topic:" << topic << ",msg: " << msg << endl;
-//     });
-// }
-
-bool CKR_QUANT_TDPlugin::Start()
+void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
 {
-	CAutoPend pend(m_abIsPending);
-
-	/* 启动 */
-    if (! pOesApi->Start()) 
+    CKR_QUANT_TDPlugin *tdimp = (CKR_QUANT_TDPlugin *) pParams;
+    char buf[1024];
+    while(1)
     {
-        ShowMessage(severity_levels::error,"启动API失败!");
-        return false;
-    }
-
-    /* 打印当前交易日 */
-    ShowMessage(severity_levels::normal,"服务端交易日: %08d",pOesApi->GetTradingDay());
-
-    // pthread_t       subThreadId;
-    // int32           ret = 0;
-
-    // ret = pthread_create(&subThreadId, NULL, subThreadMain, (void *) this);
-    // if (ret != 0) 
-    // {
-    //     ShowMessage(severity_levels::error,"创建订阅下单等命令线程失败! error[%d - %s]\n",
-    //             ret, strerror(ret));
-    // }
-
-   	//if(!subscriber.connect()) return false;
-	
-	subscriber.subscribe("order2server_td", [this](const string& topic, const string& msg) {
-      	this->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s",topic.c_str(),msg.c_str());
+        int rc = tdnnsocket.recv(buf, sizeof(buf), 0);
+        cout<<"...CKR_QUANT_TDPlugin,tdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
         //boost::property_tree::read_json(msg, c_Config);
-        std::stringstream jmsg(msg.c_str());  
+        std::stringstream jmsg(buf);  
         try {
             boost::property_tree::read_json(jmsg, c_Config);
         }
         catch(std::exception & e){
-            fprintf(stdout, "cannot parse from string 'msg' \n");
-            return false;
+            fprintf(stdout, "cannot parse from string 'msg'(CKR_QUANT_TDPlugin,tdThreadMain) \n");
+            return NULL;
         }
 
         auto temp = c_Config.find("type");
@@ -226,17 +199,17 @@ bool CKR_QUANT_TDPlugin::Start()
                 if (cate != c_Config.not_found()) sCate = cate->second.data();
                 if(sCate == "clientOverview"){
                     /* 查询 客户端总览信息 */
-                    OesClientMain_QueryClientOverview(pOesApi);
+                    tdimp->OesClientMain_QueryClientOverview(pOesApi);
 
                 }else if(sCate == "cashAsset"){
                     /* 查询 所有关联资金账户的资金信息 */
-                    OesClientMain_QueryCashAsset(pOesApi, NULL);
+                    tdimp->OesClientMain_QueryCashAsset(pOesApi, NULL);
                 }else if(sCate == "stkInfo"){
                     /* 查询 指定上证 600000 的产品信息 */
                     auto scode = c_Config.find("code");
                     string code;
                     if (scode != c_Config.not_found()) code = scode->second.data();
-                    OesClientMain_QueryStock(pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
+                    tdimp->OesClientMain_QueryStock(pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
                 }else if(sCate == "stkHolding"){
                     auto scode = c_Config.find("code");
                     auto ssclb = c_Config.find("sclb");
@@ -249,12 +222,12 @@ bool CKR_QUANT_TDPlugin::Start()
                     if(code == "allStk"){
                         /* 查询 沪深两市 所有股票持仓 */
                         cout << "...allStk\n" << endl;
-                        OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
+                        tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
                     }else{
                         if(sclb == "1"){ //上海
-                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code.c_str());
+                            tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code.c_str());
                         }else{ //深圳
-                            OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SZ_A, code.c_str());
+                            tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SZ_A, code.c_str());
                         }
                     }
                 }
@@ -290,10 +263,10 @@ bool CKR_QUANT_TDPlugin::Start()
                 }
 
                 if(wtfs == "0"){//限价
-                    OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
+                    tdimp->OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_LMT, mmbz, atoi(amount.c_str()), atoi(price.c_str()));
                 }else{ //市价
-                    OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
+                    tdimp->OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_SZ_MTL_BEST, mmbz, atoi(amount.c_str()), atoi(price.c_str()));                        
                 }
             }
@@ -306,7 +279,7 @@ bool CKR_QUANT_TDPlugin::Start()
                 if(origClEnvId != 0)
                 {
                     /* 通过待撤委托的 clOrdId 进行撤单 */
-                    OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,0, 0, origClEnvId);
+                    tdimp->OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,0, 0, origClEnvId);
                 }
                 else
                 {
@@ -315,7 +288,7 @@ bool CKR_QUANT_TDPlugin::Start()
                      * - 如果撤单时 origClEnvId 填0，则默认会使用当前客户端实例的 clEnvId 作为
                      *   待撤委托的 origClEnvId 进行撤单
                      */
-                    OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,origClSeqNo, origClEnvId, 0);
+                    tdimp->OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,origClSeqNo, origClEnvId, 0);
                 }
             }else{
 
@@ -323,8 +296,33 @@ bool CKR_QUANT_TDPlugin::Start()
         }
         else
             throw std::runtime_error("order2server:Can not find <type>");
-    });
+    }
+}
 
+bool CKR_QUANT_TDPlugin::Start()
+{
+	CAutoPend pend(m_abIsPending);
+
+	/* 启动 */
+    if (! pOesApi->Start()) 
+    {
+        ShowMessage(severity_levels::error,"启动API失败!");
+        return false;
+    }
+
+    /* 打印当前交易日 */
+    ShowMessage(severity_levels::normal,"服务端交易日: %08d",pOesApi->GetTradingDay());
+
+    pthread_t       rptThreadId;
+    int32           ret = 0;
+
+    /* 创建回报接收线程 */
+    ret = pthread_create(&rptThreadId, NULL, tdThreadMain, (void *) this);
+    if (ret != 0) {
+        fprintf(stderr, "创建交易回调接收线程失败! error[%d - %s]\n",
+            ret, strerror(ret));
+        return false;
+    }
 	return true;
 }
 
