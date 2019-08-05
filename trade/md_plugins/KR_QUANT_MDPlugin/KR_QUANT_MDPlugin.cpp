@@ -711,7 +711,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     }
 
     nnsocket.send("...md,test!!!",20,0); 
-
+    nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
     //发布者
     //((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data", sendJsonDataStr);
 
