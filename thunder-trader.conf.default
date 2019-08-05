@@ -21,9 +21,7 @@
             "rotationsize": "1048576",
             "autoflush": "true"
         },
-        "console": 
-	    {
-        },
+        "console":{}
     },
     "userlist":
     {
