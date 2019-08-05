@@ -2,6 +2,7 @@
 #include <string.h>
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
+#include <nanomsg/pair.h>
 
 #define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
 #define ADDRESS1 "inproc://test"
@@ -109,7 +110,7 @@ MdsMktDataSnapshotT:
 
 void* CZpquantMdApi::MdThreadMain(void *pParams)
 {
-  CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
+  // CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
   char buf[4096];
   while(1)
   {

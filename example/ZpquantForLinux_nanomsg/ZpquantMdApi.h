@@ -21,7 +21,6 @@ using namespace std;
 
 #include "ZpquantUserApiStruct.h"
 #include "nn.hpp"
-#include <nanomsg/pair.h>
 
 
 #if defined(ISLIB) && defined(WIN32)
