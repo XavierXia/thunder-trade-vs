@@ -16,6 +16,7 @@ MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
+	nn::socket nnsocket(AF_SP, NN_PAIR);
 	nnsocket.connect(SOCKET_ADDRESS);
 }
 
