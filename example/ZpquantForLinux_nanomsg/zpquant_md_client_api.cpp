@@ -9,6 +9,7 @@
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
 nn::socket nnsocket(AF_SP, NN_PAIR);
+nnsocket.connect(ADDRESS2);
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
@@ -17,7 +18,7 @@ namespace Zpquant {
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
-    nnsocket.connect(ADDRESS2);
+    //nnsocket.connect(ADDRESS2);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
