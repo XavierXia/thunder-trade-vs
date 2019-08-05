@@ -3,7 +3,7 @@
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
 
-#define SOCKET_ADDRESS "tcp://*:8000"
+#define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
 nn::socket nnsocket(AF_SP, NN_PAIR);
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
