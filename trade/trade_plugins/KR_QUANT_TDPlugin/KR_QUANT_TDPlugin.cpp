@@ -177,7 +177,6 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
         cout<<"...CKR_QUANT_TDPlugin,tdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
-        //boost::property_tree::read_json(msg, c_Config);
         std::stringstream jmsg(buf);  
         try {
             boost::property_tree::read_json(jmsg, c_Config);
@@ -199,17 +198,17 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
                 if (cate != c_Config.not_found()) sCate = cate->second.data();
                 if(sCate == "clientOverview"){
                     /* 查询 客户端总览信息 */
-                    tdimp->OesClientMain_QueryClientOverview(pOesApi);
+                    tdimp->OesClientMain_QueryClientOverview(tdimp->pOesApi);
 
                 }else if(sCate == "cashAsset"){
                     /* 查询 所有关联资金账户的资金信息 */
-                    tdimp->OesClientMain_QueryCashAsset(pOesApi, NULL);
+                    tdimp->OesClientMain_QueryCashAsset(tdimp->pOesApi, NULL);
                 }else if(sCate == "stkInfo"){
                     /* 查询 指定上证 600000 的产品信息 */
                     auto scode = c_Config.find("code");
                     string code;
                     if (scode != c_Config.not_found()) code = scode->second.data();
-                    tdimp->OesClientMain_QueryStock(pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
+                    tdimp->OesClientMain_QueryStock(tdimp->pOesApi, code.c_str(),OES_MKT_ID_UNDEFINE, OES_SECURITY_TYPE_UNDEFINE,OES_SUB_SECURITY_TYPE_UNDEFINE);
                 }else if(sCate == "stkHolding"){
                     auto scode = c_Config.find("code");
                     auto ssclb = c_Config.find("sclb");
@@ -222,12 +221,12 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
                     if(code == "allStk"){
                         /* 查询 沪深两市 所有股票持仓 */
                         cout << "...allStk\n" << endl;
-                        tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_UNDEFINE, NULL);
+                        tdimp->OesClientMain_QueryStkHolding(tdimp->pOesApi, OES_MKT_ID_UNDEFINE, NULL);
                     }else{
                         if(sclb == "1"){ //上海
-                            tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SH_A, code.c_str());
+                            tdimp->OesClientMain_QueryStkHolding(tdimp->pOesApi, OES_MKT_ID_SH_A, code.c_str());
                         }else{ //深圳
-                            tdimp->OesClientMain_QueryStkHolding(pOesApi, OES_MKT_ID_SZ_A, code.c_str());
+                            tdimp->OesClientMain_QueryStkHolding(tdimp->pOesApi, OES_MKT_ID_SZ_A, code.c_str());
                         }
                     }
                 }
@@ -263,10 +262,10 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
                 }
 
                 if(wtfs == "0"){//限价
-                    tdimp->OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
+                    tdimp->OesClientMain_SendOrder(tdimp->pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_LMT, mmbz, atoi(amount.c_str()), atoi(price.c_str()));
                 }else{ //市价
-                    tdimp->OesClientMain_SendOrder(pOesApi, mktId, code.c_str(), NULL,
+                    tdimp->OesClientMain_SendOrder(tdimp->pOesApi, mktId, code.c_str(), NULL,
                                             OES_ORD_TYPE_SZ_MTL_BEST, mmbz, atoi(amount.c_str()), atoi(price.c_str()));                        
                 }
             }
@@ -279,7 +278,7 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
                 if(origClEnvId != 0)
                 {
                     /* 通过待撤委托的 clOrdId 进行撤单 */
-                    tdimp->OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,0, 0, origClEnvId);
+                    tdimp->OesClientMain_CancelOrder(tdimp->pOesApi, mktId, NULL, NULL,0, 0, origClEnvId);
                 }
                 else
                 {
@@ -288,7 +287,7 @@ void * CKR_QUANT_TDPlugin::tdThreadMain(void *pParams)
                      * - 如果撤单时 origClEnvId 填0，则默认会使用当前客户端实例的 clEnvId 作为
                      *   待撤委托的 origClEnvId 进行撤单
                      */
-                    tdimp->OesClientMain_CancelOrder(pOesApi, mktId, NULL, NULL,origClSeqNo, origClEnvId, 0);
+                    tdimp->OesClientMain_CancelOrder(tdimp->pOesApi, mktId, NULL, NULL,origClSeqNo, origClEnvId, 0);
                 }
             }else{
 

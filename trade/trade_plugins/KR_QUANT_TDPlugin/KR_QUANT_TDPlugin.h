@@ -18,6 +18,8 @@
 #include "oes_client_api.h"
 #include "oes_client_spi.h"
 #include "redox.hpp"
+#include "nn.hpp"
+#include <nanomsg/pair.h>
 
 #include "SeverityLevel.h"
 

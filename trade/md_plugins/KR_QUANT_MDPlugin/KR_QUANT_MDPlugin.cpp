@@ -135,80 +135,16 @@ void CKrQuantMDPluginImp::MDInit(const ptree & in)
 	else
 		throw std::runtime_error("kr360:Can not find <password>");
 
-    
-    //**************************************************
-	// subscriber.subscribe("order2server_md", [this](const string& topic, const string& msg) {
- //      cout << "...server,order2server_md...subscribe,topic:" << topic << ",msg: " << msg << endl;
+    pthread_t       rptThreadId;
+    int32           ret = 0;
 
- //      	ptree c_Config;
- //      	std::stringstream jmsg(msg.c_str());  
- //        try {
- //            boost::property_tree::read_json(jmsg, c_Config);
- //        }
- //        catch(std::exception & e){
- //            fprintf(stdout, "cannot parse from string 'msg' \n");
- //            return false;
- //        }
-
- //        string stype;
- //        string codelistStr;
- //        string mdsSubMode;
- //        eMdsSubscribeModeT emodeT;
-
-	//     auto temp = c_Config.find("type");
-	// 	if (temp != c_Config.not_found()) stype = temp->second.data();
-	//     temp = c_Config.find("codelistStr");
-	// 	if (temp != c_Config.not_found()) codelistStr = temp->second.data();
-	// 	temp = c_Config.find("mdsSubMode");
-	// 	if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
-		
-	// 	switch(atoi(mdsSubMode.c_str()))
-	// 	{
-	// 		case 0:
-	// 		{
-	// 			emodeT = MDS_SUB_MODE_SET;
-	// 			break;
-	// 		}
-	// 		case 1:
-	// 		{
-	// 			emodeT = MDS_SUB_MODE_APPEND;
-	// 			break;
-	// 		}
-	// 		case 2:
-	// 		{
-	// 			emodeT = MDS_SUB_MODE_DELETE;
-	// 			break;
-	// 		}
-	// 	}
-
-	// 	/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
-	// 	if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
-	// 	{
-	// 		// this->ShowMessage(
-	// 		// 	severity_levels::error,
-	// 		// 	"send unsubscribemarketdata(%s) failed.", 
-	// 		// 	codelistStr.c_str());
-	// 		cout << "send unsubscribemarketdata failed: " << codelistStr.c_str() << endl;
-	// 	}
-	// 	else
-	// 	{
-	// 		//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
-	// 		cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
-	// 	}
-
- //    });
-
-	    pthread_t       rptThreadId;
-        int32           ret = 0;
-
-        /* 创建回报接收线程 */
-        ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this);
-        if (ret != 0) {
-            fprintf(stderr, "创建行情订阅接收线程失败! error[%d - %s]\n",
-                    ret, strerror(ret));
-            return;
-        }
-
+    /* 创建回报接收线程 */
+    ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this);
+    if (ret != 0) {
+        fprintf(stderr, "创建行情订阅接收线程失败! error[%d - %s]\n",
+                ret, strerror(ret));
+        return;
+    }
 
 	m_StartAndStopCtrlTimer.expires_from_now(boost::posix_time::seconds(3));
 	m_StartAndStopCtrlTimer.async_wait(boost::bind(
