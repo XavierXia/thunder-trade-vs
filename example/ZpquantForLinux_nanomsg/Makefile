@@ -7,7 +7,7 @@ OBJS := $(patsubst %cpp,%o,$(SRCS))
 INC_DIR1   =  ./
 
 CC_CFLAGS = -g -Wall -std=c++11 -fno-strict-aliasing
-CC_LFLAGS = -lnanomsg -lboost_system -lpthread -std=c++11 -fno-strict-aliasing
+CC_LFLAGS = -lnanomsg -lredox -lev -lhiredis -lboost_system -lpthread -std=c++11 -fno-strict-aliasing
 
 all : $(TARGET) cleanObjs
 
