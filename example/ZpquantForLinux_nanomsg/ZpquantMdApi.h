@@ -53,7 +53,6 @@ class MD_API_EXPORT CZpquantMdApi
 {
 public:
     static const char * GetVersion(void);
-    nn::socket nnsocket(AF_SP, NN_PAIR);
 
 public:
 	CZpquantMdApi();

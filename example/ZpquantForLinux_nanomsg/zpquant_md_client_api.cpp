@@ -4,6 +4,7 @@
 #include "ZpquantMdApi.h"
 
 #define SOCKET_ADDRESS "tcp://*:8000"
+nn::socket nnsocket(AF_SP, NN_PAIR);
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
@@ -101,7 +102,7 @@ MdsMktDataSnapshotT:
 
 */
 
-void CZpquantMdApi::MdThreadMain(void *pParams)
+void* CZpquantMdApi::MdThreadMain(void *pParams)
 {
   CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
   char buf[4096];
@@ -124,7 +125,7 @@ CZpquantMdApi::Start() {
         if (ret != 0) {
             fprintf(stderr, "创建行情盘口接收线程失败! error[%d - %s]\n",
                     ret, strerror(ret));
-            return;
+            return false;
         }
 
     // if(!subscriber.connect()) return false;
@@ -366,8 +367,8 @@ CZpquantMdApi::SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMo
     char sendJsonDataStr[1024];
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
     std::cout << "...SubscribeMd...SubscribeMarketData: " << sendJsonDataStr << endl;
-    publisher.publish("order2server_md", sendJsonDataStr);
-
+    //publisher.publish("order2server_md", sendJsonDataStr);
+    nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }
 
