@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include "ZpquantTraderApi.h"
+#include <nanomsg/pair.h>
 
 #define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
 #define ADDRESS1 "inproc://test"
@@ -65,7 +66,7 @@ CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
     return true;
 }
 
-void* CZpquantMdApi::tradeThreadMain(void *pParams)
+void* CZpquantTradeApi::tradeThreadMain(void *pParams)
 {
   CZpquantTradeSpi *tdspi = (CZpquantTradeSpi *) pParams;
   char buf[4096];
