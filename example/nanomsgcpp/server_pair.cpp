@@ -13,7 +13,8 @@ using namespace std;
 
 int main ()
 {
-    nn::socket s1 (AF_SP, NN_PAIR);
+    nn::socket s1();
+    s1.socket_s(AF_SP, NN_PAIR);
     s1.bind (SOCKET_ADDRESS3);
 
     char buf [5000];

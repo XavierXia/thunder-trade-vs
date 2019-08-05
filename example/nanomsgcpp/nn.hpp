@@ -62,8 +62,9 @@ namespace nn
     class socket
     {
     public:
+        socket();
 
-        inline socket (int domain, int protocol)
+        inline socket_s (int domain, int protocol)
         {
             s = nn_socket (domain, protocol);
             if (nn_slow (s < 0))
