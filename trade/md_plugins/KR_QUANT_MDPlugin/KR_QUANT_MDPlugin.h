@@ -75,8 +75,6 @@ public:
 	atomic_bool m_abIsPending;
 	bool IsPedding();
 
-	nn::socket nnsocket(AF_SP, NN_PAIR);
-
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();
 	virtual void DescreaseRefCount();
