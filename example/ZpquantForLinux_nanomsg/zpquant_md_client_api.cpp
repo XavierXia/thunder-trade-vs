@@ -2,6 +2,8 @@
 #include <string.h>
 #include <boost/foreach.hpp>
 #include "ZpquantMdApi.h"
+#include <nanomsg/pair.h>
+
 #define SOCKET_ADDRESS "tcp://*:8000"
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);

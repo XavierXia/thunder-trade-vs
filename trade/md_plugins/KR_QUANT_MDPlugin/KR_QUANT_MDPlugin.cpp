@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <thread>
 #include "AutoPend.h"
+#include <nanomsg/pair.h>
 
 
 #define SOCKET_ADDRESS "tcp://47.105.111.100:8000"
