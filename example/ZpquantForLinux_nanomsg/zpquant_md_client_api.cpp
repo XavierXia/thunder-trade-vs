@@ -18,7 +18,7 @@ nn::socket nnsocket(AF_SP, NN_PAIR);
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
-    nnsocket.connect(ADDRESS2);
+    nnsocket.bind(ADDRESS2);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
