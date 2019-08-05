@@ -232,6 +232,62 @@ void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
 	{
         int rc = nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CKrQuantMDPluginImp,MdThreadMain recv: " << buf << endl;
+
+        ptree c_Config;
+      	std::stringstream jmsg(buf);  
+        try {
+            boost::property_tree::read_json(jmsg, c_Config);
+        }
+        catch(std::exception & e){
+            fprintf(stdout, "cannot parse from string 'msg' \n");
+            return;
+        }
+
+        string stype;
+        string codelistStr;
+        string mdsSubMode;
+        eMdsSubscribeModeT emodeT;
+
+	    auto temp = c_Config.find("type");
+		if (temp != c_Config.not_found()) stype = temp->second.data();
+	    temp = c_Config.find("codelistStr");
+		if (temp != c_Config.not_found()) codelistStr = temp->second.data();
+		temp = c_Config.find("mdsSubMode");
+		if (temp != c_Config.not_found()) mdsSubMode = temp->second.data();
+		
+		switch(atoi(mdsSubMode.c_str()))
+		{
+			case 0:
+			{
+				emodeT = MDS_SUB_MODE_SET;
+				break;
+			}
+			case 1:
+			{
+				emodeT = MDS_SUB_MODE_APPEND;
+				break;
+			}
+			case 2:
+			{
+				emodeT = MDS_SUB_MODE_DELETE;
+				break;
+			}
+		}
+
+		/* 根据证券代码列表重新订阅行情 (根据代码后缀区分所属市场) */
+		if(!MDResubscribeByCodePrefix(&cliEnv.tcpChannel,codelistStr.c_str(),emodeT)) 
+		{
+			// this->ShowMessage(
+			// 	severity_levels::error,
+			// 	"send unsubscribemarketdata(%s) failed.", 
+			// 	codelistStr.c_str());
+			cout << "send unsubscribemarketdata failed: " << codelistStr.c_str() << endl;
+		}
+		else
+		{
+			//this->ShowMessage(severity_levels::normal,"subscribe stock:%s mdata success!!!",codelistStr.c_str());
+			cout << "subscribe stock mdata success!!!" << codelistStr.c_str() << endl;
+		}
 	}
 }
 
