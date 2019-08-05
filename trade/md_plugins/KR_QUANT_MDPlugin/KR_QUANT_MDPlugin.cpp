@@ -6,6 +6,9 @@
 
 
 #define SOCKET_ADDRESS "tcp://47.105.111.100:8000"
+#define ADDRESS1 "inproc://test"
+#define ADDRESS2 "tcp://127.0.0.1:8000"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
 const string CKrQuantMDPluginImp::s_strAccountKeyword="username;password;";
 extern char ProcessName[256];
@@ -17,7 +20,7 @@ nn::socket nnsocket(AF_SP, NN_PAIR);
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
-	nnsocket.connect(SOCKET_ADDRESS);
+	nnsocket.connect(ADDRESS3);
 }
 
 CKrQuantMDPluginImp::~CKrQuantMDPluginImp()

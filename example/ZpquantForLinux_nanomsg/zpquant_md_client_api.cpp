@@ -4,6 +4,10 @@
 #include "ZpquantMdApi.h"
 
 #define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
+#define ADDRESS1 "inproc://test"
+#define ADDRESS2 "tcp://127.0.0.1:8000"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
+
 nn::socket nnsocket(AF_SP, NN_PAIR);
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
@@ -13,7 +17,7 @@ namespace Zpquant {
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
-    nnsocket.connect(SOCKET_ADDRESS);
+    nnsocket.connect(ADDRESS3);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
 
