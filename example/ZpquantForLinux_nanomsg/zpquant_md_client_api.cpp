@@ -108,7 +108,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
   char buf[4096];
   while(1)
   {
-        int rc = mdapi->nnsocket.recv(buf, sizeof(buf), 0);
+        int rc = nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
   }
 }
