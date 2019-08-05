@@ -23,8 +23,11 @@ int main ()
 
     while(1)
     {
-        s2.send ("...CCC,client send\n", 19, 0);
-        sleep(2);
+        // s2.send ("...CCC,client send\n", 19, 0);
+        // sleep(2);
+        int rc = s2.recv (buf, sizeof (buf), 0);
+        cout<<"...buf,client recv: " << buf << endl;
+        sleep(1);
     }
     return 0;
 }

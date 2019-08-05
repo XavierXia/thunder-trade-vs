@@ -19,10 +19,11 @@ int main ()
     char buf [5000];
     while(1)
     {
-        int rc = s1.recv (buf, sizeof (buf), 0);
-        cout<<"...buf,server recv: " << buf << endl;
+        // int rc = s1.recv (buf, sizeof (buf), 0);
+        // cout<<"...buf,server recv: " << buf << endl;
+        // sleep(1);
+        s1.send ("...SSS,server send\n", 19, 0);
         sleep(1);
-        // s1.send ("...SSS,server send\n", 19, 0);
     };
     return 0;
 }
