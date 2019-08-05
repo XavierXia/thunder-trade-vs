@@ -499,159 +499,159 @@ BOOL CKrQuantMDPluginImp::MDResubscribeByCodePrefix(MdsApiSessionInfoT *pTcpChan
  */
 
 //可以在该函数上做同一行情的分发,让部署的不同策略从此处得到所需要的行情数据
-static __inline int32
-_MdsApi_OnRtnDepthMarketData_print(MdsApiSessionInfoT *pSessionInfo,
-        SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
-    MdsMktRspMsgBodyT   *pRspMsg = (MdsMktRspMsgBodyT *) pMsgBody;
+// static __inline int32
+// _MdsApi_OnRtnDepthMarketData_print(MdsApiSessionInfoT *pSessionInfo,
+//         SMsgHeadT *pMsgHead, void *pMsgBody, void *pCallbackParams) {
+//     MdsMktRspMsgBodyT   *pRspMsg = (MdsMktRspMsgBodyT *) pMsgBody;
 
-    ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... MdsApi_OnRtnDepthMarketData 接收到消息)\n");
+//     ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... MdsApi_OnRtnDepthMarketData 接收到消息)\n");
 
-    char encodeBuf[8192] = {0};
-    char *pStrMsg = (char *) NULL;
-    char sendJsonDataStr[4086];
+//     char encodeBuf[8192] = {0};
+//     char *pStrMsg = (char *) NULL;
+//     char sendJsonDataStr[4086];
 
-    if (pSessionInfo->protocolType == SMSG_PROTO_BINARY) {
-        /* 将行情消息转换为JSON格式的文本数据 */
-        pStrMsg = (char *) MdsJsonParser_EncodeRsp(
-                pMsgHead, (MdsMktRspMsgBodyT *) pMsgBody,
-                encodeBuf, sizeof(encodeBuf),
-                pSessionInfo->channel.remoteAddr);
-    } else {
-        pStrMsg = (char *) pMsgBody;
-    }
+//     if (pSessionInfo->protocolType == SMSG_PROTO_BINARY) {
+//         /* 将行情消息转换为JSON格式的文本数据 */
+//         pStrMsg = (char *) MdsJsonParser_EncodeRsp(
+//                 pMsgHead, (MdsMktRspMsgBodyT *) pMsgBody,
+//                 encodeBuf, sizeof(encodeBuf),
+//                 pSessionInfo->channel.remoteAddr);
+//     } else {
+//         pStrMsg = (char *) pMsgBody;
+//     }
 
-	const ptime now = microsec_clock::local_time();
-	const time_duration td = now.time_of_day();
+// 	const ptime now = microsec_clock::local_time();
+// 	const time_duration td = now.time_of_day();
     
-    time_t sendDataCurrentTime = td.total_milliseconds();
-    time_t GetLastRecvTime = MdsApi_GetLastRecvTime(pSessionInfo);
-    ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... sendDataCurrentTime:%ld\n",sendDataCurrentTime);
+//     time_t sendDataCurrentTime = td.total_milliseconds();
+//     time_t GetLastRecvTime = MdsApi_GetLastRecvTime(pSessionInfo);
+//     ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... sendDataCurrentTime:%ld\n",sendDataCurrentTime);
 
-    if (pMsgHead->msgSize > 0) {
-        pStrMsg[pMsgHead->msgSize - 1] = '\0';
-        sprintf(sendJsonDataStr,
-                "{" \
-                "\"msgType\":%" __SPK_FMT_HH__ "u, " \
-                "\"sendDCT\":%ld, " \
-                "\"LastRecvT\":%ld, " \
-                "\"mktData\":%s" \
-                "}\n",
-                pMsgHead->msgId,
-                sendDataCurrentTime,
-                GetLastRecvTime,
-                pStrMsg);
-    }
-    else
-    {
-        sprintf(sendJsonDataStr,
-                "{" \
-                "\"msgType\":%" __SPK_FMT_HH__ "u, " \
-                "\"sendDCT\":%ld, " \
-                "\"LastRecvT\":%ld, " \
-                "\"mktData\":{}" \
-                "}",
-                pMsgHead->msgId,
-                sendDataCurrentTime,
-                GetLastRecvTime)
-                ;
-    } 
+//     if (pMsgHead->msgSize > 0) {
+//         pStrMsg[pMsgHead->msgSize - 1] = '\0';
+//         sprintf(sendJsonDataStr,
+//                 "{" \
+//                 "\"msgType\":%" __SPK_FMT_HH__ "u, " \
+//                 "\"sendDCT\":%ld, " \
+//                 "\"LastRecvT\":%ld, " \
+//                 "\"mktData\":%s" \
+//                 "}\n",
+//                 pMsgHead->msgId,
+//                 sendDataCurrentTime,
+//                 GetLastRecvTime,
+//                 pStrMsg);
+//     }
+//     else
+//     {
+//         sprintf(sendJsonDataStr,
+//                 "{" \
+//                 "\"msgType\":%" __SPK_FMT_HH__ "u, " \
+//                 "\"sendDCT\":%ld, " \
+//                 "\"LastRecvT\":%ld, " \
+//                 "\"mktData\":{}" \
+//                 "}",
+//                 pMsgHead->msgId,
+//                 sendDataCurrentTime,
+//                 GetLastRecvTime)
+//                 ;
+//     } 
 
-    /*
-     * 根据消息类型对行情消息进行处理
-     */
-    switch (pMsgHead->msgId) {
-    case MDS_MSGTYPE_L2_TRADE:
-        /* 处理Level2逐笔成交消息 */
-        // printf("... 接收到Level2逐笔成交消息 (exchId[%" __SPK_FMT_HH__ "u], instrId[%d])\n",
-        //         pRspMsg->trade.exchId,
-        //         pRspMsg->trade.instrId);
-        // ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到Level2逐笔成交消息 (exchId[%u], instrId[%d])\n",
-		      //          pRspMsg->trade.exchId,
-		      //          pRspMsg->trade.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     /*
+//      * 根据消息类型对行情消息进行处理
+//      */
+//     switch (pMsgHead->msgId) {
+//     case MDS_MSGTYPE_L2_TRADE:
+//         /* 处理Level2逐笔成交消息 */
+//         // printf("... 接收到Level2逐笔成交消息 (exchId[%" __SPK_FMT_HH__ "u], instrId[%d])\n",
+//         //         pRspMsg->trade.exchId,
+//         //         pRspMsg->trade.instrId);
+//         // ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到Level2逐笔成交消息 (exchId[%u], instrId[%d])\n",
+// 		      //          pRspMsg->trade.exchId,
+// 		      //          pRspMsg->trade.instrId);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_L2_ORDER:
-        /* 处理Level2逐笔委托消息 */
-        // printf("... 接收到Level2逐笔委托消息 (exchId[%" __SPK_FMT_HH__ "u], instrId[%d])\n",
-        //         pRspMsg->order.exchId,
-        //         pRspMsg->order.instrId);
-        // ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到Level2逐笔委托消息 (exchId[%u], instrId[%d])\n",
-		      //           pRspMsg->trade.exchId,
-		      //           pRspMsg->trade.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     case MDS_MSGTYPE_L2_ORDER:
+//         /* 处理Level2逐笔委托消息 */
+//         // printf("... 接收到Level2逐笔委托消息 (exchId[%" __SPK_FMT_HH__ "u], instrId[%d])\n",
+//         //         pRspMsg->order.exchId,
+//         //         pRspMsg->order.instrId);
+//         // ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到Level2逐笔委托消息 (exchId[%u], instrId[%d])\n",
+// 		      //           pRspMsg->trade.exchId,
+// 		      //           pRspMsg->trade.instrId);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
-    case MDS_MSGTYPE_L2_BEST_ORDERS_SNAPSHOT:
-    case MDS_MSGTYPE_L2_MARKET_DATA_INCREMENTAL:
-    case MDS_MSGTYPE_L2_BEST_ORDERS_INCREMENTAL:
-    case MDS_MSGTYPE_L2_MARKET_OVERVIEW:
-    case MDS_MSGTYPE_L2_VIRTUAL_AUCTION_PRICE:
-        /* 处理Level2快照行情消息 */
-        //ShowMessage(severity_levels::normal,"... 接收到Level2快照行情消息 (exchId[%u], instrId[%d])\n",
-        //        pRspMsg->mktDataSnapshot.head.exchId,
-         //       pRspMsg->mktDataSnapshot.head.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
+//     case MDS_MSGTYPE_L2_BEST_ORDERS_SNAPSHOT:
+//     case MDS_MSGTYPE_L2_MARKET_DATA_INCREMENTAL:
+//     case MDS_MSGTYPE_L2_BEST_ORDERS_INCREMENTAL:
+//     case MDS_MSGTYPE_L2_MARKET_OVERVIEW:
+//     case MDS_MSGTYPE_L2_VIRTUAL_AUCTION_PRICE:
+//         /* 处理Level2快照行情消息 */
+//         //ShowMessage(severity_levels::normal,"... 接收到Level2快照行情消息 (exchId[%u], instrId[%d])\n",
+//         //        pRspMsg->mktDataSnapshot.head.exchId,
+//          //       pRspMsg->mktDataSnapshot.head.instrId);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_MARKET_DATA_SNAPSHOT_FULL_REFRESH:
-    case MDS_MSGTYPE_OPTION_SNAPSHOT_FULL_REFRESH:
-    case MDS_MSGTYPE_INDEX_SNAPSHOT_FULL_REFRESH:
-        /* 处理Level1快照行情消息 */
-        //ShowMessage(severity_levels::normal,"... 接收到Level1快照行情消息 (exchId[%u], instrId[%d])\n",
-         //       pRspMsg->mktDataSnapshot.head.exchId,
-         //       pRspMsg->mktDataSnapshot.head.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     case MDS_MSGTYPE_MARKET_DATA_SNAPSHOT_FULL_REFRESH:
+//     case MDS_MSGTYPE_OPTION_SNAPSHOT_FULL_REFRESH:
+//     case MDS_MSGTYPE_INDEX_SNAPSHOT_FULL_REFRESH:
+//         /* 处理Level1快照行情消息 */
+//         //ShowMessage(severity_levels::normal,"... 接收到Level1快照行情消息 (exchId[%u], instrId[%d])\n",
+//          //       pRspMsg->mktDataSnapshot.head.exchId,
+//          //       pRspMsg->mktDataSnapshot.head.instrId);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_SECURITY_STATUS:
-        /* 处理(深圳)证券状态消息 */
-        //ShowMessage(severity_levels::normal,"... 接收到(深圳)证券状态消息 (exchId[%u], instrId[%d])\n",
-         //       pRspMsg->securityStatus.exchId,
-         //       pRspMsg->securityStatus.instrId);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     case MDS_MSGTYPE_SECURITY_STATUS:
+//         /* 处理(深圳)证券状态消息 */
+//         //ShowMessage(severity_levels::normal,"... 接收到(深圳)证券状态消息 (exchId[%u], instrId[%d])\n",
+//          //       pRspMsg->securityStatus.exchId,
+//          //       pRspMsg->securityStatus.instrId);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_TRADING_SESSION_STATUS:
-        /* 处理(上证)市场状态消息 */
-        //ShowMessage(severity_levels::normal,"... 接收到(上证)市场状态消息 (exchId[%u], TradingSessionID[%s])\n",
-        //        pRspMsg->trdSessionStatus.exchId,
-        //        pRspMsg->trdSessionStatus.TradingSessionID);
-    	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
-        break;
+//     case MDS_MSGTYPE_TRADING_SESSION_STATUS:
+//         /* 处理(上证)市场状态消息 */
+//         //ShowMessage(severity_levels::normal,"... 接收到(上证)市场状态消息 (exchId[%u], TradingSessionID[%s])\n",
+//         //        pRspMsg->trdSessionStatus.exchId,
+//         //        pRspMsg->trdSessionStatus.TradingSessionID);
+//     	((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"%s\n",sendJsonDataStr);
+//         break;
 
-    case MDS_MSGTYPE_MARKET_DATA_REQUEST:
-        /* 处理行情订阅请求的应答消息 */
-        if (pMsgHead->status == 0) {
-            ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 行情订阅请求应答, 行情订阅成功!\n");
-        } else {
-            ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"... 行情订阅请求应答, 行情订阅失败! " \
-                    "errCode[%02u %02u]\n",
-                    pMsgHead->status, pMsgHead->detailStatus);
-        }
-        break;
+//     case MDS_MSGTYPE_MARKET_DATA_REQUEST:
+//         /* 处理行情订阅请求的应答消息 */
+//         if (pMsgHead->status == 0) {
+//             ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 行情订阅请求应答, 行情订阅成功!\n");
+//         } else {
+//             ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"... 行情订阅请求应答, 行情订阅失败! " \
+//                     "errCode[%02u %02u]\n",
+//                     pMsgHead->status, pMsgHead->detailStatus);
+//         }
+//         break;
 
-    case MDS_MSGTYPE_TEST_REQUEST:
-        /* 处理测试请求的应答消息 */
-        ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到测试请求的应答消息 (origSendTime[%s], respTime[%s])\n",
-                pRspMsg->testRequestRsp.origSendTime,
-                pRspMsg->testRequestRsp.respTime);
-        break;
+//     case MDS_MSGTYPE_TEST_REQUEST:
+//         /* 处理测试请求的应答消息 */
+//         ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::normal,"... 接收到测试请求的应答消息 (origSendTime[%s], respTime[%s])\n",
+//                 pRspMsg->testRequestRsp.origSendTime,
+//                 pRspMsg->testRequestRsp.respTime);
+//         break;
 
-    case MDS_MSGTYPE_HEARTBEAT:
-        /* 忽略心跳消息 */
-        break;
+//     case MDS_MSGTYPE_HEARTBEAT:
+//         /* 忽略心跳消息 */
+//         break;
 
-    default:
-        ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"无效的消息类型, 忽略之! msgId[0x%02X], server[%s:%d]",
-                pMsgHead->msgId, pSessionInfo->channel.remoteAddr,
-                pSessionInfo->channel.remotePort);
-        return EFTYPE;
-    }
+//     default:
+//         ((CKrQuantMDPluginImp *) pCallbackParams) -> ShowMessage(severity_levels::error,"无效的消息类型, 忽略之! msgId[0x%02X], server[%s:%d]",
+//                 pMsgHead->msgId, pSessionInfo->channel.remoteAddr,
+//                 pSessionInfo->channel.remotePort);
+//         return EFTYPE;
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 static __inline int32
 _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
@@ -710,8 +710,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
                 ;
     }
 
-    nnsocket.send("...md,test!!!",20,0); 
-    nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
+    //nnsocket.send("...md,test!!!",20,0); 
     //发布者
     //((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data", sendJsonDataStr);
 

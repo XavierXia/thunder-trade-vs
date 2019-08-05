@@ -13,7 +13,7 @@
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 namespace Zpquant {
-    
+
 nn::socket nnsocket(AF_SP, NN_PAIR);
 
 CZpquantMdApi::CZpquantMdApi() {
@@ -109,12 +109,212 @@ MdsMktDataSnapshotT:
 
 void* CZpquantMdApi::MdThreadMain(void *pParams)
 {
-  // CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
+  CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
   char buf[4096];
   while(1)
   {
         int rc = nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
+
+        ptree c_Config;
+        std::stringstream jmsg(msg.c_str());  
+        try {
+            boost::property_tree::read_json(jmsg, c_Config);
+        }
+        catch(std::exception & e){
+            fprintf(stdout, "cannot parse from string 'msg(mds_data)' \n");
+            return false;
+        }
+
+        if (c_Config.find("mktData") == c_Config.not_found()) return false;
+        if (c_Config.find("msgType") == c_Config.not_found()) return false;
+        int8 msgType = c_Config.get<int8>("msgType");
+        switch(msgType)
+        {
+            case MDS_MSGTYPE_L2_TRADE:
+            {
+                uint8 exchId = c_Config.get<uint8>("mktData.exchId");
+                uint8 securityType = c_Config.get<uint8>("mktData.securityType");
+                int32 tradeDate = c_Config.get<int32>("mktData.tradeDate");
+                int32 TransactTime = c_Config.get<int32>("mktData.TransactTime");
+                int32 ChannelNo = c_Config.get<int32>("mktData.ChannelNo");
+                int32 ApplSeqNum = c_Config.get<int32>("mktData.ApplSeqNum");
+                string SecurityID = c_Config.get<string>("mktData.SecurityID");
+                string ExecType = c_Config.get<string>("mktData.ExecType");
+                string TradeBSFlag = c_Config.get<string>("mktData.TradeBSFlag");
+                int32 TradePrice = c_Config.get<int32>("mktData.TradePrice");
+                int32 TradeQty = c_Config.get<int32>("mktData.TradeQty");
+                int64 TradeMoney = c_Config.get<int64>("mktData.TradeMoney");
+                int64 BidApplSeqNum = c_Config.get<int64>("mktData.BidApplSeqNum");
+                int64 OfferApplSeqNum = c_Config.get<int64>("mktData.OfferApplSeqNum");
+
+                MdsMktRspMsgBodyT msgBody;
+                msgBody.trade.exchId = exchId;
+                msgBody.trade.securityType = securityType;
+                msgBody.trade.tradeDate = tradeDate;
+                msgBody.trade.TransactTime = TransactTime;
+                msgBody.trade.ChannelNo = ChannelNo;
+                msgBody.trade.ApplSeqNum = ApplSeqNum;
+                //if (SecurityID != NULL) strcpy(msgBody.trade.SecurityID, SecurityID.c_str());
+                //if (ExecType != NULL) strncpy(msgBody.trade.ExecType, ExecType.c_str());
+                //if (TradeBSFlag != NULL) strncpy(msgBody.trade.TradeBSFlag, TradeBSFlag.c_str());
+                msgBody.trade.TradePrice = TradePrice;
+                msgBody.trade.TradeQty = TradeQty;
+                msgBody.trade.TradeMoney = TradeMoney;
+                msgBody.trade.BidApplSeqNum = BidApplSeqNum;
+                msgBody.trade.OfferApplSeqNum = OfferApplSeqNum;
+
+                this->pSpi->OnTradeRtnDepthMarketData(&msgBody);
+                break;
+            }
+            case MDS_MSGTYPE_L2_ORDER:
+            {
+                uint8 exchId = c_Config.get<uint8>("mktData.exchId");
+                uint8 securityType = c_Config.get<uint8>("mktData.securityType");
+                int32 tradeDate = c_Config.get<int32>("mktData.tradeDate");
+                int32 TransactTime = c_Config.get<int32>("mktData.TransactTime");
+                int32 ChannelNo = c_Config.get<int32>("mktData.ChannelNo");
+                int32 ApplSeqNum = c_Config.get<int32>("mktData.ApplSeqNum");
+                string SecurityID = c_Config.get<string>("mktData.SecurityID");
+
+                string Side = c_Config.get<string>("mktData.Side");
+                string OrderType = c_Config.get<string>("mktData.OrderType");
+                int32 Price = c_Config.get<int32>("mktData.Price");
+                int32 OrderQty = c_Config.get<int32>("mktData.OrderQty");
+
+                MdsMktRspMsgBodyT msgBody;
+                msgBody.order.exchId = exchId;
+                msgBody.order.securityType = securityType;
+                msgBody.order.tradeDate = tradeDate;
+                msgBody.order.TransactTime = TransactTime;
+                msgBody.order.ChannelNo = ChannelNo;
+                msgBody.order.ApplSeqNum = ApplSeqNum;
+
+                //if (SecurityID != NULL) strncpy(msgBody.order.SecurityID, SecurityID.c_str(), sizeof(msgBody.order.SecurityID) - 1);
+                //if (Side != NULL) strncpy(msgBody.order.Side, Side.c_str(), sizeof(msgBody.order.Side) - 1);
+                //if (OrderType != NULL) strncpy(msgBody.order.OrderType, OrderType.c_str(), sizeof(msgBody.order.OrderType) - 1);
+                msgBody.order.Price = Price;
+                msgBody.order.OrderQty = OrderQty;
+
+                this->pSpi->OnOrderRtnDepthMarketData(&msgBody);
+                break;
+            }
+            case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
+            {
+                /** 十档买盘价位信息 */
+                //MdsPriceLevelEntryT BidLevels[10];
+                /** 十档卖盘价位信息 */
+                //MdsPriceLevelEntryT OfferLevels[10]; 
+
+                uint8 exchId = c_Config.get<uint8>("mktData.head.exchId");
+                uint8 securityType = c_Config.get<uint8>("mktData.head.securityType");
+                int32 tradeDate = c_Config.get<int32>("mktData.head.tradeDate");
+                int32 updateTime = c_Config.get<int32>("mktData.head.updateTime");
+                int32 mdStreamType = c_Config.get<int32>("mktData.head.mdStreamType");
+
+                string SecurityID = c_Config.get<string>("mktData.body.SecurityID");
+                string TradingPhaseCode = c_Config.get<string>("mktData.body.TradingPhaseCode");
+                uint64 NumTrades = c_Config.get<uint64>("mktData.body.NumTrades");
+                uint64 TotalVolumeTraded = c_Config.get<uint64>("mktData.body.TotalVolumeTraded");
+                int64 TotalValueTraded = c_Config.get<int64>("mktData.body.TotalValueTraded");
+                int32 PrevClosePx = c_Config.get<int32>("mktData.body.PrevClosePx");
+                int32 OpenPx = c_Config.get<int32>("mktData.body.OpenPx");
+                int32 HighPx = c_Config.get<int32>("mktData.body.HighPx");
+                int32 LowPx = c_Config.get<int32>("mktData.body.LowPx");
+                int32 TradePx = c_Config.get<int32>("mktData.body.TradePx");
+                int32 ClosePx = c_Config.get<int32>("mktData.body.ClosePx");
+                int32 IOPV = c_Config.get<int32>("mktData.body.IOPV");
+                int32 NAV = c_Config.get<int32>("mktData.body.NAV");
+                uint64 TotalLongPosition = c_Config.get<uint64>("mktData.body.TotalLongPosition");
+                int64 TotalBidQty = c_Config.get<int64>("mktData.body.TotalBidQty");
+                int64 TotalOfferQty = c_Config.get<int64>("mktData.body.TotalOfferQty");
+                int32 WeightedAvgBidPx = c_Config.get<int32>("mktData.body.WeightedAvgBidPx");
+                int32 WeightedAvgOfferPx = c_Config.get<int32>("mktData.body.WeightedAvgOfferPx");
+                int32 BidPriceLevel = c_Config.get<int32>("mktData.body.BidPriceLevel");       
+                int32 OfferPriceLevel = c_Config.get<int32>("mktData.body.OfferPriceLevel");
+
+                MdsMktRspMsgBodyT msgBody;
+                msgBody.mktDataSnapshot.head.exchId = exchId;
+                msgBody.mktDataSnapshot.head.securityType = securityType;
+                msgBody.mktDataSnapshot.head.tradeDate = tradeDate;
+                msgBody.mktDataSnapshot.head.updateTime = updateTime;
+                msgBody.mktDataSnapshot.head.mdStreamType = mdStreamType;
+
+                //if (SecurityID != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.SecurityID, SecurityID.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.SecurityID) - 1);
+                //if (TradingPhaseCode != NULL) strncpy(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode, TradingPhaseCode.c_str(), sizeof(msgBody.mktDataSnapshot.l2Stock.TradingPhaseCode) - 1);
+
+                msgBody.mktDataSnapshot.l2Stock.NumTrades = NumTrades;
+                msgBody.mktDataSnapshot.l2Stock.TotalVolumeTraded = TotalVolumeTraded;
+                msgBody.mktDataSnapshot.l2Stock.TotalValueTraded = TotalValueTraded;
+                msgBody.mktDataSnapshot.l2Stock.PrevClosePx = PrevClosePx;
+                msgBody.mktDataSnapshot.l2Stock.TradePx = TradePx;
+                msgBody.mktDataSnapshot.l2Stock.OpenPx = OpenPx;
+                msgBody.mktDataSnapshot.l2Stock.ClosePx = ClosePx;
+                msgBody.mktDataSnapshot.l2Stock.HighPx = HighPx;
+                msgBody.mktDataSnapshot.l2Stock.LowPx = LowPx;
+                msgBody.mktDataSnapshot.l2Stock.IOPV = IOPV;
+                msgBody.mktDataSnapshot.l2Stock.NAV = NAV;
+                msgBody.mktDataSnapshot.l2Stock.TotalLongPosition = TotalLongPosition;
+                msgBody.mktDataSnapshot.l2Stock.TotalBidQty = TotalBidQty;
+                msgBody.mktDataSnapshot.l2Stock.TotalOfferQty = TotalOfferQty;
+                msgBody.mktDataSnapshot.l2Stock.WeightedAvgBidPx = WeightedAvgBidPx;
+                msgBody.mktDataSnapshot.l2Stock.WeightedAvgOfferPx = WeightedAvgOfferPx;
+                msgBody.mktDataSnapshot.l2Stock.BidPriceLevel = BidPriceLevel;
+                msgBody.mktDataSnapshot.l2Stock.OfferPriceLevel = OfferPriceLevel;
+
+                ptree child_Bid = c_Config.get_child("mktData.body.bidPrice");
+                    int i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.BidLevels[i].Price = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                child_Bid = c_Config.get_child("mktData.body.bidNumberOfOrders");
+                    i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.BidLevels[i].NumberOfOrders = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                child_Bid = c_Config.get_child("mktData.body.bidOrderQty");
+                    i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.BidLevels[i].OrderQty = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                child_Bid = c_Config.get_child("mktData.body.offerPrice");
+                    i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].Price = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                child_Bid = c_Config.get_child("mktData.body.offerNumberOfOrders");
+                    i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].NumberOfOrders = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                child_Bid = c_Config.get_child("mktData.body.offerOrderQty");
+                    i = 0;
+                    BOOST_FOREACH(boost::property_tree::ptree::value_type &vt, child_Bid) {
+                    msgBody.mktDataSnapshot.l2Stock.OfferLevels[i].OrderQty = vt.second.get_value<int32>();
+                    i++;
+                }
+
+                this->pSpi->OnTickRtnDepthMarketData(&msgBody);
+                break;
+            }
+            default:
+            {
+                cout << "other category info... \n" << endl;
+                cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
+                break;
+            }
+
+        }
   }
 }
 
