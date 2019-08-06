@@ -1,5 +1,5 @@
-#ifndef _OES_CLIENT_API_H
-#define _OES_CLIENT_API_H
+#ifndef _ZPQUANT_CLIENT_API_H
+#define _ZPQUANT_CLIENT_API_H
 
 
 #if defined(ISLIB) && defined(WIN32)
