@@ -57,7 +57,6 @@ public:
     /* 查询市场状态信息回调 */
     virtual void        OnQueryMarketState(const OesMarketStateItemT *pMarketState, const OesQryCursorT *pCursor, int32 requestId);
 
-    virtual void RegisterNanoMsgS(nn::socket ss);
 public:
     OesClientMySpi();
     virtual ~OesClientMySpi();

@@ -1,23 +1,27 @@
 #include    <iostream>
 #include    "oes_client_spi.h"
 
+#define SOCKET_ADDRESS "tcp://47.105.111.100:8002"
+#define ADDRESS1 "inproc://test"
+#define ADDRESS3 "ipc:///tmp/reqrep.ipc"
+
 
 /* 委托业务拒绝回报 */
 void
 OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderReject) {
-      sprintf(sendJsonDataStr, ">>> 收到委托业务拒绝回报: " \
-            "客户端环境号[%" __SPK_FMT_HH__ "d], " \
-            "客户委托流水号[%d], 证券账户[%s], 证券代码[%s], " \
-            "市场代码[%" __SPK_FMT_HH__ "u], 委托类型[%" __SPK_FMT_HH__ "u], " \
-            "买卖类型[%" __SPK_FMT_HH__ "u], 委托数量[%d], 委托价格[%d], " \
-            "原始委托的客户订单编号[%" __SPK_FMT_LL__ "d], 错误码[%d]\n",
-            pOrderReject->clEnvId, pOrderReject->clSeqNo,
-            pOrderReject->invAcctId, pOrderReject->securityId,
-            pOrderReject->mktId, pOrderReject->ordType,
-            pOrderReject->bsType, pOrderReject->ordQty,
-            pOrderReject->ordPrice, pOrderReject->origClOrdId, errorCode);
+      // sprintf(sendJsonDataStr, ">>> 收到委托业务拒绝回报: " \
+      //       "客户端环境号[%" __SPK_FMT_HH__ "d], " \
+      //       "客户委托流水号[%d], 证券账户[%s], 证券代码[%s], " \
+      //       "市场代码[%" __SPK_FMT_HH__ "u], 委托类型[%" __SPK_FMT_HH__ "u], " \
+      //       "买卖类型[%" __SPK_FMT_HH__ "u], 委托数量[%d], 委托价格[%d], " \
+      //       "原始委托的客户订单编号[%" __SPK_FMT_LL__ "d], 错误码[%d]\n",
+      //       pOrderReject->clEnvId, pOrderReject->clSeqNo,
+      //       pOrderReject->invAcctId, pOrderReject->securityId,
+      //       pOrderReject->mktId, pOrderReject->ordType,
+      //       pOrderReject->bsType, pOrderReject->ordQty,
+      //       pOrderReject->ordPrice, pOrderReject->origClOrdId, errorCode);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":\"6\",\"clEnvId\":%d,\"clSeqNo\":%d,\"invAcctId\":\"%s\", " \
@@ -31,7 +35,8 @@ OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderRej
                   pOrderReject->bsType, pOrderReject->ordQty,
                   pOrderReject->ordPrice, pOrderReject->origClOrdId, errorCode);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 
 }
 
@@ -39,32 +44,32 @@ OesClientMySpi::OnBusinessReject(int32 errorCode, const OesOrdRejectT *pOrderRej
 /* 委托已收回报 */
 void
 OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
-      sprintf(sendJsonDataStr, ">>> 收到委托已收回报: " \
-            "客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
-            "会员内部编号[%" __SPK_FMT_LL__ "d], 证券账户[%s], 证券代码[%s], " \
-            "市场代码[%" __SPK_FMT_HH__ "u], 订单类型[%" __SPK_FMT_HH__ "u], " \
-            "买卖类型[%" __SPK_FMT_HH__ "u], 委托状态[%" __SPK_FMT_HH__ "u], " \
-            "委托日期[%d], 委托接收时间[%d], 委托确认时间[%d], " \
-            "委托数量[%d], 委托价格[%d], 撤单数量[%d], 累计成交份数[%d], " \
-            "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
-            "累计交易佣金[%" __SPK_FMT_LL__ "d], 冻结交易金额[%" __SPK_FMT_LL__ "d], " \
-            "冻结债券利息[%" __SPK_FMT_LL__ "d], 冻结交易佣金[%" __SPK_FMT_LL__ "d], " \
-            "被撤内部委托编号[%" __SPK_FMT_LL__ "d], 拒绝原因[%d], 交易所错误码[%d]\n",
-            pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
-            pOrderInsert->clOrdId, pOrderInsert->invAcctId,
-            pOrderInsert->securityId, pOrderInsert->mktId,
-            pOrderInsert->ordType, pOrderInsert->bsType,
-            pOrderInsert->ordStatus, pOrderInsert->ordDate,
-            pOrderInsert->ordTime, pOrderInsert->ordCnfmTime,
-            pOrderInsert->ordQty, pOrderInsert->ordPrice,
-            pOrderInsert->canceledQty, pOrderInsert->cumQty,
-            pOrderInsert->cumAmt, pOrderInsert->cumInterest,
-            pOrderInsert->cumFee, pOrderInsert->frzAmt,
-            pOrderInsert->frzInterest, pOrderInsert->frzFee,
-            pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
-            pOrderInsert->exchErrCode);
+      // sprintf(sendJsonDataStr, ">>> 收到委托已收回报: " \
+      //       "客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
+      //       "会员内部编号[%" __SPK_FMT_LL__ "d], 证券账户[%s], 证券代码[%s], " \
+      //       "市场代码[%" __SPK_FMT_HH__ "u], 订单类型[%" __SPK_FMT_HH__ "u], " \
+      //       "买卖类型[%" __SPK_FMT_HH__ "u], 委托状态[%" __SPK_FMT_HH__ "u], " \
+      //       "委托日期[%d], 委托接收时间[%d], 委托确认时间[%d], " \
+      //       "委托数量[%d], 委托价格[%d], 撤单数量[%d], 累计成交份数[%d], " \
+      //       "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
+      //       "累计交易佣金[%" __SPK_FMT_LL__ "d], 冻结交易金额[%" __SPK_FMT_LL__ "d], " \
+      //       "冻结债券利息[%" __SPK_FMT_LL__ "d], 冻结交易佣金[%" __SPK_FMT_LL__ "d], " \
+      //       "被撤内部委托编号[%" __SPK_FMT_LL__ "d], 拒绝原因[%d], 交易所错误码[%d]\n",
+      //       pOrderInsert->clEnvId, pOrderInsert->clSeqNo,
+      //       pOrderInsert->clOrdId, pOrderInsert->invAcctId,
+      //       pOrderInsert->securityId, pOrderInsert->mktId,
+      //       pOrderInsert->ordType, pOrderInsert->bsType,
+      //       pOrderInsert->ordStatus, pOrderInsert->ordDate,
+      //       pOrderInsert->ordTime, pOrderInsert->ordCnfmTime,
+      //       pOrderInsert->ordQty, pOrderInsert->ordPrice,
+      //       pOrderInsert->canceledQty, pOrderInsert->cumQty,
+      //       pOrderInsert->cumAmt, pOrderInsert->cumInterest,
+      //       pOrderInsert->cumFee, pOrderInsert->frzAmt,
+      //       pOrderInsert->frzInterest, pOrderInsert->frzFee,
+      //       pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
+      //       pOrderInsert->exchErrCode);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d,\"clEnvId\":%d,\"clSeqNo\":%d,\"clOrdId\":%d,\"invAcctId\":\"%s\", " \
@@ -89,7 +94,7 @@ OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
                   pOrderInsert->origClOrdId, pOrderInsert->ordRejReason,
                   pOrderInsert->exchErrCode);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
       spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
@@ -97,32 +102,32 @@ OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
 /* 委托确认回报 */
 void
 OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) {
-      sprintf(sendJsonDataStr, ">>> 收到委托回报: " \
-            "客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
-            "会员内部编号[%" __SPK_FMT_LL__ "d], 证券账户[%s], 证券代码[%s], " \
-            "市场代码[%" __SPK_FMT_HH__ "u], 订单类型[%" __SPK_FMT_HH__ "u], " \
-            "买卖类型[%" __SPK_FMT_HH__ "u], 委托状态[%" __SPK_FMT_HH__ "u], " \
-            "委托日期[%d], 委托接收时间[%d], 委托确认时间[%d], "
-            "委托数量[%d], 委托价格[%d], 撤单数量[%d], 累计成交份数[%d], " \
-            "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
-            "累计交易佣金[%" __SPK_FMT_LL__ "d], 冻结交易金额[%" __SPK_FMT_LL__ "d], " \
-            "冻结债券利息[%" __SPK_FMT_LL__ "d], 冻结交易佣金[%" __SPK_FMT_LL__ "d], " \
-            "被撤内部委托编号[%" __SPK_FMT_LL__ "d], 拒绝原因[%d], 交易所错误码[%d]\n",
-            pOrderReport->clEnvId, pOrderReport->clSeqNo,
-            pOrderReport->clOrdId, pOrderReport->invAcctId,
-            pOrderReport->securityId, pOrderReport->mktId,
-            pOrderReport->ordType, pOrderReport->bsType,
-            pOrderReport->ordStatus, pOrderReport->ordDate,
-            pOrderReport->ordTime, pOrderReport->ordCnfmTime,
-            pOrderReport->ordQty, pOrderReport->ordPrice,
-            pOrderReport->canceledQty, pOrderReport->cumQty,
-            pOrderReport->cumAmt, pOrderReport->cumInterest,
-            pOrderReport->cumFee, pOrderReport->frzAmt,
-            pOrderReport->frzInterest, pOrderReport->frzFee,
-            pOrderReport->origClOrdId, pOrderReport->ordRejReason,
-            pOrderReport->exchErrCode);
+      // sprintf(sendJsonDataStr, ">>> 收到委托回报: " \
+      //       "客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
+      //       "会员内部编号[%" __SPK_FMT_LL__ "d], 证券账户[%s], 证券代码[%s], " \
+      //       "市场代码[%" __SPK_FMT_HH__ "u], 订单类型[%" __SPK_FMT_HH__ "u], " \
+      //       "买卖类型[%" __SPK_FMT_HH__ "u], 委托状态[%" __SPK_FMT_HH__ "u], " \
+      //       "委托日期[%d], 委托接收时间[%d], 委托确认时间[%d], "
+      //       "委托数量[%d], 委托价格[%d], 撤单数量[%d], 累计成交份数[%d], " \
+      //       "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
+      //       "累计交易佣金[%" __SPK_FMT_LL__ "d], 冻结交易金额[%" __SPK_FMT_LL__ "d], " \
+      //       "冻结债券利息[%" __SPK_FMT_LL__ "d], 冻结交易佣金[%" __SPK_FMT_LL__ "d], " \
+      //       "被撤内部委托编号[%" __SPK_FMT_LL__ "d], 拒绝原因[%d], 交易所错误码[%d]\n",
+      //       pOrderReport->clEnvId, pOrderReport->clSeqNo,
+      //       pOrderReport->clOrdId, pOrderReport->invAcctId,
+      //       pOrderReport->securityId, pOrderReport->mktId,
+      //       pOrderReport->ordType, pOrderReport->bsType,
+      //       pOrderReport->ordStatus, pOrderReport->ordDate,
+      //       pOrderReport->ordTime, pOrderReport->ordCnfmTime,
+      //       pOrderReport->ordQty, pOrderReport->ordPrice,
+      //       pOrderReport->canceledQty, pOrderReport->cumQty,
+      //       pOrderReport->cumAmt, pOrderReport->cumInterest,
+      //       pOrderReport->cumFee, pOrderReport->frzAmt,
+      //       pOrderReport->frzInterest, pOrderReport->frzFee,
+      //       pOrderReport->origClOrdId, pOrderReport->ordRejReason,
+      //       pOrderReport->exchErrCode);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d,\"clEnvId\":%d,\"clSeqNo\":%d,\"clOrdId\":%d,\"invAcctId\":\"%s\", " \
@@ -147,7 +152,7 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
                   pOrderReport->origClOrdId, pOrderReport->ordRejReason,
                   pOrderReport->exchErrCode);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
       spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
@@ -155,26 +160,26 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
 /* 成交回报 */
 void
 OesClientMySpi::OnTradeReport(const OesTrdCnfmT *pTradeReport) {
-      sprintf(sendJsonDataStr, ">>> 收到成交回报: " \
-            "成交编号[%" __SPK_FMT_LL__ "d], 会员内部编号[%" __SPK_FMT_LL__ "d], " \
-            "委托客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
-            "证券账户[%s], 证券代码[%s], 市场代码[%" __SPK_FMT_HH__ "u], " \
-            "买卖方向[%" __SPK_FMT_HH__ "u], 委托买卖类型[%" __SPK_FMT_HH__ "u], "
-            "成交日期[%d], 成交时间[%d], 成交数量[%d], 成交价格[%d], " \
-            "成交金额[%" __SPK_FMT_LL__ "d], 累计成交数量[%d], " \
-            "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
-            "累计交易费用[%" __SPK_FMT_LL__ "d], PBU代码[%d]\n",
-            pTradeReport->exchTrdNum, pTradeReport->clOrdId,
-            pTradeReport->clEnvId, pTradeReport->clSeqNo,
-            pTradeReport->invAcctId, pTradeReport->securityId,
-            pTradeReport->mktId, pTradeReport->trdSide,
-            pTradeReport->ordBuySellType, pTradeReport->trdDate,
-            pTradeReport->trdTime, pTradeReport->trdQty, pTradeReport->trdPrice,
-            pTradeReport->trdAmt, pTradeReport->cumQty, pTradeReport->cumAmt,
-            pTradeReport->cumInterest, pTradeReport->cumFee,
-            pTradeReport->pbuId);
+      // sprintf(sendJsonDataStr, ">>> 收到成交回报: " \
+      //       "成交编号[%" __SPK_FMT_LL__ "d], 会员内部编号[%" __SPK_FMT_LL__ "d], " \
+      //       "委托客户端环境号[%" __SPK_FMT_HH__ "d], 客户委托流水号[%d], " \
+      //       "证券账户[%s], 证券代码[%s], 市场代码[%" __SPK_FMT_HH__ "u], " \
+      //       "买卖方向[%" __SPK_FMT_HH__ "u], 委托买卖类型[%" __SPK_FMT_HH__ "u], "
+      //       "成交日期[%d], 成交时间[%d], 成交数量[%d], 成交价格[%d], " \
+      //       "成交金额[%" __SPK_FMT_LL__ "d], 累计成交数量[%d], " \
+      //       "累计成交金额[%" __SPK_FMT_LL__ "d], 累计债券利息[%" __SPK_FMT_LL__ "d], " \
+      //       "累计交易费用[%" __SPK_FMT_LL__ "d], PBU代码[%d]\n",
+      //       pTradeReport->exchTrdNum, pTradeReport->clOrdId,
+      //       pTradeReport->clEnvId, pTradeReport->clSeqNo,
+      //       pTradeReport->invAcctId, pTradeReport->securityId,
+      //       pTradeReport->mktId, pTradeReport->trdSide,
+      //       pTradeReport->ordBuySellType, pTradeReport->trdDate,
+      //       pTradeReport->trdTime, pTradeReport->trdQty, pTradeReport->trdPrice,
+      //       pTradeReport->trdAmt, pTradeReport->cumQty, pTradeReport->cumAmt,
+      //       pTradeReport->cumInterest, pTradeReport->cumFee,
+      //       pTradeReport->pbuId);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d,\"exchTrdNum\":%d,\"clOrdId\":%d,\"clEnvId\":%d,\"clSeqNo\":%d,\"invAcctId\":\"%s\", " \
@@ -194,50 +199,51 @@ OesClientMySpi::OnTradeReport(const OesTrdCnfmT *pTradeReport) {
                   pTradeReport->cumInterest, pTradeReport->cumFee,
                   pTradeReport->pbuId);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
 /* 资金变动回报 */
 void
 OesClientMySpi::OnCashAssetVariation(const OesCashAssetItemT *pCashAssetItem) {
-      sprintf(sendJsonDataStr, ">>> 收到资金变动回报: " \
-            "资金账户代码[%s], 客户代码[%s], " \
-            "币种[%" __SPK_FMT_HH__ "u], " \
-            "资金类型[%" __SPK_FMT_HH__ "u], " \
-            "资金账户状态[%" __SPK_FMT_HH__ "u], " \
-            "期初余额[%" __SPK_FMT_LL__ "d], " \
-            "期初可用余额[%" __SPK_FMT_LL__ "d], " \
-            "期初可取余额[%" __SPK_FMT_LL__ "d], " \
-            "不可用余额[%" __SPK_FMT_LL__ "d], " \
-            "累计存入金额[%" __SPK_FMT_LL__ "d], " \
-            "累计提取金额[%" __SPK_FMT_LL__ "d], " \
-            "当前提取冻结金额[%" __SPK_FMT_LL__ "d], " \
-            "累计卖金额[%" __SPK_FMT_LL__ "d], " \
-            "累计买金额[%" __SPK_FMT_LL__ "d], " \
-            "当前买冻结金额[%" __SPK_FMT_LL__ "d], " \
-            "累计费用金额[%" __SPK_FMT_LL__ "d], " \
-            "当前费用冻结金额[%" __SPK_FMT_LL__ "d], " \
-            "当前维持保证金金额[%" __SPK_FMT_LL__ "d], " \
-            "当前保证金冻结金额[%" __SPK_FMT_LL__ "d], " \
-            "当前余额[%" __SPK_FMT_LL__ "d], " \
-            "当前可用余额[%" __SPK_FMT_LL__ "d], " \
-            "当前可取余额[%" __SPK_FMT_LL__ "d]\n",
-            pCashAssetItem->cashAcctId, pCashAssetItem->custId,
-            pCashAssetItem->currType, pCashAssetItem->cashType,
-            pCashAssetItem->cashAcctStatus, pCashAssetItem->beginningBal,
-            pCashAssetItem->beginningAvailableBal,
-            pCashAssetItem->beginningDrawableBal,
-            pCashAssetItem->disableBal, pCashAssetItem->totalDepositAmt,
-            pCashAssetItem->totalWithdrawAmt, pCashAssetItem->withdrawFrzAmt,
-            pCashAssetItem->totalSellAmt, pCashAssetItem->totalBuyAmt,
-            pCashAssetItem->buyFrzAmt, pCashAssetItem->totalFeeAmt,
-            pCashAssetItem->feeFrzAmt, pCashAssetItem->marginAmt,
-            pCashAssetItem->marginFrzAmt, pCashAssetItem->currentTotalBal,
-            pCashAssetItem->currentAvailableBal,
-            pCashAssetItem->currentDrawableBal);
+      // sprintf(sendJsonDataStr, ">>> 收到资金变动回报: " \
+      //       "资金账户代码[%s], 客户代码[%s], " \
+      //       "币种[%" __SPK_FMT_HH__ "u], " \
+      //       "资金类型[%" __SPK_FMT_HH__ "u], " \
+      //       "资金账户状态[%" __SPK_FMT_HH__ "u], " \
+      //       "期初余额[%" __SPK_FMT_LL__ "d], " \
+      //       "期初可用余额[%" __SPK_FMT_LL__ "d], " \
+      //       "期初可取余额[%" __SPK_FMT_LL__ "d], " \
+      //       "不可用余额[%" __SPK_FMT_LL__ "d], " \
+      //       "累计存入金额[%" __SPK_FMT_LL__ "d], " \
+      //       "累计提取金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前提取冻结金额[%" __SPK_FMT_LL__ "d], " \
+      //       "累计卖金额[%" __SPK_FMT_LL__ "d], " \
+      //       "累计买金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前买冻结金额[%" __SPK_FMT_LL__ "d], " \
+      //       "累计费用金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前费用冻结金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前维持保证金金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前保证金冻结金额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前余额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前可用余额[%" __SPK_FMT_LL__ "d], " \
+      //       "当前可取余额[%" __SPK_FMT_LL__ "d]\n",
+      //       pCashAssetItem->cashAcctId, pCashAssetItem->custId,
+      //       pCashAssetItem->currType, pCashAssetItem->cashType,
+      //       pCashAssetItem->cashAcctStatus, pCashAssetItem->beginningBal,
+      //       pCashAssetItem->beginningAvailableBal,
+      //       pCashAssetItem->beginningDrawableBal,
+      //       pCashAssetItem->disableBal, pCashAssetItem->totalDepositAmt,
+      //       pCashAssetItem->totalWithdrawAmt, pCashAssetItem->withdrawFrzAmt,
+      //       pCashAssetItem->totalSellAmt, pCashAssetItem->totalBuyAmt,
+      //       pCashAssetItem->buyFrzAmt, pCashAssetItem->totalFeeAmt,
+      //       pCashAssetItem->feeFrzAmt, pCashAssetItem->marginAmt,
+      //       pCashAssetItem->marginFrzAmt, pCashAssetItem->currentTotalBal,
+      //       pCashAssetItem->currentAvailableBal,
+      //       pCashAssetItem->currentDrawableBal);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":%d,\"cashAcctId\":\"%s\",\"custId\":\"%s\",\"currType\":%d,\"cashType\":%d, " \
@@ -261,7 +267,8 @@ OesClientMySpi::OnCashAssetVariation(const OesCashAssetItemT *pCashAssetItem) {
                   pCashAssetItem->currentAvailableBal,
                   pCashAssetItem->currentDrawableBal);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -336,7 +343,8 @@ OesClientMySpi::OnStockHoldingVariation(const OesStkHoldingItemT *pStkHoldingIte
                   pStkHoldingItem->trsfOutAvlHld, pStkHoldingItem->lockAvlHld,
                   pStkHoldingItem->coveredAvlHld);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -368,7 +376,8 @@ OesClientMySpi::OnFundTrsfReject(int32 errorCode,
                   pFundTrsfReject->cashAcctId, pFundTrsfReject->isAllotOnly,
                   pFundTrsfReject->direct, pFundTrsfReject->occurAmt);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -412,7 +421,8 @@ OesClientMySpi::OnFundTrsfReport(int32 errorCode,
                   pFundTrsfReport->operTime, pFundTrsfReport->dclrTime,
                   pFundTrsfReport->doneTime);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -434,7 +444,8 @@ OesClientMySpi::OnMarketState(const OesMarketStateItemT *pMarketStateItem) {
                   pMarketStateItem->exchId, pMarketStateItem->platformId,
                   pMarketStateItem->mktId, pMarketStateItem->mktState);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -488,7 +499,8 @@ OesClientMySpi::OnQueryOrder(const OesOrdItemT *pOrder,
             pOrder->frzFee, pOrder->origClOrdId, pOrder->ordRejReason,
             pOrder->exchErrCode);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -533,7 +545,8 @@ OesClientMySpi::OnQueryTrade(const OesTrdItemT *pTrade,
                   pTrade->trdAmt, pTrade->cumQty, pTrade->cumAmt, pTrade->cumInterest,
                   pTrade->cumFee, pTrade->pbuId);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -587,7 +600,8 @@ OesClientMySpi::OnQueryCashAsset(const OesCashAssetItemT *pCashAsset,
                   pCashAsset->marginFrzAmt, pCashAsset->currentTotalBal,
                   pCashAsset->currentAvailableBal, pCashAsset->currentDrawableBal);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 /*
@@ -656,8 +670,9 @@ OesClientMySpi::OnQueryStkHolding(const OesStkHoldingItemT *pStkHolding,
                   pStkHolding->sellAvlHld, pStkHolding->trsfOutAvlHld,
                   pStkHolding->lockAvlHld);
 
-       fprintf(stdout, sendRespData2client);
-       publisher.publish("oes_resp",sendRespData2client);
+       //fprintf(stdout, sendRespData2client);
+       //publisher.publish("oes_resp",sendRespData2client);
+       spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -692,7 +707,8 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
                   pLotWinning->rejReason, pLotWinning->lotDate, pLotWinning->assignNum,
                   pLotWinning->lotQty, pLotWinning->lotPrice, pLotWinning->lotAmt);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -700,17 +716,17 @@ OesClientMySpi::OnQueryLotWinning(const OesLotWinningItemT *pLotWinning,
 void
 OesClientMySpi::OnQueryCustInfo(const OesCustItemT *pCust,
         const OesQryCursorT *pCursor, int32 requestId) {
-      sprintf(sendJsonDataStr, ">>> 查询到客户信息: index[%d], isEnd[%c], " \
-            "客户ID[%s], 客户类型[%" __SPK_FMT_HH__ "u], " \
-            "客户状态[%" __SPK_FMT_HH__ "u], 风险评级[%" __SPK_FMT_HH__ "u], " \
-            "机构标志[%" __SPK_FMT_HH__ "u], 投资者分类[%c]\n",
-            pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
-            pCust->custId, pCust->custType, pCust->status,
-            pCust->riskLevel, pCust->institutionFlag,
-            pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
-                    '0' : pCust->investorClass + 'A' - 1);
+      // sprintf(sendJsonDataStr, ">>> 查询到客户信息: index[%d], isEnd[%c], " \
+      //       "客户ID[%s], 客户类型[%" __SPK_FMT_HH__ "u], " \
+      //       "客户状态[%" __SPK_FMT_HH__ "u], 风险评级[%" __SPK_FMT_HH__ "u], " \
+      //       "机构标志[%" __SPK_FMT_HH__ "u], 投资者分类[%c]\n",
+      //       pCursor->seqNo, pCursor->isEnd ? 'Y' : 'N',
+      //       pCust->custId, pCust->custType, pCust->status,
+      //       pCust->riskLevel, pCust->institutionFlag,
+      //       pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
+      //               '0' : pCust->investorClass + 'A' - 1);
 
-      fprintf(stdout, sendJsonDataStr);
+      // fprintf(stdout, sendJsonDataStr);
 
       sprintf(sendRespData2client, 
                   "{\"msgId\":\"13\", \"seqNo\":%d,\"isEnd\":\"%s\", " \
@@ -723,7 +739,8 @@ OesClientMySpi::OnQueryCustInfo(const OesCustItemT *pCust,
                   pCust->investorClass == OES_INVESTOR_CLASS_NORMAL ?
                           '0' : pCust->investorClass + 'A' - 1);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -752,7 +769,8 @@ OesClientMySpi::OnQueryInvAcct(const OesInvAcctItemT *pInvAcct,
             pInvAcct->custId, pInvAcct->status,
             pInvAcct->subscriptionQuota);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -792,7 +810,8 @@ OesClientMySpi::OnQueryCommissionRate(
             pCommissionRate->calcFeeMode, pCommissionRate->feeRate,
             pCommissionRate->minFee, pCommissionRate->maxFee);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -837,7 +856,8 @@ OesClientMySpi::OnQueryFundTransferSerial(
                   pFundTrsf->operTime, pFundTrsf->dclrTime,
                   pFundTrsf->doneTime);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -885,7 +905,8 @@ OesClientMySpi::OnQueryIssue(const OesIssueItemT *pIssue,
             pIssue->ordMinQty, pIssue->issuePrice, pIssue->ceilPrice,
             pIssue->floorPrice);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -933,7 +954,8 @@ OesClientMySpi::OnQueryStock(const OesStockItemT *pStock,
             pStock->priceLimit[OES_TRD_SESS_TYPE_T].ceilPrice,
             pStock->priceLimit[OES_TRD_SESS_TYPE_T].floorPrice);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -966,7 +988,8 @@ OesClientMySpi::OnQueryEtf(const OesEtfItemT *pEtf,
             pEtf->maxCashRatio, pEtf->navPerCU, pEtf->cashCmpoent,
             pEtf->componentCnt);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -999,7 +1022,8 @@ OesClientMySpi::OnQueryEtfComponent(const OesEtfComponentItemT *pEtfComponent,
             pEtfComponent->qty, pEtfComponent->premiumRate,
             pEtfComponent->creationSubCash, pEtfComponent->redemptionCashSub);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -1025,21 +1049,19 @@ OesClientMySpi::OnQueryMarketState(const OesMarketStateItemT *pMarketState,
             pMarketState->exchId, pMarketState->platformId,
             pMarketState->mktId, pMarketState->mktState);
 
-      publisher.publish("oes_resp",sendRespData2client);
+      //publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
 OesClientMySpi::OesClientMySpi() {
-    if(!publisher.connect())
-        throw std::runtime_error("OesClientMySpi,Can not connect redis,publisher!!!");
+    // if(!publisher.connect())
+    //     throw std::runtime_error("OesClientMySpi,Can not connect redis,publisher!!!");
+      spisocket.socket_set(AF_SP, NN_PAIR);
+      spisocket.connect(SOCKET_ADDRESS);
 }
 
 
 OesClientMySpi::~OesClientMySpi() {
     /* do nothing */
-}
-
-void OesClientMySpi::RegisterNanoMsgS(nn::socket ss)
-{
-      spisocket=ss;
 }
