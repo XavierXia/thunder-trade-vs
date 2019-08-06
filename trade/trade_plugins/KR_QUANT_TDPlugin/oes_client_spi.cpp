@@ -90,6 +90,7 @@ OesClientMySpi::OnOrderInsert(const OesOrdCnfmT *pOrderInsert) {
                   pOrderInsert->exchErrCode);
 
       publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
@@ -147,6 +148,7 @@ OesClientMySpi::OnOrderReport(int32 errorCode, const OesOrdCnfmT *pOrderReport) 
                   pOrderReport->exchErrCode);
 
       publisher.publish("oes_resp",sendRespData2client);
+      spisocket.send(sendRespData2client,strlen(sendRespData2client)+1,0);
 }
 
 
