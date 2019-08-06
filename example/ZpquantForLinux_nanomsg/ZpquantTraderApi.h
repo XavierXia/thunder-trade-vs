@@ -77,6 +77,7 @@ public:
     redox::Subscriber subscriber;
     redox::Redox publisher;
     nn::socket tdnnsocket;
+    nn::socket tdnnsocket_resp;
 
 public:
     CZpquantTradeApi();

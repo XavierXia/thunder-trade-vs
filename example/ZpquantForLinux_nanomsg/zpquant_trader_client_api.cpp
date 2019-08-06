@@ -3,10 +3,11 @@
 #include "ZpquantTraderApi.h"
 #include <nanomsg/pair.h>
 
-#define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
+#define SOCKET_ADDRESS "tcp://127.0.0.1:8001"
 #define ADDRESS1 "inproc://test"
 #define ADDRESS2 "tcp://*:8001"
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"
+#define ADDRESS4 "tcp://*:8002"
 
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
@@ -17,6 +18,9 @@ CZpquantTradeApi::CZpquantTradeApi() {
     pSpi = NULL;
     tdnnsocket.socket_set(AF_SP, NN_PAIR);
     tdnnsocket.bind(ADDRESS2);
+
+    tdnnsocket_resp.socket_set(AF_SP, NN_PAIR);
+    tdnnsocket_resp.bind(ADDRESS4);
 }
 
 
@@ -73,7 +77,7 @@ void* CZpquantTradeApi::tradeThreadMain(void *pParams)
   char buf[4096];
   while(1)
   {
-        int rc = tdapi->tdnnsocket.recv(buf, sizeof(buf), 0);
+        int rc = tdapi->tdnnsocket_resp.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,tradeThreadMain recv: " << buf << endl;
 
         ptree c_Config;
