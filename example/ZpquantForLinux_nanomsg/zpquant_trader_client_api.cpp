@@ -78,7 +78,7 @@ void* CZpquantTradeApi::tradeThreadMain(void *pParams)
   while(1)
   {
         int rc = tdapi->tdnnsocket_resp.recv(buf, sizeof(buf), 0);
-        cout<<"...CZpquantMdApi,tradeThreadMain recv: " << buf << endl;
+        cout<<"...CZpquantTradeApi,tradeThreadMain recv: " << buf << endl;
 
         ptree c_Config;
         std::stringstream jmsg(buf);  
