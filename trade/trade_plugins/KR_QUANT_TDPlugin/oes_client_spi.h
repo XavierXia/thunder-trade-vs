@@ -5,6 +5,7 @@
 #include "oes_client_api.h"
 #include "redox.hpp"
 #include "nn.hpp"
+#include <nanomsg/pair.h>
 
 
 class   OesClientMySpi: public Quant360::OesClientSpi {
