@@ -64,17 +64,17 @@ namespace nn
     public:
         socket(){};
 
-        inline void socket_s (int domain, int protocol)
-        {
-            s = nn_socket (domain, protocol);
-            if (nn_slow (s < 0))
-                throw nn::exception ();
-        }
-
         inline ~socket ()
         {
             int rc = nn_close (s);
             assert (rc == 0);
+        }
+
+        inline void socket_set (int domain, int protocol)
+        {
+            s = nn_socket (domain, protocol);
+            if (nn_slow (s < 0))
+                throw nn::exception ();
         }
 
         inline void setsockopt (int level, int option, const void *optval,

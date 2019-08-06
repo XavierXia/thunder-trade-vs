@@ -13,11 +13,11 @@ extern char ProcessName[256];
 const char THE_CONFIG_FILE_NAME[100]="/root/thunder-trade-vs/third/Kr360Quant/conf/mds_client.conf";
 	//读取配置
 MdsApiClientEnvT cliEnv = {NULLOBJ_MDSAPI_CLIENT_ENV};
-nn::socket nnsocket(AF_SP, NN_PAIR);
 
 
 CKrQuantMDPluginImp::CKrQuantMDPluginImp():m_StartAndStopCtrlTimer(m_IOservice),m_abIsPending(false), m_adbIsPauseed(false)
 {
+	nnsocket.socket_set(AF_SP, NN_PAIR);
 	nnsocket.connect(SOCKET_ADDRESS);
 }
 
@@ -164,7 +164,7 @@ void * CKrQuantMDPluginImp::MdThreadMain(void *pParams)
 	char buf[1024];
 	while(1)
 	{
-        int rc = nnsocket.recv(buf, sizeof(buf), 0);
+        int rc = mdimp->nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CKrQuantMDPluginImp,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
@@ -717,13 +717,13 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     case MDS_MSGTYPE_L2_TRADE:
         /* 处理Level2逐笔成交消息 */
     	//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTrade", sendJsonDataStr);
-    	nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
         break;
 
     case MDS_MSGTYPE_L2_ORDER:
         /* 处理Level2逐笔委托消息 */
 		//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onOrder", sendJsonDataStr);
-		nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
+		((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
         break;
 
     case MDS_MSGTYPE_L2_MARKET_DATA_SNAPSHOT:
@@ -737,7 +737,7 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
         //        pRspMsg->mktDataSnapshot.head.exchId,
          //       pRspMsg->mktDataSnapshot.head.instrId);
     	//((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data_onTick", sendJsonDataStr);
-    	nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
+    	((CKrQuantMDPluginImp *) pCallbackParams) -> nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr) + 1,0);
         break;
 
     case MDS_MSGTYPE_MARKET_DATA_REQUEST:

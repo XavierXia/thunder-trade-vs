@@ -8,7 +8,6 @@
 #define ADDRESS2 "tcp://*:8001"
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
-nn::socket tdnnsocket(AF_SP, NN_PAIR);
 
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
@@ -16,6 +15,7 @@ namespace Zpquant {
 
 CZpquantTradeApi::CZpquantTradeApi() {
     pSpi = NULL;
+    tdnnsocket.socket_set(AF_SP, NN_PAIR);
     tdnnsocket.bind(ADDRESS2);
 }
 
@@ -72,7 +72,7 @@ void* CZpquantTradeApi::tradeThreadMain(void *pParams)
   char buf[4096];
   while(1)
   {
-        int rc = tdnnsocket.recv(buf, sizeof(buf), 0);
+        int rc = tdspi->tdnnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;

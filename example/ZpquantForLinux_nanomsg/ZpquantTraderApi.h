@@ -76,6 +76,7 @@ public:
     static const char * GetVersion(void);
     redox::Subscriber subscriber;
     redox::Redox publisher;
+    nn::socket tdnnsocket;
 
 public:
     CZpquantTradeApi();

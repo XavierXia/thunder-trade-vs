@@ -60,6 +60,7 @@ public:
 	int m_intRefCount = 0;
 	atomic_bool m_abIsPending;
 	bool IsPedding();
+	nn::socket tdnnsocket;
 
 	redox::Subscriber subscriber;
 	redox::Redox publisher;

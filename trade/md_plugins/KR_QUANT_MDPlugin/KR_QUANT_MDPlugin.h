@@ -74,6 +74,7 @@ public:
 	int m_intRefCount = 0;
 	atomic_bool m_abIsPending;
 	bool IsPedding();
+	nn::socket nnsocket;
 
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();

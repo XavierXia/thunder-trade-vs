@@ -9,14 +9,13 @@
 #define ADDRESS2 "tcp://*:8000"
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"
 
-nn::socket nnsocket(AF_SP, NN_PAIR);
-
 void Communicate(const char * address, unsigned int port, const std::stringstream & in, std::stringstream & out);
 
 namespace Zpquant {
 
 CZpquantMdApi::CZpquantMdApi() {
     pSpi = NULL;
+    nnsocket.socket_set(AF_SP, NN_PAIR);
     nnsocket.bind(ADDRESS2);
     //memset(sendJsonDataStr, 0, sizeof(sendJsonDataStr)*4096);
 }
@@ -112,7 +111,7 @@ void* CZpquantMdApi::MdThreadMain(void *pParams)
   char buf[4096];
   while(1)
   {
-        int rc = nnsocket.recv(buf, sizeof(buf), 0);
+        int rc = mdspi->nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;

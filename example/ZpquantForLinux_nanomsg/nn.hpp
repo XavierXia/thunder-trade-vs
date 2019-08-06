@@ -62,18 +62,19 @@ namespace nn
     class socket
     {
     public:
-
-        inline socket (int domain, int protocol)
-        {
-            s = nn_socket (domain, protocol);
-            if (nn_slow (s < 0))
-                throw nn::exception ();
-        }
+        socket(){};
 
         inline ~socket ()
         {
             int rc = nn_close (s);
             assert (rc == 0);
+        }
+
+        inline void socket_set (int domain, int protocol)
+        {
+            s = nn_socket (domain, protocol);
+            if (nn_slow (s < 0))
+                throw nn::exception ();
         }
 
         inline void setsockopt (int level, int option, const void *optval,
