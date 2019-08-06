@@ -107,11 +107,12 @@ MdsMktDataSnapshotT:
 
 void* CZpquantMdApi::MdThreadMain(void *pParams)
 {
-  CZpquantMdSpi *mdspi = (CZpquantMdSpi *) pParams;
+  CZpquantMdApi *mdapi = (CZpquantMdApi *) pParams;
+  CZpquantMdSpi *mdspi = mdapi->pSpi;
   char buf[4096];
   while(1)
   {
-        int rc = mdspi->nnsocket.recv(buf, sizeof(buf), 0);
+        int rc = mdapi->nnsocket.recv(buf, sizeof(buf), 0);
         cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
 
         ptree c_Config;
@@ -324,7 +325,7 @@ CZpquantMdApi::Start() {
     int32           ret = 0;
 
     /* 创建回报接收线程 */
-    ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this->pSpi);
+    ret = pthread_create(&rptThreadId, NULL, MdThreadMain, (void *) this);
     if (ret != 0) {
         fprintf(stderr, "创建行情盘口接收线程失败! error[%d - %s]\n",
                 ret, strerror(ret));

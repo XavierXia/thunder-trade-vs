@@ -68,12 +68,13 @@ CZpquantTradeApi::InitTraderSource(ZpquantUserLoginField* userLogin) {
 
 void* CZpquantTradeApi::tradeThreadMain(void *pParams)
 {
-  CZpquantTradeSpi *tdspi = (CZpquantTradeSpi *) pParams;
+  CZpquantTradeApi *tdapi = (CZpquantTradeApi *) pParams;  
+  CZpquantTradeSpi *tdspi = tdapi->pSpi;
   char buf[4096];
   while(1)
   {
-        int rc = tdspi->tdnnsocket.recv(buf, sizeof(buf), 0);
-        cout<<"...CZpquantMdApi,MdThreadMain recv: " << buf << endl;
+        int rc = tdapi->tdnnsocket.recv(buf, sizeof(buf), 0);
+        cout<<"...CZpquantMdApi,tradeThreadMain recv: " << buf << endl;
 
         ptree c_Config;
         std::stringstream jmsg(buf);  
@@ -373,7 +374,7 @@ CZpquantTradeApi::Start()
     int32           ret = 0;
 
     /* 创建回报接收线程 */
-    ret = pthread_create(&rptThreadId, NULL, tradeThreadMain, (void *) this->pSpi);
+    ret = pthread_create(&rptThreadId, NULL, tradeThreadMain, (void *) this);
     if (ret != 0) {
         fprintf(stderr, "创建交易回调接收线程失败! error[%d - %s]\n",
                 ret, strerror(ret));
