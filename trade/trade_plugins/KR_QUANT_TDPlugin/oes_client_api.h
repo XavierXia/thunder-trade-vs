@@ -7,6 +7,7 @@
 #include    <pthread.h>
 #endif
 
+#include "nn.hpp"
 
 namespace   Quant360 {
 
@@ -61,6 +62,7 @@ public:
     /* 查询市场状态信息回调 */
     virtual void        OnQueryMarketState(const OesMarketStateItemT *pMarketState, const OesQryCursorT *pCursor, int32 requestId) = 0;
 
+    virtual void RegisterNanoMsgS(nn::socket ss) = 0;
 public:
     virtual ~OesClientSpi() {};
 
