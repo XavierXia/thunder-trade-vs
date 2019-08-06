@@ -61,7 +61,7 @@ public:
     OesClientMySpi();
     virtual ~OesClientMySpi();
     redox::Redox publisher;
-    nn::stock spisocket;
+    nn::socket spisocket;
     char sendJsonDataStr[4096];
     char sendRespData2client[4096];
 

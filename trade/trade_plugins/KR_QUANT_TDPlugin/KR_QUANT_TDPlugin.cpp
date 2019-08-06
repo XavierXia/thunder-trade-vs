@@ -126,7 +126,7 @@ void CKR_QUANT_TDPlugin::TDInit(const ptree & in, MTradePluginContextInterface *
 
     pOesApi = new Quant360::OesClientApi();
     pOesSpi = new OesClientMySpi();
-    POesSpi->spisocket = tdnnsocket;
+    pOesSpi->spisocket = tdnnsocket;
     
     if (!pOesApi || !pOesSpi) 
     {
