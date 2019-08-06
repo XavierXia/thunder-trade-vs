@@ -331,7 +331,6 @@ bool CKR_QUANT_TDPlugin::Stop()
 
 	/* 停止 */
     pOesApi->Stop();
-    subscriber.disconnect();
 
     delete pOesApi;
     delete pOesSpi;
@@ -462,7 +461,7 @@ CKR_QUANT_TDPlugin::OesClientMain_QueryClientOverview(Quant360::OesClientApi *pO
             clientOverview.sseStkPbuId, clientOverview.szseStkPbuId,
             clientOverview.ordTrafficLimit, clientOverview.qryTrafficLimit,
             clientOverview.associatedCustCnt);
-    publisher.publish("oes_resp",sendJsonDataStr);
+    //publisher.publish("oes_resp",sendJsonDataStr);
 
     // for (i = 0; i < clientOverview.associatedCustCnt; i++) {
     //     sprintf(sendJsonDataStr,"    >>> 客户总览信息: {客户代码[%s], 客户状态[%hhu], " \

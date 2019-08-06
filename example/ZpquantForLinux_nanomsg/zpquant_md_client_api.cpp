@@ -346,7 +346,6 @@ CZpquantMdApi::SubscribeMarketData(char *ppInstrumentIDStr,ZpquantMdsSubscribeMo
     char sendJsonDataStr[1024];
     sprintf(sendJsonDataStr, "{\"type\":\"SubscribeMd\",\"codelistStr\":\"%s\",\"mdsSubMode\":\"%d\"}",ppInstrumentIDStr,mdsSubMode);
     std::cout << "...SubscribeMd...SubscribeMarketData: " << sendJsonDataStr << endl;
-    //publisher.publish("order2server_md", sendJsonDataStr);
     nnsocket.send(sendJsonDataStr,strlen(sendJsonDataStr)+1,0);
     return 0;
 }

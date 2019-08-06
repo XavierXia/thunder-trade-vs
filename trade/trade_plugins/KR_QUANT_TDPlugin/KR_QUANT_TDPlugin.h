@@ -17,7 +17,6 @@
 
 #include "oes_client_api.h"
 #include "oes_client_spi.h"
-#include "redox.hpp"
 #include "nn.hpp"
 #include <nanomsg/pair.h>
 
@@ -61,9 +60,6 @@ public:
 	atomic_bool m_abIsPending;
 	bool IsPedding();
 	nn::socket tdnnsocket;
-
-	redox::Subscriber subscriber;
-	redox::Redox publisher;
 
 	virtual bool IsOnline();
 	virtual void IncreaseRefCount();

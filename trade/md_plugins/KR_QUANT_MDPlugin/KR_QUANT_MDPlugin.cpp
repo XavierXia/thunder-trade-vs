@@ -703,16 +703,9 @@ _MdsApi_OnRtnDepthMarketData(MdsApiSessionInfoT *pSessionInfo,
     //nnsocket.send("...md,test!!!",20,0); 
     //发布者
     //((CKrQuantMDPluginImp *) pCallbackParams) -> publisher.publish("mds_data", sendJsonDataStr);
-
-    //fprintf(stdout, sendJsonDataStr);
-	// subscriber.subscribe("allHQData", [pCallbackParams](const string& topic, const string& msg) {
-	// 	((CKrQuantMDPluginImp *) pCallbackParams)->ShowMessage(severity_levels::normal,"...subscribe,topic:%s,msg:%s", topic.c_str(),msg.c_str());
-
-	// });
-
-	    /*
-     * 根据消息类型对行情消息进行处理
-     */
+	/*
+    * 根据消息类型对行情消息进行处理
+    */
     switch (pMsgHead->msgId) {
     case MDS_MSGTYPE_L2_TRADE:
         /* 处理Level2逐笔成交消息 */

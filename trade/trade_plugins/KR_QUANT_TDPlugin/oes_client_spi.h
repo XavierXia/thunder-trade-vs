@@ -3,7 +3,6 @@
 
 
 #include "oes_client_api.h"
-#include "redox.hpp"
 #include "nn.hpp"
 #include <nanomsg/pair.h>
 
@@ -62,8 +61,6 @@ public:
     OesClientMySpi();
     virtual ~OesClientMySpi();
     nn::socket spisocket;
-
-    redox::Redox publisher;
     char sendJsonDataStr[4096];
     char sendRespData2client[4096];
 

@@ -13,7 +13,6 @@
 #endif
 
 #include "ZpquantUserApiStruct.h"
-#include "redox.hpp"
 #include "nn.hpp"
 
 #include <boost/property_tree/ptree.hpp>  
@@ -74,8 +73,6 @@ public:
 class  TRADER_API_EXPORT CZpquantTradeApi {
 public:
     static const char * GetVersion(void);
-    redox::Subscriber subscriber;
-    redox::Redox publisher;
     nn::socket tdnnsocket;
     nn::socket tdnnsocket_resp;
 

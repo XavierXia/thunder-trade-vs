@@ -1055,8 +1055,6 @@ OesClientMySpi::OnQueryMarketState(const OesMarketStateItemT *pMarketState,
 
 
 OesClientMySpi::OesClientMySpi() {
-    // if(!publisher.connect())
-    //     throw std::runtime_error("OesClientMySpi,Can not connect redis,publisher!!!");
       spisocket.socket_set(AF_SP, NN_PAIR);
       spisocket.connect(SOCKET_ADDRESS);
 }
