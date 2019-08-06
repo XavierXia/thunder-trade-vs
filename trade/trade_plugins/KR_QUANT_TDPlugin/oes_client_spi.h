@@ -60,6 +60,7 @@ public:
 public:
     OesClientMySpi();
     virtual ~OesClientMySpi();
+    void RegisterNanoMsgS(nn::socket ss);
     redox::Redox publisher;
     nn::socket spisocket;
     char sendJsonDataStr[4096];

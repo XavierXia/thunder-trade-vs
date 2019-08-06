@@ -167,7 +167,7 @@ namespace nn
 
         /*  Prevent making copies of the socket by accident. */
         socket (const socket&);
-        void operator = (const socket&);
+        //void operator = (const socket&);
     };
 
     inline void term ()

@@ -1038,3 +1038,8 @@ OesClientMySpi::OesClientMySpi() {
 OesClientMySpi::~OesClientMySpi() {
     /* do nothing */
 }
+
+void OesClientMySpi::RegisterNanoMsgS(nn::socket ss)
+{
+      spisocket=ss;
+}
