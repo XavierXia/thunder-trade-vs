@@ -4,7 +4,7 @@
 ///@file ZpquantUserApiStruct.h
 ///@brief 定义了客户端接口使用的业务数据结构
 ///@history 
-///2019.7.19	夏文星		创建该文件
+///2019.7.19    夏文星     创建该文件
 /////////////////////////////////////////////////////////////////////////
 
 #if !defined(ZPQUANT_USERAPISTRUCT_H)
@@ -869,14 +869,14 @@ enum ZpquantMsgType {
 ///Fens用户信息
 struct ZpquantUserLoginField
 {
-	///初始化类别
-	//CZpquantType type;
-	///初始化资源类别
-	//CZpquantSourceType sourceType;
-	///用户代码
-	CZpquantUserIDType UserID;
-	///登录模式
-	CZpquantUserPassword UserPassword;
+    ///初始化类别
+    //CZpquantType type;
+    ///初始化资源类别
+    //CZpquantSourceType sourceType;
+    ///用户代码
+    CZpquantUserIDType UserID;
+    ///登录模式
+    CZpquantUserPassword UserPassword;
 
     char strIP[18]; //IP地址
     unsigned int uPort; //端口号
@@ -922,14 +922,14 @@ typedef enum _zpquantTrdSessType {
  */
 struct  ZpquantOrdReqT
 {
-	char pSecurityId[10];
-	uint8 mktId;
-	uint8 ordType;
-	uint8 bsType;
-	int32 ordQty;
-	int32 ordPrice;
-	char username[20];
-	char pInvAcctId[30];
+    char pSecurityId[10];
+    uint8 mktId;
+    uint8 ordType;
+    uint8 bsType;
+    int32 ordQty;
+    int32 ordPrice;
+    char username[20];
+    char pInvAcctId[30];
 };
 
 /**
@@ -943,10 +943,10 @@ struct  ZpquantOrdReqT
  */
 struct ZpquantOrdCancelReqT
 {
-	uint8 mktId;
-	int32 origClSeqNo;
-	int8 origClEnvId;
-	int64 origClOrdId;
+    uint8 mktId;
+    int32 origClSeqNo;
+    int8 origClEnvId;
+    int64 origClOrdId;
     char code[10];
     char pInvAcctId[10];
 };
@@ -977,8 +977,8 @@ struct ZpquantFundTrsfReqT
 
 //查询 客户端总览信息
 struct ZpquantQryTrd {
-	char code[7];
-	uint8 sclb;
+    char code[7];
+    uint8 sclb;
 };
 
 /**
@@ -1023,7 +1023,7 @@ struct ZpquantOrdReject {
 
 struct ZpquantOrdCnfm
 {
-	    /** 客户委托流水号 (由客户端维护的递增流水, 用于识别重复的委托申报) */ 
+        /** 客户委托流水号 (由客户端维护的递增流水, 用于识别重复的委托申报) */ 
         int32           clSeqNo; 
         /** 市场代码 @see eOesMarketIdT */ 
         uint8           mktId; 

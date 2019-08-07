@@ -13,7 +13,7 @@
 #endif
 
 #include "ZpquantUserApiStruct.h"
-#include "redox.hpp"
+#include "nn.hpp"
 
 #include <boost/property_tree/ptree.hpp>  
 #include <boost/property_tree/json_parser.hpp> 
@@ -22,117 +22,117 @@ using namespace std;
 
 namespace   Zpquant {
 
-	class   CZpquantTradeSpi {
-	public:
-		/* Î¯ÍĞ¾Ü¾ø»Ø±¨ÏìÓ¦ */
-		virtual void        OnBusinessReject(int32 errorCode, const ZpquantOrdReject *pOrderReject) = 0;
-		/* Î¯ÍĞÒÑÊÕ»Ø±¨»Øµ÷ */
-		virtual void        OnOrderInsert(const ZpquantOrdCnfm *pOrderInsert) = 0;
-		/* Î¯ÍĞÈ·ÈÏ»Ø±¨»Øµ÷ */
-		virtual void        OnOrderReport(int32 errorCode, const ZpquantOrdCnfm *pOrderReport) = 0;
-		/* ³É½»È·ÈÏ»Ø±¨»Øµ÷ */
-		virtual void        OnTradeReport(const ZpquantTrdCnfm *pTradeReport) = 0;
-		/* ×Ê½ğ±ä¶¯»Ø±¨»Øµ÷ */
-		virtual void        OnCashAssetVariation(const ZpquantCashAssetItem *pCashAssetItem) = 0;
-		/* ³Ö²Ö±ä¶¯»Ø±¨»Øµ÷ */
-		virtual void        OnStockHoldingVariation(const ZpquantStkHoldingItem *pStkHoldingItem) = 0;
-		/* ³öÈë½ğÎ¯ÍĞ¾Ü¾ø»Ø±¨»Øµ÷ */
-		virtual void        OnFundTrsfReject(int32 errorCode, const ZpquantFundTrsfReject *pFundTrsfReject) = 0;
-		/* ³öÈë½ğÎ¯ÍĞÖ´ĞĞ»Ø±¨»Øµ÷ */
-		virtual void        OnFundTrsfReport(int32 errorCode, const ZpquantFundTrsfReport *pFundTrsfReport) = 0;
-		/* ÊĞ³¡×´Ì¬ĞÅÏ¢»Ø±¨»Øµ÷ */
-		virtual void        OnMarketState(const ZpquantMarketStateInfo *pMarketStateItem) = 0;
+class   CZpquantTradeSpi {
+public:
+    /* å§”æ‰˜æ‹’ç»å›æŠ¥å“åº” */
+    virtual void        OnBusinessReject(int32 errorCode, const ZpquantOrdReject *pOrderReject) = 0;
+    /* å§”æ‰˜å·²æ”¶å›æŠ¥å›è°ƒ */
+    virtual void        OnOrderInsert(const ZpquantOrdCnfm *pOrderInsert) = 0;
+    /* å§”æ‰˜ç¡®è®¤å›æŠ¥å›è°ƒ */
+    virtual void        OnOrderReport(int32 errorCode, const ZpquantOrdCnfm *pOrderReport) = 0;
+    /* æˆäº¤ç¡®è®¤å›æŠ¥å›è°ƒ */
+    virtual void        OnTradeReport(const ZpquantTrdCnfm *pTradeReport) = 0;
+    /* èµ„é‡‘å˜åŠ¨å›æŠ¥å›è°ƒ */
+    virtual void        OnCashAssetVariation(const ZpquantCashAssetItem *pCashAssetItem) = 0;
+    /* æŒä»“å˜åŠ¨å›æŠ¥å›è°ƒ */
+    virtual void        OnStockHoldingVariation(const ZpquantStkHoldingItem *pStkHoldingItem) = 0;
+    /* å‡ºå…¥é‡‘å§”æ‰˜æ‹’ç»å›æŠ¥å›è°ƒ */
+    virtual void        OnFundTrsfReject(int32 errorCode, const ZpquantFundTrsfReject *pFundTrsfReject) = 0;
+    /* å‡ºå…¥é‡‘å§”æ‰˜æ‰§è¡Œå›æŠ¥å›è°ƒ */
+    virtual void        OnFundTrsfReport(int32 errorCode, const ZpquantFundTrsfReport *pFundTrsfReport) = 0;
+    /* å¸‚åœºçŠ¶æ€ä¿¡æ¯å›æŠ¥å›è°ƒ */
+    virtual void        OnMarketState(const ZpquantMarketStateInfo *pMarketStateItem) = 0;
 
-		/* ²éÑ¯Î¯ÍĞĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryOrder(const ZpquantOrdItem *pOrder, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯³É½»ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryTrade(const ZpquantTrdItem *pTrade, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯×Ê½ğĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryCashAsset(const ZpquantCashAssetItem *pCashAsset, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯³Ö²ÖĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryStkHolding(const ZpquantStkHoldingItem *pStkHolding, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯¿Í»§ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryCustInfo(const ZpquantCustItemT *pCust, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯¹É¶«ÕË»§ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryInvAcct(const ZpquantInvAcctItem *pInvAcct, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯³öÈë½ğÁ÷Ë®ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryFundTransferSerial(const ZpquantFundTransferSerialItemT *pFundTrsf, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯Ö¤È¯ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryStock(const ZpquantStockBaseInfo *pStock, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
-		/* ²éÑ¯ÊĞ³¡×´Ì¬ĞÅÏ¢»Øµ÷ */
-		virtual void        OnQueryMarketState(const ZpquantMarketStateInfo *pMarketState, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢å§”æ‰˜ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryOrder(const ZpquantOrdItem *pOrder, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢æˆäº¤ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryTrade(const ZpquantTrdItem *pTrade, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢èµ„é‡‘ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryCashAsset(const ZpquantCashAssetItem *pCashAsset, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢æŒä»“ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryStkHolding(const ZpquantStkHoldingItem *pStkHolding, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢å®¢æˆ·ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryCustInfo(const ZpquantCustItemT *pCust, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢è‚¡ä¸œè´¦æˆ·ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryInvAcct(const ZpquantInvAcctItem *pInvAcct, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢å‡ºå…¥é‡‘æµæ°´ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryFundTransferSerial(const ZpquantFundTransferSerialItemT *pFundTrsf, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢è¯åˆ¸ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryStock(const ZpquantStockBaseInfo *pStock, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
+    /* æŸ¥è¯¢å¸‚åœºçŠ¶æ€ä¿¡æ¯å›è°ƒ */
+    virtual void        OnQueryMarketState(const ZpquantMarketStateInfo *pMarketState, const ZpquantQryCursor *pCursor, int32 requestId) = 0;
 
-	public:
-		virtual ~CZpquantTradeSpi() {};
+public:
+    virtual ~CZpquantTradeSpi() {};
 
-	public:
-		int32               currentRequestId;
-	};
-
-
-	class  TRADER_API_EXPORT CZpquantTradeApi {
-	public:
-		static const char * GetVersion(void);
-		redox::Subscriber subscriber;
-		redox::Redox publisher;
-
-	public:
-		CZpquantTradeApi();
-
-		virtual ~CZpquantTradeApi();
-
-		/* ×¢²áspi»Øµ÷½Ó¿Ú */
-		void                RegisterSpi(CZpquantTradeSpi *pSpi);
-		//³õÊ¼»¯½»Ò×Ô´
-		bool                InitTraderSource(ZpquantUserLoginField* userLogin);
-		/* Æô¶¯Á¬Í¨Êı¾İÍ¨µÀ */
-		bool                Start();
-		/* Í£Ö¹Á¬Í¨Êı¾İÍ¨µÀ */
-		void                Stop();
-		/* ·¢ËÍ½»Ò×Î¯ÍĞÇëÇó£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               SendOrder(const ZpquantOrdReqT *pOrderReq);
-		/* ·¢ËÍ³·µ¥ÇëÇó£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               SendCancelOrder(const ZpquantOrdCancelReqT *pCancelReq);
-		/* ·¢ËÍ³öÈë½ğÇëÇó£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               SendFundTrsf(const ZpquantOrdCancelReqT *pFundTrsfReq);
-		/* »ñÈ¡½»Ò×ÈÕÆÚ */
-		int32               GetTradingDay(void);
-		/* »ñÈ¡¿Í»§¶Ë×ÜÀÀĞÅÏ¢ */
-		//int32               GetClientOverview(OesClientOverviewT *pClientOverview);
-		/* ²éÑ¯ËùÓĞÎ¯ÍĞĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		//int32               QueryOrder(const OesQryOrdFilterT *pQryFilter, int32 requestId = 0);
-		/* ²éÑ¯³É½»ĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               QueryTrade(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
-		/* ²éÑ¯¿Í»§×Ê½ğĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               QueryCashAsset(int32 requestId = 0);
-		/* ²éÑ¯¹ÉÆ±³Ö²ÖĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
-		// /* ²éÑ¯¿Í»§ĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		// int32               QueryCustInfo(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
-		/* ²éÑ¯Ö¤È¯ÕË»§ĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
-		/* ²éÑ¯ÏÖ»õ²úÆ·ĞÅÏ¢£¬·ÇÏß³Ì°²È«ÊµÏÖ */
-		int32               QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
-
-	private:
-		/* ½ûÖ¹¿½±´¹¹Ôìº¯Êı */
-		CZpquantTradeApi(const CZpquantTradeApi&);
-		/* ½ûÖ¹¸³Öµº¯Êı */
-		CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
-		char sendJsonDataStr[4096];
+public:
+    int32               currentRequestId;
+};
 
 
-	private:
-		bool                isCfg;
-		bool                isRunning;
-		volatile int32      terminatedFlag;
+class  TRADER_API_EXPORT CZpquantTradeApi {
+public:
+    static const char * GetVersion(void);
+    nn::socket tdnnsocket;
+    nn::socket tdnnsocket_resp;
 
-		CZpquantTradeSpi        *pSpi;
-	};
+public:
+    CZpquantTradeApi();
+
+    virtual ~CZpquantTradeApi();
+
+    /* æ³¨å†Œspiå›è°ƒæ¥å£ */
+    void                RegisterSpi(CZpquantTradeSpi *pSpi);
+    //åˆå§‹åŒ–äº¤æ˜“æº
+    bool                InitTraderSource(ZpquantUserLoginField* userLogin);
+    /* å¯åŠ¨è¿é€šæ•°æ®é€šé“ */
+    bool                Start();
+    /* åœæ­¢è¿é€šæ•°æ®é€šé“ */
+    void                Stop();
+    /* å‘é€äº¤æ˜“å§”æ‰˜è¯·æ±‚ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               SendOrder(const ZpquantOrdReqT *pOrderReq);
+    /* å‘é€æ’¤å•è¯·æ±‚ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               SendCancelOrder(const ZpquantOrdCancelReqT *pCancelReq);
+    /* å‘é€å‡ºå…¥é‡‘è¯·æ±‚ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               SendFundTrsf(const ZpquantOrdCancelReqT *pFundTrsfReq);
+    /* è·å–äº¤æ˜“æ—¥æœŸ */
+    int32               GetTradingDay(void);
+    /* è·å–å®¢æˆ·ç«¯æ€»è§ˆä¿¡æ¯ */
+    //int32               GetClientOverview(OesClientOverviewT *pClientOverview);
+    /* æŸ¥è¯¢æ‰€æœ‰å§”æ‰˜ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    //int32               QueryOrder(const OesQryOrdFilterT *pQryFilter, int32 requestId = 0);
+    /* æŸ¥è¯¢æˆäº¤ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               QueryTrade(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
+    /* æŸ¥è¯¢å®¢æˆ·èµ„é‡‘ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               QueryCashAsset(int32 requestId = 0);
+    /* æŸ¥è¯¢è‚¡ç¥¨æŒä»“ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               QueryStkHolding(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
+    // /* æŸ¥è¯¢å®¢æˆ·ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    // int32               QueryCustInfo(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
+    /* æŸ¥è¯¢è¯åˆ¸è´¦æˆ·ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               QueryInvAcct(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
+    /* æŸ¥è¯¢ç°è´§äº§å“ä¿¡æ¯ï¼Œéçº¿ç¨‹å®‰å…¨å®ç° */
+    int32               QueryStock(const ZpquantQryTrd *pQryFilter, int32 requestId = 0);
+
+private:
+    /* ç¦æ­¢æ‹·è´æ„é€ å‡½æ•° */
+    CZpquantTradeApi(const CZpquantTradeApi&);
+    /* ç¦æ­¢èµ‹å€¼å‡½æ•° */
+    CZpquantTradeApi&       operator=(const CZpquantTradeApi&);
+
+private:
+    bool                isCfg;
+    bool                isRunning;
+    volatile int32      terminatedFlag;
+
+    CZpquantTradeSpi        *pSpi;
+private:
+    /* å†…éƒ¨çš„å›è°ƒå¤„ç†å‡½æ•°ï¼Œå¯ä»¥è€ƒè™‘ä¸å®šä¹‰åœ¨ç±»ä¸­ */
+    static void *tradeThreadMain(void *pParams);
+};
 
 
 }
 
 
 #endif /* _OES_CLIENT_SAMPLE_H */
-#pragma once

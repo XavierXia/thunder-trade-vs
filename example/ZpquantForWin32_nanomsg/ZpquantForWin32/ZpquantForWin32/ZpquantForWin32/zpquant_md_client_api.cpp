@@ -9,7 +9,6 @@
 #include <nanomsg/pair.h>
 #include <windows.h>
 
-#define SOCKET_ADDRESS "tcp://127.0.0.1:8000"
 #define ADDRESS1 "inproc://test"
 #define ADDRESS2 "tcp://*:8000"
 #define ADDRESS3 "ipc:///tmp/reqrep.ipc"

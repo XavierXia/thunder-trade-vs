@@ -15,17 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="zpquant_md_client_api.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="zpquant_trader_client_api.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CommunicationModuleForClient.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="demo_md_client_spi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_trader_client_spi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="nn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="ZpquantMdApi.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -38,8 +36,24 @@
     <ClInclude Include="ZpquantUserApiStruct.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="nn.hpp">
+    <ClInclude Include="unistd.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="demo_md_client_spi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="demo_trader_client_spi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="zpquant_client_main_demo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Zpquant_dll.dll">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
